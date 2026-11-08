@@ -1,25 +1,11 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter, usePathname } from "@/i18n/navigation";
-
-const LANGS = [
-  { code: "en", label: "EN" },
-  { code: "ar", label: "عربي" },
-  { code: "ur", label: "اردو" },
-  { code: "hi", label: "हिं" },
-] as const;
+import LangSwitcher from "./LangSwitcher";
 
 export default function Header() {
   const t = useTranslations("Header");
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const switchLocale = (loc: string) => {
-    document.cookie = `NEXT_LOCALE=${loc};path=/;max-age=31536000`;
-    router.replace(pathname, { locale: loc });
-  };
 
   return (
     <header className="bg-ivory-white border-b border-line sticky top-0 z-50 shadow-[0_2px_12px_rgba(14,59,46,0.07)]">
@@ -160,23 +146,7 @@ export default function Header() {
         </nav>
 
         {/* ── Language switcher ──────────────────────────────── */}
-        <div
-          className="flex border border-line rounded-full overflow-hidden bg-ivory-white shrink-0"
-          role="group"
-          aria-label="Language"
-        >
-          {LANGS.map((l) => (
-            <button
-              key={l.code}
-              type="button"
-              aria-pressed={locale === l.code}
-              onClick={() => switchLocale(l.code)}
-              className="px-3 py-1.5 text-[13px] min-h-[36px] text-emerald aria-pressed:bg-emerald aria-pressed:text-ivory-white transition-colors"
-            >
-              {l.label}
-            </button>
-          ))}
-        </div>
+        <LangSwitcher />
 
         {/* ── Bag button ─────────────────────────────────────── */}
         <button

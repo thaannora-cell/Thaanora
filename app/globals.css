@@ -108,8 +108,31 @@ body {
   to   { opacity: 1; transform: none; }
 }
 
+@keyframes th-ring {
+  0%, 55%, 100% { transform: rotate(0deg); }
+  60%, 70%, 80% { transform: rotate(-14deg); }
+  65%, 75%, 85% { transform: rotate(14deg); }
+}
+@keyframes th-fly {
+  0%, 100% { transform: translate(0, 0); }
+  40%      { transform: translate(2px, -2px); }
+  50%      { transform: translate(3px, -3px); opacity: 0.4; }
+  51%      { transform: translate(-3px, 3px); opacity: 0; }
+  60%      { transform: translate(-1px, 1px); opacity: 1; }
+}
+@keyframes th-pop {
+  0%   { transform: scale(0.82); }
+  60%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+@keyframes th-wave {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+
 /* Motion icon helpers */
-.mi-twinkle { transform-origin: center; transform-box: fill-box; animation: th-twinkle 2.2s ease-in-out infinite; }
+.mi-ring    { transform-origin: 12px 12px; transform-box: view-box; animation: th-ring 2.8s ease-in-out infinite; }
+.mi-fly     { animation: th-fly 3.2s ease-in-out infinite; }.mi-twinkle { transform-origin: center; transform-box: fill-box; animation: th-twinkle 2.2s ease-in-out infinite; }
 .mi-snipA   { transform-origin: 12px 13px; transform-box: view-box; animation: th-snipA 2.6s ease-in-out infinite; }
 .mi-snipB   { transform-origin: 12px 13px; transform-box: view-box; animation: th-snipB 2.6s ease-in-out infinite; }
 .mi-peek    { animation: th-peek 3s ease-in-out infinite; }
@@ -126,8 +149,24 @@ body {
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .mi-twinkle, .mi-snipA, .mi-snipB, .mi-peek,
-  .mi-drive, .mi-road, .mi-bob { animation: none !important; }
+  .mi-drive, .mi-road, .mi-bob, .mi-ring, .mi-fly,
+  .th-lang-btn, .th-lang-btn span { animation: none !important; transition: none !important; }
+  .th-lang-thumb { transition: none !important; }
 }
+
+/* ── Language switcher ─────────────────────────────────────────── */
+.th-lang-thumb {
+  position: absolute;
+  inset-block: 3px;
+  border-radius: 9999px;
+  background: var(--color-emerald);
+  box-shadow: 0 2px 8px rgba(14,59,46,.25);
+  transition: inset-inline-start .45s cubic-bezier(.2,.8,.2,1), width .45s cubic-bezier(.2,.8,.2,1);
+}
+.th-lang-btn { transition: color .3s; }
+.th-lang-btn span { display: inline-block; transition: transform .25s; }
+.th-lang-btn:hover:not([aria-pressed="true"]) span { animation: th-wave .6s ease-in-out; }
+.th-lang-btn[aria-pressed="true"] span { animation: th-pop .45s cubic-bezier(.2,.8,.2,1); }
 
 /* ── Locale-aware font overrides ─────────────────────────── */
 html[lang="ar"] body { font-family: var(--font-amiri); }

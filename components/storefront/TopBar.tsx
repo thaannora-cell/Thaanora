@@ -12,7 +12,7 @@ export default function TopBar() {
         {/* Shipping origin */}
         <span className="flex items-center gap-2 shrink-0">
           <svg
-            className="mi-bob shrink-0"
+            className="shrink-0"
             width="18"
             height="18"
             viewBox="0 0 24 24"
