@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* ── Brand theme tokens ─────────────────────────────────────────── */
+@theme {
+  /* Emerald */
+  --color-emerald:       #0E3B2E;
+  --color-emerald-deep:  #082A20;
+  --color-emerald-deep2: #0A2C22;
+
+  /* Gold */
+  --color-gold:      #C8A15A;
+  --color-gold-light: #E6CB8E;
+  --color-gold-ink:  #8A6A2E;
+
+  /* Ivory */
+  --color-ivory:       #F6F3EE;
+  --color-ivory-alt:   #F2EEE6;
+  --color-ivory-white: #FBF8F2;
+
+  /* Accent */
+  --color-rani:   #C81E5E;
+  --color-indigo: #1F2E5C;
+  --color-walnut: #5A3A26;
+  --color-blush:  #D9A5A0;
+
+  /* Neutrals */
+  --color-ink:   #1B211E;
+  --color-muted: #5C635F;
+  --color-line:  #E2D7C3;
+
+  /* Fonts */
+  --font-cinzel:    'Cinzel', Georgia, serif;
+  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --font-jost:      'Jost', 'Segoe UI', Arial, sans-serif;
+  --font-amiri:     'Amiri', 'Times New Roman', serif;
+  --font-urdu:      'Noto Nastaliq Urdu', 'Amiri', serif;
+  --font-hindi:     'Noto Sans Devanagari', 'Jost', sans-serif;
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { color-scheme: light; }
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-jost);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* RTL font overrides */
+[lang="ar"] body, body[lang="ar"] { font-family: var(--font-amiri); }
+[lang="ur"] body, body[lang="ur"] { font-family: var(--font-urdu); line-height: 1.9; }
+[lang="hi"] body, body[lang="hi"] { font-family: var(--font-hindi); }
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-rani);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ── Animated motion icons ─────────────────────────────────────── */
+@keyframes th-twinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50%       { transform: scale(0.55) rotate(45deg); opacity: 0.55; }
+}
+@keyframes th-snipA {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  70%, 90%      { transform: rotate(-16deg); }
+  80%           { transform: rotate(2deg); }
+}
+@keyframes th-snipB {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  70%, 90%      { transform: rotate(16deg); }
+  80%           { transform: rotate(-2deg); }
+}
+@keyframes th-peek {
+  0%, 100%  { transform: translate(0, 0); }
+  25%       { transform: translate(1.5px, -1.2px); }
+  50%       { transform: translate(-1px, 1px); }
+  75%       { transform: translate(1px, 1px); }
+}
+@keyframes th-drive {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-0.8px); }
+}
+@keyframes th-road {
+  to { stroke-dashoffset: -6; }
+}
+@keyframes th-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+@keyframes th-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(200,161,90,.55), 0 10px 24px rgba(0,0,0,.25); }
+  70%  { box-shadow: 0 0 0 16px rgba(200,161,90,0), 0 10px 24px rgba(0,0,0,.25); }
+  100% { box-shadow: 0 0 0 0 rgba(200,161,90,0), 0 10px 24px rgba(0,0,0,.25); }
+}
+@keyframes th-rip {
+  to { transform: scale(3.2); opacity: 0; }
+}
+@keyframes th-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Motion icon helpers */
+.mi-twinkle { transform-origin: center; transform-box: fill-box; animation: th-twinkle 2.2s ease-in-out infinite; }
+.mi-snipA   { transform-origin: 12px 13px; transform-box: view-box; animation: th-snipA 2.6s ease-in-out infinite; }
+.mi-snipB   { transform-origin: 12px 13px; transform-box: view-box; animation: th-snipB 2.6s ease-in-out infinite; }
+.mi-peek    { animation: th-peek 3s ease-in-out infinite; }
+.mi-drive   { animation: th-drive 0.6s ease-in-out infinite; }
+.mi-road    { stroke-dasharray: 3 3; animation: th-road 0.6s linear infinite; }
+.mi-bob     { animation: th-bob 2.4s ease-in-out infinite; }
+
+/* Pill hover triggers faster animation */
+.th-pill:hover .mi-snipA, .th-pill:hover .mi-snipB { animation-duration: 0.5s; }
+.th-pill:hover .mi-peek  { animation-duration: 0.8s; }
+.th-pill:hover .mi-drive { animation-duration: 0.3s; }
+.th-pill:hover .mi-road  { animation-duration: 0.3s; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .mi-twinkle, .mi-snipA, .mi-snipB, .mi-peek,
+  .mi-drive, .mi-road, .mi-bob { animation: none !important; }
+}
+
+/* ── Ripple ─────────────────────────────────────────────────────── */
+.th-rip {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  transform: scale(0);
+  animation: th-rip 0.6s ease-out forwards;
+  pointer-events: none;
+}
+.th-pill .th-rip { background: rgba(200,161,90,0.35); }
+
+/* ── Logo medal ─────────────────────────────────────────────────── */
+.th-medal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-emerald);
+  box-shadow: 0 0 0 1.5px var(--color-gold);
+  font-family: var(--font-cinzel);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--color-gold-light);
+  flex-shrink: 0;
+  position: relative;
+}
+/* ث above final A */
+.th-medal::after {
+  content: "ث";
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-amiri);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--color-rani);
+  letter-spacing: 0;
+  pointer-events: none;
+}
