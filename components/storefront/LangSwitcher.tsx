@@ -70,7 +70,7 @@ export default function LangSwitcher() {
           lang={l.code}
           aria-pressed={active === l.code}
           onClick={() => choose(l.code)}
-          className="th-lang-btn relative z-10 px-3 py-1.5 text-[13px] min-h-[36px] text-emerald aria-pressed:text-ivory-white"
+          className={`th-lang-btn relative z-10 my-[2px] rounded-full px-3 py-1.5 text-[13px] min-h-[32px] text-emerald aria-pressed:text-ivory-white ${thumb ? "" : "aria-pressed:bg-emerald"}`}
         >
           <span>{l.label}</span>
         </button>

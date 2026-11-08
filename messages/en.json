@@ -73,5 +73,14 @@
     "q_stitch": "Get it stitched",
     "q_source": "Can't find your suit?",
     "q_track": "Track my order"
+  },
+  "DevProducts": {
+    "title": "Products from the database",
+    "subtitle": "Test page: reads visible products from Supabase with the public key.",
+    "notConfigured": "Supabase is not connected yet. Copy .env.example to .env.local, fill in the URL and public key, then restart the dev server.",
+    "error": "Could not load products:",
+    "count": "{n} products",
+    "inStock": "{n} in stock",
+    "soldOut": "Sold out"
   }
 }
