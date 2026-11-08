@@ -129,6 +129,11 @@ body {
   .mi-drive, .mi-road, .mi-bob { animation: none !important; }
 }
 
+/* ── Locale-aware font overrides ─────────────────────────── */
+html[lang="ar"] body { font-family: var(--font-amiri); }
+html[lang="ur"] body { font-family: var(--font-urdu); line-height: 1.9; }
+html[lang="hi"] body { font-family: var(--font-hindi); }
+
 /* ── Ripple ─────────────────────────────────────────────────────── */
 .th-rip {
   position: absolute;

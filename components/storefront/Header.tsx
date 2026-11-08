@@ -1,27 +1,47 @@
 "use client";
 
+import { useTranslations, useLocale } from "next-intl";
+import { useRouter, usePathname } from "@/i18n/navigation";
+
+const LANGS = [
+  { code: "en", label: "EN" },
+  { code: "ar", label: "عربي" },
+  { code: "ur", label: "اردو" },
+  { code: "hi", label: "हिं" },
+] as const;
+
 export default function Header() {
+  const t = useTranslations("Header");
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const switchLocale = (loc: string) => {
+    document.cookie = `NEXT_LOCALE=${loc};path=/;max-age=31536000`;
+    router.replace(pathname, { locale: loc });
+  };
+
   return (
     <header className="bg-ivory-white border-b border-line sticky top-0 z-50 shadow-[0_2px_12px_rgba(14,59,46,0.07)]">
       <div className="max-w-[1320px] mx-auto px-4 flex items-center gap-4 min-h-[68px] flex-wrap py-2">
 
         {/* ── Logo ───────────────────────────────────────────── */}
         <a
-          href="/"
+          href={`/${locale}`}
           className="flex items-center gap-3 no-underline group shrink-0"
-          aria-label="Thaanora — home"
+          aria-label={t("homeLabel")}
         >
           <span className="th-medal" aria-hidden="true">T</span>
           <span className="flex flex-col leading-none">
             <span
               className="font-[family-name:var(--font-cinzel)] font-semibold tracking-[0.18em] text-[18px] text-emerald pt-2"
-              style={{ letterSpacing: "0.18em" }}
             >
               THAANORA
             </span>
             <span
               className="font-[family-name:var(--font-amiri)] text-[13px] text-gold-ink"
               lang="ar"
+              dir="rtl"
             >
               قماشكِ… على مقاسكِ
             </span>
@@ -40,7 +60,6 @@ export default function Header() {
           >
             <span className="relative flex items-center justify-center w-5 h-5 rounded-full bg-rani/10 shrink-0">
               <span className="font-semibold text-[10px] text-rani tracking-wide">AI</span>
-              {/* sparkle */}
               <svg
                 className="absolute -top-1 -end-1"
                 width="10"
@@ -55,7 +74,7 @@ export default function Header() {
                 />
               </svg>
             </span>
-            Virtual try-on
+            {t("tryOn")}
           </button>
 
           {/* Tailor network */}
@@ -83,7 +102,7 @@ export default function Header() {
                 <path d="M8 7.5 L20 18" />
               </g>
             </svg>
-            Tailor network
+            {t("tailor")}
           </button>
 
           {/* Sourcing request */}
@@ -108,7 +127,7 @@ export default function Header() {
                 <path d="M8 8.5 A3 3 0 0 1 10.5 7" stroke="var(--color-gold)" />
               </g>
             </svg>
-            Sourcing request
+            {t("sourcing")}
           </button>
 
           {/* Track order */}
@@ -136,7 +155,7 @@ export default function Header() {
               </g>
               <path className="mi-road" d="M1 20 H23" />
             </svg>
-            Track order
+            {t("trackOrder")}
           </button>
         </nav>
 
@@ -146,18 +165,12 @@ export default function Header() {
           role="group"
           aria-label="Language"
         >
-          {(
-            [
-              { code: "en", label: "EN" },
-              { code: "ar", label: "عربي" },
-              { code: "ur", label: "اردو" },
-              { code: "hi", label: "हिं" },
-            ] as const
-          ).map((l, i) => (
+          {LANGS.map((l) => (
             <button
               key={l.code}
               type="button"
-              aria-pressed={i === 0}
+              aria-pressed={locale === l.code}
+              onClick={() => switchLocale(l.code)}
               className="px-3 py-1.5 text-[13px] min-h-[36px] text-emerald aria-pressed:bg-emerald aria-pressed:text-ivory-white transition-colors"
             >
               {l.label}
@@ -168,7 +181,7 @@ export default function Header() {
         {/* ── Bag button ─────────────────────────────────────── */}
         <button
           type="button"
-          aria-label="Open your selection (0 items)"
+          aria-label={t("bagLabel")}
           className="relative flex items-center justify-center w-10 h-10 rounded-full border border-line bg-ivory-white text-emerald hover:border-gold transition-colors shrink-0"
         >
           <svg
@@ -190,8 +203,8 @@ export default function Header() {
         {/* ── Gold crown — back office ───────────────────────── */}
         <button
           type="button"
-          aria-label="Back office (owner)"
-          title="Back office (owner)"
+          aria-label={t("backOfficeLabel")}
+          title={t("backOfficeLabel")}
           className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gold text-emerald hover:bg-gold-light transition-colors shrink-0 shadow-[0_2px_8px_rgba(200,161,90,0.4)]"
         >
           <svg

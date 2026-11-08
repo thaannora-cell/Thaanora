@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <TopBar />
       <Header />
-      {/* Product rack goes here — Step 10 */}
+      {/* Product rack — Step 11 */}
       <main className="min-h-[60vh]" />
       <Footer />
     </>

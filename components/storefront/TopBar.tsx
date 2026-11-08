@@ -1,18 +1,18 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 export default function TopBar() {
+  const t = useTranslations("TopBar");
+
   return (
-    <div
-      className="bg-emerald text-gold-light text-[13px] py-2"
-      role="complementary"
-      aria-label="Promotions"
-    >
-      <div className="max-w-[1320px] mx-auto px-4 flex items-center justify-between gap-4 flex-wrap">
-        {/* Left — shipping origin */}
-        <span className="flex items-center gap-2">
-          {/* Animated paper plane */}
+    <div className="bg-emerald text-gold-light text-[13.5px] font-medium">
+      <div className="max-w-[1320px] mx-auto px-4 flex items-center justify-between gap-4 min-h-[42px] py-2">
+
+        {/* Shipping origin */}
+        <span className="flex items-center gap-2 shrink-0">
           <svg
-            className="shrink-0"
+            className="mi-bob shrink-0"
             width="18"
             height="18"
             viewBox="0 0 24 24"
@@ -23,41 +23,40 @@ export default function TopBar() {
             strokeLinejoin="round"
             aria-hidden="true"
           >
-            <g className="mi-bob">
+            <g className="mi-fly">
               <path d="M3 13 L21 6 L15 20 L12 14 Z" />
               <path d="M12 14 L21 6" />
             </g>
           </svg>
-          Direct from Lahore &amp; Karachi to Riyadh
+          {t("shipping")}
         </span>
 
-        {/* Centre — rotating promo */}
-        <span className="hidden sm:block" aria-live="polite">
-          Any 3 suits{" "}
-          <strong className="text-rani font-medium">10% off</strong> · Cash on
-          delivery in Riyadh
+        {/* Centre promo */}
+        <span className="hidden sm:block text-center">
+          {t("promo")}
         </span>
 
-        {/* Right — WhatsApp */}
-        <span className="flex items-center gap-2">
+        {/* WhatsApp */}
+        <span className="flex items-center gap-2 shrink-0">
           <svg
             className="shrink-0"
             width="17"
             height="17"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#F3A7C3"
+            stroke="var(--color-rani)"
             strokeWidth="1.8"
             strokeLinecap="round"
             aria-hidden="true"
           >
             <path
-              className="mi-bob"
+              className="mi-ring"
               d="M5 3 H9 L11 8 L8.5 9.5 A11 11 0 0 0 14.5 15.5 L16 13 L21 15 V19 A2 2 0 0 1 19 21 A16 16 0 0 1 3 5 A2 2 0 0 1 5 3Z"
             />
           </svg>
-          WhatsApp concierge
+          {t("whatsapp")}
         </span>
+
       </div>
     </div>
   );
