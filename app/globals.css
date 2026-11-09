@@ -235,6 +235,12 @@ html[lang="hi"] .th-hero-title em { font-family: inherit; }
 .th-opt input { margin-top: 3px; accent-color: var(--color-emerald); }
 .th-opt:has(input:checked) { border-color: var(--color-emerald); box-shadow: 0 0 0 1px var(--color-emerald); }
 .th-modal::backdrop { background: rgba(8,42,32,.6); }
+.th-drawer { box-shadow: -20px 0 40px rgba(0,0,0,.2); }
+.th-drawer::backdrop { background: rgba(8,42,32,.55); }
+.th-drawer[open] { animation: th-slide-in .35s cubic-bezier(.2,.8,.2,1) both; }
+[dir="rtl"] .th-drawer[open] { animation-name: th-slide-in-rtl; }
+@keyframes th-slide-in { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes th-slide-in-rtl { from { transform: translateX(-100%); } to { transform: none; } }
 .th-modal[open] { animation: th-rise .3s both; }
 html[lang="ar"] .th-dialog-title { font-family: var(--font-amiri); font-weight: 700; line-height: 1.3; }
 html[lang="ur"] .th-dialog-title { font-family: var(--font-urdu); line-height: 1.9; font-size: 26px; }
@@ -249,7 +255,7 @@ html[lang="hi"] .th-dialog-title { font-family: var(--font-hindi); font-weight: 
 
 @media (prefers-reduced-motion: reduce) {
   .th-btn:hover, .th-btn:active { transform: none !important; }
-  .th-modal[open], .th-toast { animation: none; }
+  .th-modal[open], .th-toast, .th-drawer[open] { animation: none; }
 }
 
 /* Letter-spacing and capitals break Arabic-script joining */

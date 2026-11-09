@@ -2,23 +2,15 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { normaliseSaudiMobile } from "@/lib/phone";
 import { isLocale } from "@/lib/site-gate";
+import { isSameOrigin } from "@/lib/http";
 
 const TYPES = ["notify_me", "preorder"] as const;
 type RequestType = (typeof TYPES)[number];
 
 const bad = (error: string, status = 400) => NextResponse.json({ ok: false, error }, { status });
 
-function originHost(origin: string): string | null {
-  try {
-    return new URL(origin).host;
-  } catch {
-    return null;
-  }
-}
-
 export async function POST(req: NextRequest) {
-  const origin = req.headers.get("origin");
-  if (origin && originHost(origin) !== req.headers.get("host")) return bad("forbidden", 403);
+  if (!isSameOrigin(req)) return bad("forbidden", 403);
 
   let body: Record<string, unknown>;
   try {

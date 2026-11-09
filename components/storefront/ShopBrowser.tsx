@@ -11,6 +11,7 @@ import NotifyDialog from "./panel/NotifyDialog";
 import TryOnDialog from "./panel/TryOnDialog";
 import { DEFAULT_FILTERS, brandsOf, filterProducts, type Filters } from "@/lib/filters";
 import { salePrice, stockState, type PublicProduct } from "@/lib/product";
+import { useSelection } from "./selection/SelectionProvider";
 
 const SAVED_KEY = "th_saved";
 
@@ -33,7 +34,6 @@ function writeSaved(codes: string[]) {
 }
 
 const toggle = (list: string[], code: string) => (list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
-const add = (list: string[], code: string) => (list.includes(code) ? list : [...list, code]);
 
 type Dialog = { kind: Exclude<PanelAction, "share">; code: string } | null;
 
@@ -49,11 +49,11 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
   const t = useTranslations("Home");
   const tPanel = useTranslations("Panel");
   const tRack = useTranslations("Rack");
+  const tSel = useTranslations("Selection");
+  const selection = useSelection();
   const locale = useLocale();
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [saved, setSaved] = useState<string[]>([]);
-  const [chosen, setChosen] = useState<string[]>([]);
-  const [stitching, setStitching] = useState<string[]>([]);
   const [activeCode, setActiveCode] = useState<string | null>(null);
   const [dialog, setDialog] = useState<Dialog>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -76,6 +76,22 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
       rackAnchor.current?.scrollIntoView({ block: "start" });
     }
   }, [products]);
+
+  const chosen = useMemo(() => selection?.lines.map((l) => l.code) ?? [], [selection?.lines]);
+  const stitching = useMemo(() => selection?.lines.filter((l) => l.stitch).map((l) => l.code) ?? [], [selection?.lines]);
+
+  const toggleChosen = (code: string) => {
+    if (!selection) return;
+    if (selection.toggle(code) === "removed") {
+      showToast(tSel("removedToast"));
+      return;
+    }
+    const count = selection.totals.count + 1;
+    const b = selection.bundle;
+    showToast(
+      !b ? tSel("addedToast") : count >= b.qty ? tSel("addedUnlockedToast", { pct: b.pct }) : tSel("addedLeftToast", { left: b.qty - count, pct: b.pct }),
+    );
+  };
 
   const brands = useMemo(() => brandsOf(products), [products]);
   const shown = useMemo(() => filterProducts(products, filters, saved), [products, filters, saved]);
@@ -143,10 +159,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
           saved={saved}
           brandOfMonth={brandOfMonth}
           onToggleSaved={toggleSaved}
-          onToggleChosen={(code) => {
-            setChosen((list) => toggle(list, code));
-            setStitching((list) => list.filter((c) => c !== code));
-          }}
+          onToggleChosen={toggleChosen}
           onAction={onAction}
           emptyMessage={filters.occasion === "saved" ? t("noSaved") : t("noMatch")}
         />
@@ -163,8 +176,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
             tailors={tailors}
             canAdd={!isOut}
             onAddWithStitching={() => {
-              setChosen((list) => add(list, dialogProduct.code));
-              setStitching((list) => add(list, dialogProduct.code));
+              selection?.add(dialogProduct.code, { stitch: true });
               showToast(tPanel("addedWithStitching"));
             }}
             onToast={showToast}
@@ -177,7 +189,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
             primaryLabel={isOut ? tPanel("notifyBtn") : isChosen ? t("added") : t("add")}
             onPrimary={() => {
               if (isOut) setDialog({ kind: "notify", code: dialogProduct.code });
-              else setChosen((list) => add(list, dialogProduct.code));
+              else if (!isChosen) toggleChosen(dialogProduct.code);
             }}
           />
         </>

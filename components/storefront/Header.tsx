@@ -2,10 +2,13 @@
 
 import { useTranslations, useLocale } from "next-intl";
 import LangSwitcher from "./LangSwitcher";
+import { useSelection } from "./selection/SelectionProvider";
 
 export default function Header() {
   const t = useTranslations("Header");
   const locale = useLocale();
+  const selection = useSelection();
+  const bagCount = selection?.totals.count ?? 0;
 
   return (
     <header className="bg-ivory-white border-b border-line sticky top-0 z-50 shadow-[0_2px_12px_rgba(14,59,46,0.07)]">
@@ -151,9 +154,18 @@ export default function Header() {
         {/* ── Bag button ─────────────────────────────────────── */}
         <button
           type="button"
-          aria-label={t("bagLabel")}
+          aria-label={t("bagLabel", { count: bagCount })}
+          onClick={selection?.openDrawer}
           className="relative flex items-center justify-center w-10 h-10 rounded-full border border-line bg-ivory-white text-emerald hover:border-gold transition-colors shrink-0"
         >
+          {bagCount > 0 && (
+            <span
+              aria-hidden="true"
+              className="absolute -top-1 -end-1 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-rani px-1 text-[11px] font-semibold text-white tabular-nums shadow-[0_0_0_2px_var(--color-ivory-white)]"
+            >
+              {bagCount}
+            </span>
+          )}
           <svg
             width="22"
             height="22"
