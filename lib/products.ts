@@ -26,7 +26,24 @@ export type PublicProduct = {
   trending_rank: number | null;
   occasions: string[];
   sort_order: number;
+  product_images: ProductImage[];
 };
+
+export type ProductImage = {
+  storage_path: string;
+  alt: string | null;
+  width: number | null;
+  height: number | null;
+  sort_order: number;
+};
+
+export const PHOTO_BUCKET = "product-photos";
+
+export function photoUrl(storagePath: string): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const encoded = storagePath.split("/").map(encodeURIComponent).join("/");
+  return `${base}/storage/v1/object/public/${PHOTO_BUCKET}/${encoded}`;
+}
 
 export function salePrice(p: Pick<PublicProduct, "price_sar" | "sale_pct">): number {
   return p.sale_pct ? Math.round(p.price_sar * (1 - p.sale_pct / 100)) : Number(p.price_sar);
@@ -42,9 +59,10 @@ export async function getVisibleProducts(): Promise<ProductsResult> {
   if (!supabase) return { status: "not_configured" };
   const { data, error } = await supabase
     .from("products")
-    .select(PUBLIC_PRODUCT_COLUMNS)
+    .select(`${PUBLIC_PRODUCT_COLUMNS}, product_images (storage_path, alt, width, height, sort_order)`)
     .eq("visible", true)
-    .order("sort_order");
+    .order("sort_order")
+    .order("sort_order", { referencedTable: "product_images" });
   if (error) return { status: "error", message: error.message };
   return { status: "ok", products: (data ?? []) as unknown as PublicProduct[] };
 }

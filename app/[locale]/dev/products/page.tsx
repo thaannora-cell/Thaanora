@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import TopBar from "@/components/storefront/TopBar";
 import Header from "@/components/storefront/Header";
 import Footer from "@/components/storefront/Footer";
+import ProductThumb from "@/components/storefront/ProductThumb";
 import { getVisibleProducts, salePrice } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
@@ -41,16 +42,12 @@ export default async function DevProductsPage() {
               {t("count", { n: result.products.length })}
             </p>
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 list-none p-0 m-0">
-              {result.products.map((p) => (
+              {result.products.map((p, i) => (
                 <li
                   key={p.id}
                   className="flex gap-3 rounded-2xl border border-line bg-ivory-white p-3"
                 >
-                  <span
-                    aria-hidden="true"
-                    className="w-10 shrink-0 rounded-t-full rounded-b-md"
-                    style={{ background: p.colour_hex, boxShadow: `inset 0 -10px 0 ${p.accent_hex}` }}
-                  />
+                  <ProductThumb product={p} width={84} priority={i < 3} />
                   <div className="min-w-0 flex-1">
                     <p className="text-[11px] tracking-[0.14em] uppercase text-gold-ink">{p.brand}</p>
                     <p className="text-[15px] text-emerald font-medium leading-snug" dir="auto">{p.name}</p>

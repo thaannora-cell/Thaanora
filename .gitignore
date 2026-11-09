@@ -5,6 +5,9 @@ out/
 # deps
 node_modules/
 
+# product photos (brand-owned; uploaded to Supabase Storage, never committed)
+/photos/
+
 # env — never commit secrets
 .env
 .env.local
