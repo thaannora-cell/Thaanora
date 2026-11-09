@@ -82,5 +82,12 @@
     "count": "{n} products",
     "inStock": "{n} in stock",
     "soldOut": "Sold out"
+  },
+  "Unlock": {
+    "title": "Private preview",
+    "subtitle": "This site is not open yet. Enter the password to continue.",
+    "label": "Password",
+    "button": "Enter",
+    "wrong": "That password is not right. Please try again."
   }
 }
