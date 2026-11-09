@@ -246,6 +246,15 @@ html[lang="ar"] .th-dialog-title { font-family: var(--font-amiri); font-weight: 
 html[lang="ur"] .th-dialog-title { font-family: var(--font-urdu); line-height: 1.9; font-size: 26px; }
 html[lang="hi"] .th-dialog-title { font-family: var(--font-hindi); font-weight: 500; line-height: 1.25; font-size: 26px; }
 
+/* Try-on stage: gold-rimmed arch behind the model */
+.th-mirror::before {
+  content: ""; position: absolute; inset: 4% 0 0; border-radius: 999px 999px 0 0;
+  background: rgba(251,248,242,.88); border: 2px solid var(--color-gold);
+  box-shadow: inset 0 0 0 6px rgba(251,248,242,.88), inset 0 0 0 7px rgba(200,161,90,.6);
+}
+.th-swatch { box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
+.th-swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--color-ivory-white), 0 0 0 4px var(--color-emerald); }
+
 /* Order tracking timeline */
 .th-track li { position: relative; padding-inline-start: 30px; padding-bottom: 18px; font-size: 14px; color: var(--color-muted); }
 .th-track li::before {

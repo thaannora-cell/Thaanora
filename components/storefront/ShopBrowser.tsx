@@ -8,9 +8,10 @@ import type { PanelAction } from "./rack/Bolt";
 import DetailsDialog from "./panel/DetailsDialog";
 import StitchDialog, { OPEN_TAILORS_EVENT, type Tailor } from "./panel/StitchDialog";
 import NotifyDialog from "./panel/NotifyDialog";
-import TryOnDialog from "./panel/TryOnDialog";
+import TryOnDialog, { OPEN_TRYON_EVENT } from "./panel/TryOnDialog";
+import type { Face } from "./tryon/ModelFigure";
 import { DEFAULT_FILTERS, brandsOf, filterProducts, type Filters } from "@/lib/filters";
-import { salePrice, stockState, type PublicProduct } from "@/lib/product";
+import { salePrice, type PublicProduct } from "@/lib/product";
 import { useSelection } from "./selection/SelectionProvider";
 import { openSourcing } from "./SourcingDialog";
 
@@ -57,6 +58,8 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
   const [activeCode, setActiveCode] = useState<string | null>(null);
   const [dialog, setDialog] = useState<Dialog>(null);
   const [tailorsOpen, setTailorsOpen] = useState(false);
+  // Her try-on photo lives only in this page's memory; it is never uploaded or saved.
+  const [face, setFace] = useState<Face | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
   const rackAnchor = useRef<HTMLDivElement>(null);
@@ -75,6 +78,18 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
     window.addEventListener(OPEN_TAILORS_EVENT, onOpen);
     return () => window.removeEventListener(OPEN_TAILORS_EVENT, onOpen);
   }, []);
+
+  // The header's "Virtual try-on" pill opens the preview on the fabric that is open on the rack.
+  const activeRef = useRef<string | null>(null);
+  activeRef.current = activeCode;
+  useEffect(() => {
+    const onOpen = () => {
+      const code = activeRef.current ?? products[0]?.code;
+      if (code) setDialog({ kind: "try", code });
+    };
+    window.addEventListener(OPEN_TRYON_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_TRYON_EVENT, onOpen);
+  }, [products]);
 
   // A shared link (?p=CODE) opens that fabric.
   useEffect(() => {
@@ -137,8 +152,6 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
   };
 
   const closeDialog = () => setDialog(null);
-  const isChosen = dialogProduct ? chosen.includes(dialogProduct.code) : false;
-  const isOut = dialogProduct ? stockState(dialogProduct.stock) === "out" : false;
 
   return (
     <>
@@ -194,18 +207,19 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
             onToast={showToast}
           />
           <NotifyDialog product={dialogProduct} open={dialog?.kind === "notify"} onClose={closeDialog} />
-          <TryOnDialog
-            product={dialogProduct}
-            open={dialog?.kind === "try"}
-            onClose={closeDialog}
-            primaryLabel={isOut ? tPanel("notifyBtn") : isChosen ? t("added") : t("add")}
-            onPrimary={() => {
-              if (isOut) setDialog({ kind: "notify", code: dialogProduct.code });
-              else if (!isChosen) toggleChosen(dialogProduct.code);
-            }}
-          />
         </>
       )}
+
+      <TryOnDialog
+        products={products}
+        startCode={dialog?.kind === "try" ? dialog.code : null}
+        open={dialog?.kind === "try"}
+        onClose={closeDialog}
+        face={face}
+        onFace={setFace}
+        onAdd={(code) => toggleChosen(code)}
+        onNotify={(code) => setDialog({ kind: "notify", code })}
+      />
 
       <StitchDialog product={null} open={tailorsOpen} onClose={() => setTailorsOpen(false)} tailors={tailors} onToast={showToast} />
 

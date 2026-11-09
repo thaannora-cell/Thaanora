@@ -203,10 +203,6 @@
     "sendError": "We couldn’t send this right now. Please try again, or message us on WhatsApp.",
     "sending": "Sending…",
     "confirm": "Confirm",
-    "tryEyebrow": "AI try-on · preview",
-    "tryTitle": "See it on you before you buy",
-    "tryComingSoon": "Virtual try-on is coming soon: you’ll upload a photo and see this suit on you, stitched.",
-    "tryPrivacy": "Your photo will stay on your device.",
     "feel": {
       "khaddar": "Medium weight, soft and matte; warm for Riyadh winter evenings",
       "khaddarShawl": "Medium-weight khaddar with a soft blended shawl",
@@ -409,5 +405,25 @@
     "preorder": "Hello Thaanora, I would like to pre-order {name} ({code}) from the next shipment ({reference}).",
     "customer": "WhatsApp: {phone}",
     "customerNamed": "Name: {name} · WhatsApp: {phone}"
+  },
+  "TryOn": {
+    "eyebrow": "Try-on · preview",
+    "title": "See it on you before you buy",
+    "previewBadge": "Preview",
+    "you": "You",
+    "previewOf": "Preview",
+    "realSuit": "The real suit",
+    "figureLabel": "Drawn model wearing {name}",
+    "step1": "1 · Your photo",
+    "upload": "Upload a photo",
+    "changePhoto": "Change photo",
+    "sample": "Use a sample",
+    "removePhoto": "Remove my photo",
+    "photoError": "We couldn’t open that photo here. Please try a JPG or PNG.",
+    "size": "Size",
+    "upDown": "Up / down",
+    "leftRight": "Left / right",
+    "step2": "2 · Pick a fabric",
+    "note": "This is a simple preview, not a photo: your face is placed on our drawn model in the fabric’s colours. Your photo stays on this device; it is never uploaded or saved. A realistic AI try-on is coming later."
   }
 }
