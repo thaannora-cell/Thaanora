@@ -20,7 +20,7 @@ export async function getWhatsappNumber(): Promise<string | null> {
   return /^[1-9]\d{7,14}$/.test(digits) ? digits : null;
 }
 
-const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 15 };
+const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 15, tailorDiscountPct: 10 };
 
 // Public settings only (RLS hides the private ones such as the PKR rate).
 export async function getCheckoutSettings(): Promise<CheckoutSettings> {
@@ -29,7 +29,7 @@ export async function getCheckoutSettings(): Promise<CheckoutSettings> {
   const { data } = await supabase
     .from("settings")
     .select("key, value")
-    .in("key", ["delivery_fees", "gift_box_fee_sar", "vat_rate_pct"]);
+    .in("key", ["delivery_fees", "gift_box_fee_sar", "vat_rate_pct", "tailor_member_discount_pct"]);
   const get = (k: string) => data?.find((r) => r.key === k)?.value as unknown;
 
   const fees = get("delivery_fees");
@@ -46,5 +46,6 @@ export async function getCheckoutSettings(): Promise<CheckoutSettings> {
     areas,
     giftBoxFee: num(get("gift_box_fee_sar"), DEFAULTS.giftBoxFee),
     vatPct: num(get("vat_rate_pct"), DEFAULTS.vatPct),
+    tailorDiscountPct: num(get("tailor_member_discount_pct"), DEFAULTS.tailorDiscountPct),
   };
 }

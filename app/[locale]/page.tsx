@@ -31,7 +31,7 @@ export default async function Home() {
       <Header />
       <main className="max-w-[1320px] mx-auto px-4 pb-16 min-h-[60vh]">
         <Hero designs={loaded ? products.length : null} brands={loaded ? brandsOf(products).length : null} />
-        <ShopBrowser products={products} brandOfMonth={brandOfMonth} loadFailed={!loaded} tailors={tailors} areas={settings.areas.map((a) => a.area)} />
+        <ShopBrowser products={products} brandOfMonth={brandOfMonth} loadFailed={!loaded} tailors={tailors} />
       </main>
       <Footer />
       <SelectionTray />

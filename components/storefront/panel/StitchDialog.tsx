@@ -3,10 +3,14 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Modal from "@/components/ui/Modal";
-import type { PublicProduct } from "@/lib/product";
+import { stockState, type PublicProduct } from "@/lib/product";
 import { useAreaLabel } from "../useAreaLabel";
+import { useSelection } from "../selection/SelectionProvider";
 
 export type Tailor = { id: string; name: string; area: string; member_price_note: string | null };
+
+export const OPEN_TAILORS_EVENT = "th:open-tailors";
+export const openTailors = () => window.dispatchEvent(new Event(OPEN_TAILORS_EVENT));
 
 const FIELDS = ["bust", "waist", "hips", "shoulder", "shirt", "sleeve", "trouser", "hem"] as const;
 const NECKLINES = ["round", "vNeck", "boat", "collar", "askTailor"] as const;
@@ -24,24 +28,30 @@ function load(): Measurements {
 }
 
 type Props = {
-  product: PublicProduct;
+  // With a suit: offers "Add … with stitching". Without: the tailor network screen,
+  // where suits already in the bag can be ticked for stitching.
+  product: PublicProduct | null;
   open: boolean;
   onClose: () => void;
-  areas: string[];
   tailors: Tailor[];
-  canAdd: boolean;
-  onAddWithStitching: () => void;
   onToast: (message: string) => void;
 };
 
-export default function StitchDialog({ product, open, onClose, areas, tailors, canAdd, onAddWithStitching, onToast }: Props) {
+export default function StitchDialog({ product, open, onClose, tailors, onToast }: Props) {
   const t = useTranslations("Panel");
   const areaLabel = useAreaLabel();
-  const [area, setArea] = useState(areas[0] ?? "");
+  const sel = useSelection();
+  const areas = sel?.settings.areas.map((a) => a.area) ?? [];
+  const pct = sel?.settings.tailorDiscountPct ?? 10;
+  const [area, setArea] = useState("");
   const [m, setM] = useState<Measurements>({});
 
   useEffect(() => {
-    if (open) setM(load());
+    if (!open) return;
+    setM(load());
+    // Start on her delivery area if she chose one at checkout.
+    setArea((a) => a || sel?.checkout.area || areas[0] || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only when the dialog opens
   }, [open]);
 
   const inArea = tailors.filter((x) => x.area === area);
@@ -59,17 +69,21 @@ export default function StitchDialog({ product, open, onClose, areas, tailors, c
   const steps = [
     [t("step1Title"), t("step1Text")],
     [t("step2Title"), t("step2Text")],
-    [t("step3Title"), t("step3Text")],
+    [t("step3Title"), t("step3Text", { pct })],
   ];
+
+  const canAdd = product !== null && stockState(product.stock) !== "out";
 
   return (
     <Modal open={open} onClose={onClose} eyebrow={t("stitchEyebrow")} title={t("stitchTitle")}>
       <ol className="m-0 grid list-none grid-cols-1 gap-2.5 p-0 sm:grid-cols-3">
         {steps.map(([title, text], i) => (
-          <li key={title} className="rounded-[14px] border border-line bg-white p-3 text-[13px] text-muted">
-            <i className="block font-[family-name:var(--font-cormorant)] text-[22px] not-italic text-gold-ink">{i + 1}</i>
-            <b className="block text-[14px] font-medium text-emerald">{title}</b>
-            {text}
+          <li key={title} className="flex gap-3 rounded-[14px] border border-line bg-white p-3 text-[13px] text-muted sm:block">
+            <i className="block shrink-0 font-[family-name:var(--font-cormorant)] text-[22px] not-italic leading-none text-gold-ink">{i + 1}</i>
+            <span>
+              <b className="block text-[14px] font-medium text-emerald">{title}</b>
+              {text}
+            </span>
           </li>
         ))}
       </ol>
@@ -91,12 +105,39 @@ export default function StitchDialog({ product, open, onClose, areas, tailors, c
           <li key={x.id} className="flex items-center justify-between gap-2.5 rounded-[14px] border border-line bg-white px-3.5 py-2.5 text-[14px]">
             <span>
               <bdi>{x.name}</bdi>
-              <small className="block text-muted">{t("tailorLine")}</small>
+              <small className="block text-muted">{t("tailorLine", { pct })}</small>
             </span>
             <span className="shrink-0 rounded-full bg-emerald px-2.5 py-0.5 text-[11px] text-gold-light">{t("verified")}</span>
           </li>
         ))}
       </ul>
+
+      {product === null && sel && (
+        <section className="flex flex-col gap-2" aria-labelledby="stitch-bag">
+          <span id="stitch-bag" className="th-caps mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-gold-ink">
+            {t("bagTitle")}
+          </span>
+          {sel.lines.length === 0 ? (
+            <p className="m-0 text-[14px] text-muted">{t("bagEmpty")}</p>
+          ) : (
+            sel.lines.map((l) => {
+              const p = sel.products.get(l.code);
+              if (!p) return null;
+              return (
+                <label key={l.code} className="th-opt">
+                  <input type="checkbox" checked={l.stitch} onChange={(e) => sel.setStitch(l.code, e.target.checked)} />
+                  <span>
+                    <bdi>{p.name}</bdi>
+                    <small className="block text-[12px] text-muted">
+                      <bdi>{p.brand}</bdi> · {l.stitch ? t("willBeStitched") : t("tickToStitch")}
+                    </small>
+                  </span>
+                </label>
+              );
+            })
+          )}
+        </section>
+      )}
 
       <span className="th-caps mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-gold-ink">{t("measurementsTitle")}</span>
       <form onSubmit={save} className="flex flex-col gap-3">
@@ -108,6 +149,7 @@ export default function StitchDialog({ product, open, onClose, areas, tailors, c
                 type="number"
                 inputMode="decimal"
                 min="0"
+                max="80"
                 step="0.5"
                 value={m[f] ?? ""}
                 onChange={(e) => setM((v) => ({ ...v, [f]: e.target.value }))}
@@ -131,16 +173,17 @@ export default function StitchDialog({ product, open, onClose, areas, tailors, c
         </button>
       </form>
 
-      {canAdd && (
+      {product && canAdd && sel && (
         <button
           type="button"
           className="th-btn th-btn-pink"
           onClick={() => {
-            onAddWithStitching();
+            sel.add(product.code, { stitch: true });
+            onToast(t("addedWithStitching"));
             onClose();
           }}
         >
-          {t("addWithStitching", { name: product.name })}
+          {sel.stitched(product.code) ? t("addedStitched") : t("addWithStitching", { name: product.name })}
         </button>
       )}
     </Modal>

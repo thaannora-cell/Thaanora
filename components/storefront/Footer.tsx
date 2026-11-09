@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { openTrackOrder } from "./TrackOrderDialog";
 import { openSourcing } from "./SourcingDialog";
+import { openTailors } from "./panel/StitchDialog";
 
 export default function Footer() {
   const t = useTranslations("Footer");
@@ -45,7 +46,7 @@ export default function Footer() {
               <li key={key}>
                 <button
                   type="button"
-                  onClick={key === "trackOrder" ? openTrackOrder : key === "sourcing" ? openSourcing : undefined}
+                  onClick={key === "trackOrder" ? openTrackOrder : key === "sourcing" ? openSourcing : key === "tailoring" ? openTailors : undefined}
                   className="text-[#9FB5AB] hover:text-gold-light transition-colors text-start bg-transparent border-0 p-0 cursor-pointer"
                 >
                   {t(key)}

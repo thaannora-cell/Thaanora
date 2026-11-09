@@ -2,7 +2,7 @@
 
 export type BundleRule = { qty: number; pct: number };
 export type DeliveryArea = { area: string; fee: number };
-export type CheckoutSettings = { areas: DeliveryArea[]; giftBoxFee: number; vatPct: number };
+export type CheckoutSettings = { areas: DeliveryArea[]; giftBoxFee: number; vatPct: number; tailorDiscountPct: number };
 
 export type Totals = {
   count: number;

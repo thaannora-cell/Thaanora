@@ -50,7 +50,8 @@ insert into public.settings (key, value, is_public) values
   ('vat_rate_pct', '15'::jsonb, true),
   ('gift_box_fee_sar', '15'::jsonb, true),
   ('pkr_per_sar', '73.73'::jsonb, false),
-  ('low_stock_level', '3'::jsonb, false)
+  ('low_stock_level', '3'::jsonb, false),
+  ('tailor_member_discount_pct', '10'::jsonb, true)
 on conflict (key) do nothing;
 
 insert into public.offers (kind, code, percent, min_qty, active) values

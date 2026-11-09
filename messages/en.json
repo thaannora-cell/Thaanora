@@ -166,10 +166,10 @@
     "step2Title": "Choose a tailor",
     "step2Text": "Registered partner tailors across Riyadh, women’s tailoring.",
     "step3Title": "Member price",
-    "step3Text": "10% off stitching for Thaanora customers. Quote on WhatsApp.",
+    "step3Text": "{pct}% off stitching for Thaanora customers. Quote on WhatsApp.",
     "yourArea": "Your area",
     "noTailors": "No partner tailor in this area yet. Ask us on WhatsApp.",
-    "tailorLine": "Women’s tailoring · member price 10% off · 5–7 days",
+    "tailorLine": "Women’s tailoring · member price {pct}% off · 5–7 days",
     "verified": "Verified",
     "measurementsTitle": "Your measurements (inches) · saved on this device",
     "m_bust": "Bust",
@@ -220,7 +220,11 @@
       "pashmina": "Soft and warm with a light brushed feel",
       "linen": "Light-medium weight, crisp and breathable",
       "default": "Medium weight"
-    }
+    },
+    "bagTitle": "Your selection · tick the suits to stitch",
+    "bagEmpty": "Your bag is empty. Open a fabric on the rack and tap “Get it stitched” to add it with stitching.",
+    "willBeStitched": "will be stitched",
+    "tickToStitch": "tick to add stitching"
   },
   "Selection": {
     "trayLabel": "Your selection",

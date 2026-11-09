@@ -4,6 +4,7 @@ import { useTranslations, useLocale } from "next-intl";
 import LangSwitcher from "./LangSwitcher";
 import { openTrackOrder } from "./TrackOrderDialog";
 import { openSourcing } from "./SourcingDialog";
+import { openTailors } from "./panel/StitchDialog";
 import { useSelection } from "./selection/SelectionProvider";
 
 export default function Header() {
@@ -71,6 +72,7 @@ export default function Header() {
           {/* Tailor network */}
           <button
             type="button"
+            onClick={openTailors}
             className="th-pill relative overflow-hidden hidden md:flex items-center gap-2 border border-line bg-ivory-white text-emerald rounded-full px-3 py-2 text-[13px] min-h-[38px] hover:border-gold transition-colors"
           >
             <svg

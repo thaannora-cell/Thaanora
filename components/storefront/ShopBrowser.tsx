@@ -6,7 +6,7 @@ import FilterCard from "./FilterCard";
 import FabricRack from "./rack/FabricRack";
 import type { PanelAction } from "./rack/Bolt";
 import DetailsDialog from "./panel/DetailsDialog";
-import StitchDialog, { type Tailor } from "./panel/StitchDialog";
+import StitchDialog, { OPEN_TAILORS_EVENT, type Tailor } from "./panel/StitchDialog";
 import NotifyDialog from "./panel/NotifyDialog";
 import TryOnDialog from "./panel/TryOnDialog";
 import { DEFAULT_FILTERS, brandsOf, filterProducts, type Filters } from "@/lib/filters";
@@ -43,10 +43,9 @@ type Props = {
   brandOfMonth: string | null;
   loadFailed: boolean;
   tailors: Tailor[];
-  areas: string[];
 };
 
-export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailors, areas }: Props) {
+export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailors }: Props) {
   const t = useTranslations("Home");
   const tPanel = useTranslations("Panel");
   const tRack = useTranslations("Rack");
@@ -57,6 +56,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
   const [saved, setSaved] = useState<string[]>([]);
   const [activeCode, setActiveCode] = useState<string | null>(null);
   const [dialog, setDialog] = useState<Dialog>(null);
+  const [tailorsOpen, setTailorsOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
   const rackAnchor = useRef<HTMLDivElement>(null);
@@ -68,6 +68,13 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
   }, []);
 
   useEffect(() => setSaved(readSaved()), []);
+
+  // The header pill and the footer link open the tailor network screen.
+  useEffect(() => {
+    const onOpen = () => setTailorsOpen(true);
+    window.addEventListener(OPEN_TAILORS_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_TAILORS_EVENT, onOpen);
+  }, []);
 
   // A shared link (?p=CODE) opens that fabric.
   useEffect(() => {
@@ -183,13 +190,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
             product={dialogProduct}
             open={dialog?.kind === "stitch"}
             onClose={closeDialog}
-            areas={areas}
             tailors={tailors}
-            canAdd={!isOut}
-            onAddWithStitching={() => {
-              selection?.add(dialogProduct.code, { stitch: true });
-              showToast(tPanel("addedWithStitching"));
-            }}
             onToast={showToast}
           />
           <NotifyDialog product={dialogProduct} open={dialog?.kind === "notify"} onClose={closeDialog} />
@@ -205,6 +206,8 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
           />
         </>
       )}
+
+      <StitchDialog product={null} open={tailorsOpen} onClose={() => setTailorsOpen(false)} tailors={tailors} onToast={showToast} />
 
       {toast && (
         <div className="th-toast" role="status">
