@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { photoUrl, salePrice, stockState, type PublicProduct } from "@/lib/product";
 import { fabricBackground, hemBackground } from "./fabricPattern";
 import s from "./rack.module.css";
 
+export type PanelAction = "try" | "stitch" | "details" | "share" | "notify";
+
 type Props = {
   product: PublicProduct;
   open: boolean;
   chosen: boolean;
+  stitched: boolean;
   saved: boolean;
   brandOfMonth: boolean;
   priority: boolean;
@@ -18,12 +21,47 @@ type Props = {
   onStep: (dir: 1 | -1) => void;
   onToggleSaved: () => void;
   onToggleChosen: () => void;
+  onAction: (action: PanelAction) => void;
 };
 
-export default function Bolt({ product: p, open, chosen, saved, brandOfMonth, priority, onOpen, onStep, onToggleSaved, onToggleChosen }: Props) {
+const SWIPE_MIN = 50;
+
+export default function Bolt({
+  product: p,
+  open,
+  chosen,
+  stitched,
+  saved,
+  brandOfMonth,
+  priority,
+  onOpen,
+  onStep,
+  onToggleSaved,
+  onToggleChosen,
+  onAction,
+}: Props) {
   const t = useTranslations("Rack");
   const tHome = useTranslations("Home");
+  const tPanel = useTranslations("Panel");
   const [photoIndex, setPhotoIndex] = useState(0);
+  const touch = useRef<{ x: number; y: number } | null>(null);
+
+  // Swipe sideways on the open fabric to move to the next one (mirrored in right-to-left).
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t0 = e.touches[0];
+    touch.current = { x: t0.clientX, y: t0.clientY };
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touch.current;
+    touch.current = null;
+    if (!start) return;
+    const t1 = e.changedTouches[0];
+    const dx = t1.clientX - start.x;
+    const dy = t1.clientY - start.y;
+    if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const rtl = document.documentElement.dir === "rtl";
+    onStep((dx < 0) !== rtl ? 1 : -1);
+  };
 
   const price = salePrice(p);
   const stock = stockState(p.stock);
@@ -58,7 +96,14 @@ export default function Bolt({ product: p, open, chosen, saved, brandOfMonth, pr
   const fabricStyle = { "--fabric": p.colour_hex, ...(open ? fabricBackground(p.colour_hex, p.accent_hex, printed) : {}) } as React.CSSProperties;
 
   return (
-    <div role="listitem" className={classes} style={fabricStyle} data-code={p.code}>
+    <div
+      role="listitem"
+      className={classes}
+      style={fabricStyle}
+      data-code={p.code}
+      onTouchStart={open ? onTouchStart : undefined}
+      onTouchEnd={open ? onTouchEnd : undefined}
+    >
       {!open && photo && (
         <div className={s.photo} aria-hidden="true">
           <Image src={photoUrl(photo.storage_path)} alt="" fill sizes="(max-width: 760px) 100vw, 480px" />
@@ -103,7 +148,7 @@ export default function Bolt({ product: p, open, chosen, saved, brandOfMonth, pr
                 sizes="(max-width: 760px) 240px, 400px"
                 priority={priority}
               />
-              {p.product_images.length > 1 && (
+              {p.product_images.length > 0 && (
                 <div className={s.pth}>
                   {p.product_images.map((img, i) => (
                     <button
@@ -132,7 +177,6 @@ export default function Bolt({ product: p, open, chosen, saved, brandOfMonth, pr
                 aria-pressed={saved}
                 aria-label={t("save", { name: p.name })}
                 onClick={onToggleSaved}
-                data-rack-focus={stock === "out" ? "" : undefined}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -163,17 +207,38 @@ export default function Bolt({ product: p, open, chosen, saved, brandOfMonth, pr
               <span>{t("dupatta", { m: Number(p.dupatta_m) })}</span>
               <span>{t("trouser", { m: Number(p.trouser_m) })}</span>
             </div>
-            {stock !== "out" && (
-              <button
-                type="button"
-                className={`${s.add} ${chosen ? s.added : ""}`}
-                aria-pressed={chosen}
-                onClick={onToggleChosen}
-                data-rack-focus=""
-              >
-                {chosen ? tHome("added") : tHome("add")}
+            <div className={s.acts}>
+              {stock === "out" ? (
+                <button type="button" className={s.add} onClick={() => onAction("notify")} data-rack-focus="">
+                  {tPanel("notifyBtn")}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${s.add} ${chosen ? s.added : ""}`}
+                  aria-pressed={chosen}
+                  onClick={onToggleChosen}
+                  data-rack-focus=""
+                >
+                  {chosen ? (stitched ? tPanel("addedStitched") : tHome("added")) : tHome("add")}
+                </button>
+              )}
+              <button type="button" className={s.try} onClick={() => onAction("try")}>
+                <span className={s.ai}>AI</span>
+                {tHome("try_btn")}
               </button>
-            )}
+            </div>
+            <div className={s.links}>
+              <button type="button" onClick={() => onAction("stitch")}>
+                {tHome("q_stitch")}
+              </button>
+              <button type="button" onClick={() => onAction("details")}>
+                {tPanel("detailsLink")}
+              </button>
+              <button type="button" onClick={() => onAction("share")}>
+                {tPanel("shareLink")}
+              </button>
+            </div>
           </div>
         </>
       )}

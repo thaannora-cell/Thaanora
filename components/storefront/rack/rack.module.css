@@ -118,7 +118,7 @@
 
 .nav {
   position: absolute;
-  top: 34%;
+  top: 50%;
   transform: translateY(-50%);
   z-index: 4;
   width: 44px;
@@ -132,7 +132,8 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
-.prev { inset-inline-start: 14px; }
+/* desktop: just past the info card, so the card never covers it */
+.prev { inset-inline-start: calc(22px + min(300px, 52%) + 12px); }
 .next { inset-inline-end: 14px; }
 :global([dir="rtl"]) .nav { transform: translateY(-50%) scaleX(-1); }
 
@@ -226,6 +227,39 @@
 .heart[aria-pressed="true"] { animation: beat 0.5s ease; }
 .heart[aria-pressed="true"] path { fill: var(--color-rani); stroke: var(--color-rani); }
 
+.acts { display: flex; gap: 8px; margin-top: 4px; }
+.acts .add { flex: 1; margin-top: 0; }
+.try {
+  flex: none;
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 14px;
+  border: 1.5px solid var(--color-emerald);
+  border-radius: 40px;
+  background: none;
+  color: var(--color-emerald);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.try:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(14, 59, 46, 0.18); }
+.ai { border-radius: 20px; padding: 1px 6px; background: var(--color-gold); color: var(--color-emerald); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; }
+.links { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; }
+.links button {
+  min-height: 32px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--color-emerald);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.on { touch-action: pan-y; }
+
 .add {
   margin-top: 4px;
   min-height: 46px;
@@ -265,9 +299,9 @@
 /* ── Phone: stacked shelf ── */
 @media (max-width: 760px) {
   .rack { flex-direction: column; height: auto; gap: 5px; overflow-anchor: none; }
-  .bolt { flex: none; height: 56px; border-radius: 12px; scroll-margin-top: 160px; }
+  .bolt { flex: none; height: 56px; border-radius: 12px; scroll-margin-top: 124px; }
   .bolt:not(.on):hover { flex-grow: 0; }
-  .on { height: 640px; border-radius: 120px 120px 14px 14px; }
+  .on { height: 720px; border-radius: 120px 120px 14px 14px; }
 
   .pick { flex-direction: row; justify-content: space-between; align-items: center; gap: 10px; padding: 0 16px; }
   .vt { writing-mode: horizontal-tb; transform: none; max-height: none; max-width: 62%; font-size: 14px; text-overflow: ellipsis; }
@@ -283,14 +317,16 @@
   .hem { height: 16px; }
   .on .hem { height: 46px; }
 
-  .nav { top: 210px; }
-  .pmain { top: 60px; bottom: auto; height: 300px; width: 225px; inset-inline: 0; margin-inline: auto; max-width: none; animation: none; }
+  .nav { top: 192px; }
+  .prev { inset-inline-start: 14px; }
+  .pmain { top: 52px; bottom: auto; height: 280px; width: 210px; inset-inline: 0; margin-inline: auto; max-width: none; animation: none; }
   .info { inset-inline-start: 12px; bottom: 12px; width: calc(100% - 24px); padding: 16px; }
   .title { font-size: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bolt, .add, .heart { transition: none; }
+  .bolt, .add, .heart, .try { transition: none; }
+  .try:hover { transform: none; }
   .pmain, .info, .heart[aria-pressed="true"] { animation: none; }
   .add:hover, .heart:hover { transform: none; }
 }

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import type { PublicProduct } from "@/lib/product";
-import Bolt from "./Bolt";
+import Bolt, { type PanelAction } from "./Bolt";
 import s from "./rack.module.css";
 
 type Props = {
@@ -11,10 +11,12 @@ type Props = {
   activeCode: string | null;
   onActivate: (code: string) => void;
   chosen: string[];
+  stitching: string[];
   saved: string[];
   brandOfMonth: string | null;
   onToggleSaved: (code: string) => void;
   onToggleChosen: (code: string) => void;
+  onAction: (action: PanelAction, product: PublicProduct) => void;
   emptyMessage: string;
 };
 
@@ -26,10 +28,12 @@ export default function FabricRack({
   activeCode,
   onActivate,
   chosen,
+  stitching,
   saved,
   brandOfMonth,
   onToggleSaved,
   onToggleChosen,
+  onAction,
   emptyMessage,
 }: Props) {
   const t = useTranslations("Rack");
@@ -106,6 +110,7 @@ export default function FabricRack({
           product={p}
           open={p.code === active.code}
           chosen={chosen.includes(p.code)}
+          stitched={stitching.includes(p.code)}
           saved={saved.includes(p.code)}
           brandOfMonth={p.brand === brandOfMonth}
           priority={p.code === products[0].code}
@@ -113,6 +118,7 @@ export default function FabricRack({
           onStep={step}
           onToggleSaved={() => onToggleSaved(p.code)}
           onToggleChosen={() => onToggleChosen(p.code)}
+          onAction={(a) => onAction(a, p)}
         />
       ))}
     </div>
