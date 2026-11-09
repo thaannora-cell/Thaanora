@@ -7,10 +7,10 @@ export default function TopBar() {
 
   return (
     <div className="bg-emerald text-gold-light text-[13.5px] font-medium">
-      <div className="max-w-[1320px] mx-auto px-4 flex items-center justify-between gap-4 min-h-[42px] py-2">
+      <div className="max-w-[1320px] mx-auto px-4 flex items-center justify-center md:justify-between gap-4 min-h-[38px] md:min-h-[42px] py-2">
 
         {/* Shipping origin */}
-        <span className="flex items-center gap-2 shrink-0">
+        <span className="hidden md:flex items-center gap-2 shrink-0">
           <svg
             className="shrink-0"
             width="18"
@@ -32,12 +32,12 @@ export default function TopBar() {
         </span>
 
         {/* Centre promo */}
-        <span className="hidden sm:block text-center">
+        <span className="text-center">
           {t("promo")}
         </span>
 
         {/* WhatsApp */}
-        <span className="flex items-center gap-2 shrink-0">
+        <span className="hidden md:flex items-center gap-2 shrink-0">
           <svg
             className="shrink-0"
             width="17"

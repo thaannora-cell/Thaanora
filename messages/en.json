@@ -32,7 +32,7 @@
     "copyright": "© {year} Thaanora · Riyadh, Saudi Arabia · Prices include 15% VAT"
   },
   "Home": {
-    "h1": "Your fabric. Your fit.",
+    "h1": "Your fabric. Your fit. <em>قماشكِ… على مقاسكِ</em>",
     "sub": "Browse hanging bolts of original unstitched 3-piece suits. Tap any fabric to see it on a model, try it on yourself with AI, or order with cash on delivery in Riyadh.",
     "badge": "Riyadh exclusive · original Pakistani brands",
     "nav_try": "Virtual try-on",
@@ -72,7 +72,27 @@
     "try_btn": "Try on me",
     "q_stitch": "Get it stitched",
     "q_source": "Can't find your suit?",
-    "q_track": "Track my order"
+    "q_track": "Track my order",
+    "codValue": "COD",
+    "hstatsLabel": "At a glance",
+    "filtersLabel": "Find your fabric",
+    "occasionLabel": "Occasion",
+    "famAll": "All colours",
+    "fam_red": "Reds & pinks",
+    "fam_earth": "Rust & gold",
+    "fam_green": "Greens",
+    "fam_blue": "Blues & teals",
+    "fam_purple": "Lilac & plum",
+    "fam_neutral": "Off white",
+    "searchLabel": "Search fabrics",
+    "searchPlaceholder": "Search brand, fabric, code…",
+    "brandLabel": "Brand",
+    "allBrands": "All brands",
+    "brandOfMonth": "brand of the month",
+    "count": "{shown} of {total} fabrics",
+    "noMatch": "No fabrics match. Try another colour or brand.",
+    "noSaved": "No saved fabrics yet. Tap the heart on any fabric to save it.",
+    "loadError": "The fabrics could not be loaded right now. Please refresh in a moment."
   },
   "DevProducts": {
     "title": "Products from the database",
