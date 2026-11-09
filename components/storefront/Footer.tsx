@@ -1,18 +1,42 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import type { SiteInfo } from "@/lib/shop-data";
+import { POLICIES, type PolicySlug } from "@/lib/policies";
 import { openTrackOrder } from "./TrackOrderDialog";
 import { openSourcing } from "./SourcingDialog";
 import { openTailors } from "./panel/StitchDialog";
 
-export default function Footer() {
+const SOCIAL_LABEL = { instagram: "Instagram", tiktok: "TikTok", snapchat: "Snapchat" } as const;
+const linkClass =
+  "inline-flex min-h-[30px] items-center text-[#E7EEEA] no-underline transition-[color,transform] duration-200 hover:text-gold-light hover:translate-x-1 rtl:hover:-translate-x-1 motion-reduce:hover:translate-x-0 text-start bg-transparent border-0 p-0 cursor-pointer";
+
+type Props = {
+  info: SiteInfo;
+  // On the shop page the dialogs are there; elsewhere the care links go back to the shop.
+  onShop?: boolean;
+};
+
+export default function Footer({ info, onShop = false }: Props) {
   const t = useTranslations("Footer");
   const year = new Date().getFullYear();
+  const { cr, vat } = info.business;
+  // "Riyadh, Saudi Arabia" is already in the translated line; show only a fuller street address.
+  const address = /^riyadh,?\s*saudi arabia$/i.test(info.business.address) ? "" : info.business.address;
+  const join = info.whatsapp ? `https://wa.me/${info.whatsapp}?text=${encodeURIComponent(t("joinMessage"))}` : null;
+
+  const care: { key: string; action?: () => void; href?: string }[] = [
+    { key: "trackOrder", action: openTrackOrder },
+    onShop ? { key: "tailoring", action: openTailors } : { key: "tailoring", href: "/" },
+    { key: "sourcing", action: openSourcing },
+    { key: "delivery", href: "/policies/delivery" },
+  ];
+  const legal: PolicySlug[] = POLICIES.filter((p) => p !== "delivery");
 
   return (
     <footer className="bg-emerald-deep text-[#9FB5AB] text-[14px] border-t border-gold/20">
       <div className="max-w-[1320px] mx-auto px-4 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
         {/* Brand column */}
         <div>
           <div className="flex items-center gap-3 mb-4">
@@ -22,103 +46,111 @@ export default function Footer() {
             >
               T
             </span>
-            <span className="font-[family-name:var(--font-cinzel)] font-semibold tracking-[0.16em] text-[20px] text-white">
-              THAANORA
-            </span>
+            <span className="font-[family-name:var(--font-cinzel)] font-semibold tracking-[0.16em] text-[20px] text-white">THAANORA</span>
           </div>
           <p className="text-[13px] leading-relaxed mb-3">{t("brandDesc")}</p>
-          <p
-            className="font-[family-name:var(--font-amiri)] text-gold-light text-[16px]"
-            lang="ar"
-            dir="rtl"
-          >
+          <p className="font-[family-name:var(--font-amiri)] text-gold-light text-[16px]" lang="ar" dir="rtl">
             قماشكِ… على مقاسكِ
           </p>
         </div>
 
         {/* Client care */}
-        <div>
-          <h4 className="font-[family-name:var(--font-cinzel)] text-[11px] tracking-[0.2em] text-gold-light mb-3">
+        <nav aria-labelledby="ft-care">
+          <h2 id="ft-care" className="th-caps font-[family-name:var(--font-cinzel)] text-[11px] font-semibold tracking-[0.2em] text-gold-light mb-3">
             {t("clientCare")}
-          </h4>
-          <ul className="flex flex-col gap-2 list-none p-0 m-0">
-            {(["trackOrder", "tailoring", "sourcing", "delivery"] as const).map((key) => (
-              <li key={key}>
-                <button
-                  type="button"
-                  onClick={key === "trackOrder" ? openTrackOrder : key === "sourcing" ? openSourcing : key === "tailoring" ? openTailors : undefined}
-                  className="text-[#9FB5AB] hover:text-gold-light transition-colors text-start bg-transparent border-0 p-0 cursor-pointer"
-                >
-                  {t(key)}
-                </button>
+          </h2>
+          <ul className="flex flex-col gap-1 list-none p-0 m-0">
+            {care.map((c) => (
+              <li key={c.key}>
+                {c.href ? (
+                  <Link href={c.href} className={linkClass}>
+                    {t(c.key)}
+                  </Link>
+                ) : (
+                  <button type="button" onClick={c.action} className={linkClass}>
+                    {t(c.key)}
+                  </button>
+                )}
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
 
         {/* Legal */}
-        <div>
-          <h4 className="font-[family-name:var(--font-cinzel)] text-[11px] tracking-[0.2em] text-gold-light mb-3">
+        <nav aria-labelledby="ft-legal">
+          <h2 id="ft-legal" className="th-caps font-[family-name:var(--font-cinzel)] text-[11px] font-semibold tracking-[0.2em] text-gold-light mb-3">
             {t("legalPolicies")}
-          </h4>
-          <ul className="flex flex-col gap-2 list-none p-0 m-0">
-            {(["returns", "privacy", "terms"] as const).map((key) => (
+          </h2>
+          <ul className="flex flex-col gap-1 list-none p-0 m-0">
+            {legal.map((key) => (
               <li key={key}>
-                <button
-                  type="button"
-                  className="text-[#9FB5AB] hover:text-gold-light transition-colors text-start bg-transparent border-0 p-0 cursor-pointer"
-                >
+                <Link href={`/policies/${key}`} className={linkClass}>
                   {t(key)}
-                </button>
+                </Link>
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
 
-        {/* Join circle */}
+        {/* Join the circle */}
         <div>
-          <h4 className="font-[family-name:var(--font-cinzel)] text-[11px] tracking-[0.2em] text-gold-light mb-3">
+          <h2 className="th-caps font-[family-name:var(--font-cinzel)] text-[11px] font-semibold tracking-[0.2em] text-gold-light mb-3">
             {t("joinCircle")}
-          </h4>
+          </h2>
           <p className="text-[13px] mb-3 leading-relaxed">{t("joinDesc")}</p>
-          <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-            <label className="sr-only" htmlFor="joinTel">
-              WhatsApp
-            </label>
-            <input
-              id="joinTel"
-              type="tel"
-              inputMode="tel"
-              placeholder={t("joinPlaceholder")}
-              className="flex-1 min-w-0 min-h-[46px] rounded-full border border-gold/40 bg-emerald/40 text-white placeholder:text-[#9FB5AB] px-4 font-[family-name:var(--font-jost)] text-[14px] focus:outline-none focus:border-gold"
-            />
-            <button
-              type="submit"
-              className="shrink-0 min-h-[46px] px-4 rounded-full bg-rani text-white font-medium text-[14px] hover:-translate-y-0.5 transition-transform"
+          {join && (
+            <a
+              href={join}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-[46px] items-center rounded-full bg-rani px-5 text-[14px] font-medium text-white no-underline transition-transform hover:-translate-y-0.5 motion-reduce:hover:translate-y-0"
             >
               {t("joinBtn")}
-            </button>
-          </form>
+            </a>
+          )}
           <p className="text-[12px] mt-2 text-[#9FB5AB]">{t("joinNote")}</p>
         </div>
-
       </div>
 
       {/* Legal strip */}
       <div className="border-t border-gold/20">
         <div className="max-w-[1320px] mx-auto px-4 py-4 flex flex-wrap justify-between gap-3 text-[12px] text-[#9FB5AB]">
-          <span>{t("copyright", { year })}</span>
-          <span className="flex gap-4">
-            {["Instagram", "TikTok", "Snapchat"].map((s) => (
-              <a
-                key={s}
-                href="#"
-                className="hover:text-gold-light transition-colors no-underline"
-              >
-                {s}
-              </a>
-            ))}
-          </span>
+          <p className="m-0">
+            {t("copyright", { year })}
+            {address && (
+              <>
+                {" · "}
+                <bdi>{address}</bdi>
+              </>
+            )}
+            {cr && (
+              <>
+                {" · "}
+                {t("crNo")} <bdi dir="ltr">{cr}</bdi>
+              </>
+            )}
+            {vat && (
+              <>
+                {" · "}
+                {t("vatNo")} <bdi dir="ltr">{vat}</bdi>
+              </>
+            )}
+            {" · "}
+            {t("vatIncluded")}
+            {" · "}
+            {t("photosNote")}
+          </p>
+          {info.social.length > 0 && (
+            <ul className="m-0 flex list-none gap-4 p-0" aria-label={t("social")}>
+              {info.social.map((s) => (
+                <li key={s.key}>
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-[#E7EEEA] no-underline transition-colors hover:text-gold-light">
+                    {SOCIAL_LABEL[s.key]}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </footer>

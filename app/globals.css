@@ -338,3 +338,34 @@ html[lang="hi"] body { font-family: var(--font-hindi); }
   letter-spacing: 0;
   pointer-events: none;
 }
+
+/* ── Floating WhatsApp help ────────────────────────────────────── */
+.th-help {
+  position: fixed;
+  z-index: 45;
+  inset-inline-end: calc(16px + env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  width: 58px;
+  height: 58px;
+  border-radius: 9999px;
+  border: 2px solid var(--color-gold);
+  background: var(--color-emerald);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: th-pulse 2.4s ease-out infinite;
+  transition: transform .2s;
+}
+.th-help-tray { bottom: calc(76px + 14px + env(safe-area-inset-bottom, 0px)); }
+.th-help:hover { transform: scale(1.08); }
+.th-help:focus-visible { outline: 3px solid var(--color-gold-light); outline-offset: 3px; }
+@media (max-width: 767px) { .th-help { width: 52px; height: 52px; } }
+@media (prefers-reduced-motion: reduce) {
+  .th-help { animation: none; transition: none; box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+  .th-help:hover { transform: none; }
+}
+
+/* ── Policy pages ──────────────────────────────────────────────── */
+.th-policy h2 { margin: 22px 0 4px; font-family: var(--font-jost); font-size: 17px; font-weight: 500; color: var(--color-emerald); }
+.th-policy p, .th-policy li { margin: 0; font-size: 15px; line-height: 1.7; color: var(--color-ink); }
+.th-policy ul { margin: 4px 0 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 2px; }

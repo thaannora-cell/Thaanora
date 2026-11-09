@@ -1,7 +1,8 @@
 import { NextIntlClientProvider } from "next-intl";
 import TrackOrderDialog from "@/components/storefront/TrackOrderDialog";
 import SourcingDialog from "@/components/storefront/SourcingDialog";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   Cinzel,
@@ -51,6 +52,12 @@ const hindi = Noto_Sans_Devanagari({
   variable: "--font-hindi",
   display: "swap",
 });
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Meta" });
+  return { title: t("title"), description: t("description") };
+}
 
 export default async function LocaleLayout({
   children,

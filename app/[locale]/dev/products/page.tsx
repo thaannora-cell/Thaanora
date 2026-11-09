@@ -6,6 +6,7 @@ import Footer from "@/components/storefront/Footer";
 import ProductThumb from "@/components/storefront/ProductThumb";
 import { getVisibleProducts } from "@/lib/products";
 import { salePrice } from "@/lib/product";
+import { getSiteInfo } from "@/lib/shop-data";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -18,7 +19,7 @@ export default async function DevProductsPage() {
   return (
     <>
       <TopBar />
-      <Header />
+      <Header minimal />
       <main className="max-w-[1320px] mx-auto px-4 py-8 min-h-[60vh]">
         <h1 className="font-[family-name:var(--font-cormorant)] text-[36px] font-semibold text-emerald leading-tight">
           {t("title")}
@@ -85,7 +86,7 @@ export default async function DevProductsPage() {
           </>
         )}
       </main>
-      <Footer />
+      <Footer info={await getSiteInfo()} />
     </>
   );
 }

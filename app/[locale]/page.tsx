@@ -10,17 +10,19 @@ import { getVisibleProducts } from "@/lib/products";
 import { getBrandOfMonth } from "@/lib/campaigns";
 import { getBundleRule } from "@/lib/offers";
 import { brandsOf } from "@/lib/filters";
-import { getCheckoutSettings, getTailors } from "@/lib/shop-data";
+import { getCheckoutSettings, getSiteInfo, getTailors } from "@/lib/shop-data";
+import WhatsAppHelp from "@/components/storefront/WhatsAppHelp";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [result, brandOfMonth, tailors, settings, bundle] = await Promise.all([
+  const [result, brandOfMonth, tailors, settings, bundle, info] = await Promise.all([
     getVisibleProducts(),
     getBrandOfMonth(),
     getTailors(),
     getCheckoutSettings(),
     getBundleRule(),
+    getSiteInfo(),
   ]);
   const products = result.status === "ok" ? result.products : [];
   const loaded = result.status === "ok";
@@ -33,7 +35,8 @@ export default async function Home() {
         <Hero designs={loaded ? products.length : null} brands={loaded ? brandsOf(products).length : null} />
         <ShopBrowser products={products} brandOfMonth={brandOfMonth} loadFailed={!loaded} tailors={tailors} />
       </main>
-      <Footer />
+      <Footer info={info} onShop />
+      <WhatsAppHelp whatsapp={info.whatsapp} aboveTray />
       <SelectionTray />
       <SelectionDrawer />
     </SelectionProvider>

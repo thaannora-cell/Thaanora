@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import LangSwitcher from "./LangSwitcher";
 import { openTrackOrder } from "./TrackOrderDialog";
 import { openSourcing } from "./SourcingDialog";
@@ -8,7 +9,9 @@ import { openTailors } from "./panel/StitchDialog";
 import { openTryOn } from "./panel/TryOnDialog";
 import { useSelection } from "./selection/SelectionProvider";
 
-export default function Header() {
+// On pages other than the shop (policies) the service pills and bag are left out:
+// they only work on the shop page. A "Back to the shop" link takes their place.
+export default function Header({ minimal = false }: { minimal?: boolean }) {
   const t = useTranslations("Header");
   const locale = useLocale();
   const selection = useSelection();
@@ -41,7 +44,14 @@ export default function Header() {
           </span>
         </a>
 
+        {minimal && (
+          <Link href="/" className="ms-auto text-[14px] text-emerald underline-offset-4 hover:underline">
+            {t("backToShop")}
+          </Link>
+        )}
+
         {/* ── Service pills ──────────────────────────────────── */}
+        {!minimal && (
         <nav
           className="flex items-center gap-2 flex-wrap ms-auto me-2"
           aria-label="Services"
@@ -155,11 +165,13 @@ export default function Header() {
             {t("trackOrder")}
           </button>
         </nav>
+        )}
 
         {/* ── Language switcher ──────────────────────────────── */}
         <LangSwitcher />
 
         {/* ── Bag button ─────────────────────────────────────── */}
+        {!minimal && (
         <button
           type="button"
           aria-label={t("bagLabel", { count: bagCount })}
@@ -189,6 +201,7 @@ export default function Header() {
             <path className="mi-bob" d="M9 10 V6 A3 3 0 0 1 15 6 V10" />
           </svg>
         </button>
+        )}
 
         {/* ── Gold crown — back office ───────────────────────── */}
         <button

@@ -11,7 +11,8 @@
     "sourcing": "Sourcing request",
     "trackOrder": "Track order",
     "bagLabel": "Open your selection ({count, plural, =0 {empty} one {# suit} other {# suits}})",
-    "backOfficeLabel": "Back office (owner)"
+    "backOfficeLabel": "Back office (owner)",
+    "backToShop": "Back to the shop"
   },
   "Footer": {
     "brandDesc": "Original Pakistani unstitched suits for women across Riyadh. Every order is confirmed on WhatsApp before dispatch.",
@@ -26,10 +27,15 @@
     "terms": "Terms of sale",
     "joinCircle": "JOIN THE CIRCLE",
     "joinDesc": "Unboxing previews, new collections and Eid offers on WhatsApp, about twice a month.",
-    "joinPlaceholder": "05X XXX XXXX",
-    "joinBtn": "Join",
+    "joinBtn": "Join on WhatsApp",
     "joinNote": "We only message you about Thaanora.",
-    "copyright": "© {year} Thaanora · Riyadh, Saudi Arabia · Prices include 15% VAT"
+    "copyright": "© {year} Thaanora · Riyadh, Saudi Arabia",
+    "vatIncluded": "Prices include VAT",
+    "photosNote": "Product photos belong to each brand",
+    "crNo": "CR No.",
+    "vatNo": "VAT No.",
+    "social": "Social media",
+    "joinMessage": "Hello Thaanora, please add me to your WhatsApp circle."
   },
   "Home": {
     "h1": "Your fabric. Your fit. <em>قماشكِ… على مقاسكِ</em>",
@@ -425,5 +431,66 @@
     "leftRight": "Left / right",
     "step2": "2 · Pick a fabric",
     "note": "This is a simple preview, not a photo: your face is placed on our drawn model in the fabric’s colours. Your photo stays on this device; it is never uploaded or saved. A realistic AI try-on is coming later."
+  },
+  "Meta": {
+    "title": "Thaanora — Your fabric. Your fit.",
+    "description": "Original Pakistani unstitched suits for women in Riyadh. Order on WhatsApp and pay cash on delivery."
+  },
+  "Help": {
+    "label": "Chat with us on WhatsApp",
+    "message": "Hello Thaanora, I have a question:"
+  },
+  "Policies": {
+    "eyebrow": "Thaanora · Policies",
+    "draft": "Draft for review by a lawyer or accountant before going live.",
+    "questions": "Questions about this policy?",
+    "chat": "Chat with us on WhatsApp",
+    "sar": "SAR {amount}",
+    "returns": {
+      "title": "Returns and exchanges",
+      "exchange_h": "Exchanges and returns",
+      "exchange_p": "Uncut, unwashed and unstitched fabric in its original packaging can be exchanged or returned within {days} days of delivery.",
+      "notReturnable_h": "Not returnable",
+      "notReturnable_p": "Fabric that has been cut, stitched or washed, and sale items marked final sale.",
+      "faulty_h": "Wrong or faulty item",
+      "faulty_p": "We replace it or refund in full, including delivery. Message us on WhatsApp with your order number and a photo.",
+      "refunds_h": "Refunds",
+      "refunds_p": "Cash-on-delivery refunds are paid by bank transfer within {refundDays} working days after we receive the item."
+    },
+    "delivery": {
+      "title": "Delivery and fees",
+      "where_h": "Where we deliver",
+      "where_p": "Riyadh city and outskirts. For other cities, ask us on WhatsApp.",
+      "fees_h": "Delivery fees",
+      "feesAtCheckout": "The delivery fee for your area is shown before you send your order.",
+      "timing_h": "Timing",
+      "timing_p": "Usually 1–3 working days after we confirm your order on WhatsApp.",
+      "payment_h": "Payment",
+      "payment_p": "Cash on delivery only. Please have the exact amount ready. We never ask for card details."
+    },
+    "privacy": {
+      "title": "Privacy policy (PDPL)",
+      "collect_h": "What we collect",
+      "collect_p": "Your name, phone number, delivery area and address, and your order or request details. Measurements you save for stitching stay on your device; we only see them if you send them to us.",
+      "tryon_h": "Try-on photos",
+      "tryon_p": "Your try-on photo never leaves your device. We do not upload or keep it.",
+      "use_h": "How we use it",
+      "use_p": "To confirm and deliver your order, arrange stitching if you ask, and answer your requests. We send offers only if you join our WhatsApp circle. We never sell your data.",
+      "storage_h": "Where it is kept",
+      "storage_p": "Orders and requests are stored securely with our website and database providers, and only Thaanora staff can see them. We keep order records for as long as tax and accounting law requires.",
+      "rights_h": "Your rights",
+      "rights_p": "Under Saudi Arabia’s Personal Data Protection Law (PDPL) you can ask to see, correct or delete your data. Message us on WhatsApp."
+    },
+    "terms": {
+      "title": "Terms of sale",
+      "authentic_h": "Authentic products",
+      "authentic_p": "Every suit is an original from the named brand, bought in Pakistan, with the brand code shown.",
+      "prices_h": "Prices",
+      "prices_p": "In Saudi riyals, including {vat}% VAT. Delivery, the gift box and stitching are extra and shown before you confirm.",
+      "orders_h": "Orders",
+      "orders_p": "An order is final once we confirm it with you on WhatsApp. A discount code applies after any bundle discount; one code per order.",
+      "colour_h": "Colour",
+      "colour_p": "Screens show colours slightly differently from fabric in daylight."
+    }
   }
 }

@@ -49,3 +49,52 @@ export async function getCheckoutSettings(): Promise<CheckoutSettings> {
     tailorDiscountPct: num(get("tailor_member_discount_pct"), DEFAULTS.tailorDiscountPct),
   };
 }
+
+export type SocialKey = "instagram" | "tiktok" | "snapchat";
+export type SiteInfo = {
+  whatsapp: string | null;
+  social: { key: SocialKey; url: string }[];
+  business: { cr: string; vat: string; address: string };
+};
+
+const SOCIAL_HOSTS: Record<SocialKey, string> = {
+  instagram: "instagram.com",
+  tiktok: "tiktok.com",
+  snapchat: "snapchat.com",
+};
+
+// Only a real profile link counts: https on the network's own site, with a path
+// (the seeded "https://www.instagram.com/" placeholders are hidden).
+function profileUrl(key: SocialKey, value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  try {
+    const u = new URL(value.trim());
+    const host = u.hostname.replace(/^www\./, "");
+    const ok = u.protocol === "https:" && (host === SOCIAL_HOSTS[key] || host.endsWith(`.${SOCIAL_HOSTS[key]}`));
+    return ok && u.pathname.replace(/\/+$/, "") !== "" ? u.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+const text = (v: unknown, max = 160) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+
+// Footer, help button and policy pages: WhatsApp number, social links and business details.
+export async function getSiteInfo(): Promise<SiteInfo> {
+  const supabase = getPublicClient();
+  const whatsapp = await getWhatsappNumber();
+  if (!supabase) return { whatsapp, social: [], business: { cr: "", vat: "", address: "" } };
+  const { data } = await supabase.from("settings").select("key, value").in("key", ["social_links", "business"]);
+  const get = (k: string) => (data?.find((r) => r.key === k)?.value ?? {}) as Record<string, unknown>;
+  const links = get("social_links");
+  const biz = get("business");
+  const social = (Object.keys(SOCIAL_HOSTS) as SocialKey[]).flatMap((key) => {
+    const url = profileUrl(key, links[key]);
+    return url ? [{ key, url }] : [];
+  });
+  return {
+    whatsapp,
+    social,
+    business: { cr: text(biz.cr_number, 40), vat: text(biz.vat_number, 40), address: text(biz.address) },
+  };
+}
