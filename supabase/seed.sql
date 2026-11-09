@@ -47,7 +47,7 @@ insert into public.settings (key, value, is_public) values
   ('social_links', '{"instagram":"https://www.instagram.com/","tiktok":"https://www.tiktok.com/","snapchat":"https://www.snapchat.com/"}'::jsonb, true),
   ('delivery_fees', '[{"area":"Central Riyadh (Olaya, Malaz, Sulaimaniyah)","fee_sar":20},{"area":"North Riyadh (Narjis, Yasmin, Malqa)","fee_sar":25},{"area":"East Riyadh (Rawdah, Naseem, Qadisiyah)","fee_sar":25},{"area":"West Riyadh (Laban, Irqah, Dhahrat)","fee_sar":25},{"area":"South Riyadh (Shifa, Aziziyah, Dar Al Baida)","fee_sar":25},{"area":"Outskirts of Riyadh","fee_sar":35}]'::jsonb, true),
   ('business', '{"legal_name":"Desert Bloom Poultry Company","entity_type":"Limited liability company (one person)","national_number":"7054375741","vat_number":"","address":"Riyadh, Saudi Arabia"}'::jsonb, true),
-  ('vat_rate_pct', '0'::jsonb, true),   -- not VAT-registered yet; set to 15 once registered
+  ('vat_rate_pct', '15'::jsonb, true),
   ('gift_box_fee_sar', '15'::jsonb, true),
   ('pkr_per_sar', '73.73'::jsonb, false),
   ('low_stock_level', '3'::jsonb, false),

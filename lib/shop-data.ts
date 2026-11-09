@@ -20,8 +20,8 @@ export async function getWhatsappNumber(): Promise<string | null> {
   return /^[1-9]\d{7,14}$/.test(digits) ? digits : null;
 }
 
-// VAT defaults to 0: Thaanora is not VAT-registered yet. Set vat_rate_pct to 15 in settings once it is.
-const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 0, tailorDiscountPct: 10 };
+// Prices include VAT at vat_rate_pct (15%). At 0 the site hides all VAT wording.
+const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 15, tailorDiscountPct: 10 };
 
 // Public settings only (RLS hides the private ones such as the PKR rate).
 export async function getCheckoutSettings(): Promise<CheckoutSettings> {
