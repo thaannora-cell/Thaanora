@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { photoUrl, salePrice } from "@/lib/product";
 import { useSelection } from "./SelectionProvider";
 import CheckoutOptions from "./CheckoutOptions";
+import SendOrder from "./SendOrder";
 import { useAreaLabel } from "../useAreaLabel";
 
 // The first-order cash-on-delivery limit from the prototype; bigger orders are confirmed by phone.
@@ -69,7 +70,9 @@ export default function SelectionDrawer() {
           </button>
         </div>
 
-        {lines.length === 0 ? (
+        {sel.placedOrder ? (
+          <SendOrder />
+        ) : lines.length === 0 ? (
           <p className="my-6 text-center text-[15px] text-muted">{t("empty")}</p>
         ) : (
           <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
@@ -222,6 +225,7 @@ export default function SelectionDrawer() {
             <p className="m-0 rounded-xl border border-[#BFDCCB] bg-[#E7F3EC] px-3 py-2.5 text-[13px] text-[#1d3a2d]">
               {tCheckout("codNote")}
             </p>
+            <SendOrder />
           </>
         )}
       </div>

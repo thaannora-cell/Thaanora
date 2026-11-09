@@ -255,7 +255,8 @@
     "removedToast": "Removed from your selection.",
     "addedToast": "Added to your selection.",
     "addedUnlockedToast": "Added. {pct}% off is on.",
-    "addedLeftToast": "Added. {left} more for {pct}% off."
+    "addedLeftToast": "Added. {left} more for {pct}% off.",
+    "orderButton": "Order on WhatsApp"
   },
   "Checkout": {
     "packaging": "Packaging",
@@ -289,5 +290,43 @@
     "west": "West Riyadh (Laban, Irqah, Dhahrat)",
     "south": "South Riyadh (Shifa, Aziziyah, Dar Al Baida)",
     "outskirts": "Outskirts of Riyadh"
+  },
+  "Order": {
+    "yourDetails": "Your details",
+    "name": "Your name",
+    "phone": "Your WhatsApp number",
+    "privacy": "We use your number only to confirm and deliver this order.",
+    "sending": "Saving your order…",
+    "error_name": "Please enter your name.",
+    "error_phone": "Please enter a Saudi mobile number, for example 05X XXX XXXX.",
+    "error_area": "Please choose your delivery area.",
+    "error_stock": "Some suits just sold out or have less stock now. Please refresh the page and check your selection.",
+    "error_other": "We couldn’t save your order right now. Please try again in a moment.",
+    "placedTitle": "Order {orderNo} saved",
+    "placedText": "WhatsApp has opened with your order. Press send there, and we’ll confirm on WhatsApp.",
+    "placedNoWhatsapp": "Copy the message below and send it to us on WhatsApp. We’ll confirm your order there.",
+    "openWhatsapp": "Open WhatsApp",
+    "copy": "Copy message",
+    "copied": "Copied ✓",
+    "keepShopping": "Keep shopping"
+  },
+  "OrderMessage": {
+    "greeting": "Hello Thaanora, I would like to order ({orderNo}):",
+    "line": "{name} ({brand}, {code}) × {qty} = {amount}",
+    "stitching": "+ stitching (tailor quote, member price)",
+    "subtotal": "Subtotal: {amount}",
+    "bundle": "Bundle {pct}% off: −{amount}",
+    "code": "Code {code}: −{amount}",
+    "giftBox": "Packaging: keepsake gift box ({amount})",
+    "keeperBag": "Packaging: Thaanora Suit Keeper bag (free)",
+    "delivery": "Delivery: {area} ({amount})",
+    "free": "free",
+    "total": "Total to pay on delivery: {amount} (incl. {pct}% VAT)",
+    "giftHeader": "This is a gift:",
+    "giftTo": "For: {name}",
+    "giftArea": "Recipient’s area: {area}",
+    "giftNote": "Card message: {note}",
+    "customer": "Name: {name} · WhatsApp: {phone}",
+    "closing": "Cash on delivery. Thank you!"
   }
 }

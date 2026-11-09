@@ -11,6 +11,15 @@ export async function getTailors(): Promise<Tailor[]> {
   return (data ?? []) as Tailor[];
 }
 
+// The shop's WhatsApp number as digits for wa.me links, or null while it is still a placeholder.
+export async function getWhatsappNumber(): Promise<string | null> {
+  const supabase = getPublicClient();
+  if (!supabase) return null;
+  const { data } = await supabase.from("settings").select("value").eq("key", "whatsapp_number").maybeSingle();
+  const digits = typeof data?.value === "string" ? data.value.replace(/\D/g, "") : "";
+  return /^[1-9]\d{7,14}$/.test(digits) ? digits : null;
+}
+
 const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 15 };
 
 // Public settings only (RLS hides the private ones such as the PKR rate).

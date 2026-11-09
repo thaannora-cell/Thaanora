@@ -7,6 +7,7 @@ import { computeTotals, type BundleRule, type CheckoutSettings, type Totals } fr
 export type Line = { code: string; qty: number; stitch: boolean };
 export type AppliedCode = { code: string; percent: number };
 export type CodeResult = "applied" | "invalid" | "error";
+export type PlacedOrder = { orderNo: string; message: string; whatsappUrl: string | null };
 export type Packaging = "suit_keeper_bag" | "gift_box";
 export type Checkout = {
   packaging: Packaging;
@@ -15,9 +16,11 @@ export type Checkout = {
   recipientArea: string;
   giftNote: string;
   area: string;
+  customerName: string;
+  customerPhone: string;
 };
 
-const EMPTY_CHECKOUT: Checkout = { packaging: "suit_keeper_bag", isGift: false, recipientName: "", recipientArea: "", giftNote: "", area: "" };
+const EMPTY_CHECKOUT: Checkout = { packaging: "suit_keeper_bag", isGift: false, recipientName: "", recipientArea: "", giftNote: "", area: "", customerName: "", customerPhone: "" };
 
 type SelectionContext = {
   lines: Line[];
@@ -36,6 +39,8 @@ type SelectionContext = {
   setStitch: (code: string, stitch: boolean) => void;
   applyCode: (code: string) => Promise<CodeResult>;
   removeCode: () => void;
+  placedOrder: PlacedOrder | null;
+  orderPlaced: (order: PlacedOrder) => void;
   drawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
@@ -92,6 +97,7 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
   const [appliedCode, setAppliedCode] = useState<AppliedCode | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [checkout, setCheckout] = useState<Checkout>(EMPTY_CHECKOUT);
+  const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
   const loaded = useRef(false);
 
   // Restore from the device, dropping suits that are gone or sold out, and re-checking the code.
@@ -118,6 +124,8 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
         recipientArea: str(savedCheckout.recipientArea),
         giftNote: str(savedCheckout.giftNote),
         area: settings.areas.some((a) => a.area === savedCheckout.area) ? str(savedCheckout.area) : "",
+        customerName: str(savedCheckout.customerName),
+        customerPhone: str(savedCheckout.customerPhone),
       });
     }
     const savedCode = readJson<string>(CODE_KEY);
@@ -212,6 +220,15 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
     writeJson(CODE_KEY, null);
   }, []);
 
+  // After an order is placed: empty the bag and the code, keep her name, phone and area for next time.
+  const orderPlaced = useCallback((order: PlacedOrder) => {
+    setPlacedOrder(order);
+    setLines([]);
+    setAppliedCode(null);
+    writeJson(CODE_KEY, null);
+    setCheckout((c) => ({ ...EMPTY_CHECKOUT, area: c.area, customerName: c.customerName, customerPhone: c.customerPhone }));
+  }, []);
+
   const value: SelectionContext = {
     lines,
     products,
@@ -229,9 +246,14 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
     setStitch,
     applyCode,
     removeCode,
+    placedOrder,
+    orderPlaced,
     drawerOpen,
     openDrawer: () => setDrawerOpen(true),
-    closeDrawer: () => setDrawerOpen(false),
+    closeDrawer: () => {
+      setDrawerOpen(false);
+      setPlacedOrder(null);
+    },
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
