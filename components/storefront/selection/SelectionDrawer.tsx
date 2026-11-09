@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { photoUrl, salePrice } from "@/lib/product";
 import { useSelection } from "./SelectionProvider";
+import CheckoutOptions from "./CheckoutOptions";
+import { useAreaLabel } from "../useAreaLabel";
 
 // The first-order cash-on-delivery limit from the prototype; bigger orders are confirmed by phone.
 const COD_FIRST_ORDER_LIMIT = 3;
@@ -13,6 +15,8 @@ export default function SelectionDrawer() {
   const sel = useSelection();
   const t = useTranslations("Selection");
   const tRack = useTranslations("Rack");
+  const tCheckout = useTranslations("Checkout");
+  const areaLabel = useAreaLabel();
   const ref = useRef<HTMLDialogElement>(null);
   const [codeInput, setCodeInput] = useState("");
   const [codeState, setCodeState] = useState<"idle" | "busy" | "invalid" | "error">("idle");
@@ -26,7 +30,7 @@ export default function SelectionDrawer() {
   }, [open]);
 
   if (!sel) return null;
-  const { lines, products, bundle, totals, appliedCode } = sel;
+  const { lines, products, bundle, totals, appliedCode, checkout, settings } = sel;
   const price = (n: number) => tRack("price", { amount: n });
 
   const apply = async (e: React.FormEvent) => {
@@ -141,6 +145,8 @@ export default function SelectionDrawer() {
 
         {lines.length > 0 && (
           <>
+            <CheckoutOptions />
+
             {appliedCode ? (
               <div className="flex items-center justify-between gap-2 rounded-full border border-emerald/30 bg-emerald/5 px-4 py-2 text-[14px]">
                 <span>
@@ -198,12 +204,24 @@ export default function SelectionDrawer() {
               {totals.codeDiscount > 0 && appliedCode && (
                 <Row label={t("codeLine", { code: appliedCode.code })} value={`−${price(totals.codeDiscount)}`} accent />
               )}
+              {totals.packagingFee > 0 && <Row label={tCheckout("giftBoxLine")} value={price(totals.packagingFee)} />}
+              <Row
+                label={checkout.area ? tCheckout("deliveryLine", { area: areaLabel(checkout.area) }) : tCheckout("deliveryLineNoArea")}
+                value={checkout.area ? (totals.deliveryFee > 0 ? price(totals.deliveryFee) : tCheckout("free")) : "—"}
+              />
               <div className="mt-1 flex justify-between border-t border-line pt-3 text-[19px] font-medium text-emerald">
-                <dt>{t("total")}</dt>
+                <dt>{checkout.area ? tCheckout("payOnDelivery") : tCheckout("payOnDeliveryNoArea")}</dt>
                 <dd className="m-0">{price(totals.total)}</dd>
               </div>
+              <div className="flex justify-between pt-1 text-[13px] text-muted">
+                <dt>{tCheckout("vatIncluded", { pct: settings.vatPct })}</dt>
+                <dd className="m-0">{tRack("price", { amount: totals.vat.toFixed(2) })}</dd>
+              </div>
             </dl>
-            <p className="m-0 text-[12px] text-muted">{t("vatNote")}</p>
+            <p className="m-0 text-[12px] text-muted">{tCheckout("vatNote", { pct: settings.vatPct })}</p>
+            <p className="m-0 rounded-xl border border-[#BFDCCB] bg-[#E7F3EC] px-3 py-2.5 text-[13px] text-[#1d3a2d]">
+              {tCheckout("codNote")}
+            </p>
           </>
         )}
       </div>

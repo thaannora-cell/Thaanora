@@ -252,10 +252,42 @@
     "subtotal": "Subtotal ({n, plural, one {# suit} other {# suits}})",
     "bundleLine": "{qty}+ suits · {pct}% off",
     "codeLine": "Code {code}",
-    "vatNote": "Prices include 15% VAT. Delivery fee depends on your area. Pay cash at your door.",
     "removedToast": "Removed from your selection.",
     "addedToast": "Added to your selection.",
     "addedUnlockedToast": "Added. {pct}% off is on.",
     "addedLeftToast": "Added. {left} more for {pct}% off."
+  },
+  "Checkout": {
+    "packaging": "Packaging",
+    "keeperBag": "Thaanora Suit Keeper bag · free",
+    "keeperBagNote": "Reusable zip bag to store your suits",
+    "giftBox": "Keepsake gift box · +{fee}",
+    "giftBoxNote": "Tissue, ribbon and a handwritten card",
+    "isGift": "This is a gift",
+    "isGiftNote": "We leave prices out and add your message",
+    "recipientName": "Recipient’s name",
+    "recipientArea": "Recipient’s area",
+    "recipientAreaPlaceholder": "e.g. Al Yasmin",
+    "cardMessage": "Card message",
+    "deliveryArea": "Delivery area",
+    "chooseArea": "Choose your area",
+    "areaHint": "Choose your area to see the delivery fee.",
+    "free": "Free",
+    "giftBoxLine": "Keepsake gift box",
+    "deliveryLine": "Delivery · {area}",
+    "deliveryLineNoArea": "Delivery",
+    "payOnDelivery": "Pay on delivery",
+    "payOnDeliveryNoArea": "Pay on delivery (before delivery fee)",
+    "vatIncluded": "Includes {pct}% VAT",
+    "vatNote": "All prices include {pct}% VAT. Stitching is quoted separately by your tailor.",
+    "codNote": "Cash on delivery only. We confirm every order on WhatsApp before dispatch. Please keep your phone on."
+  },
+  "Areas": {
+    "central": "Central Riyadh (Olaya, Malaz, Sulaimaniyah)",
+    "north": "North Riyadh (Narjis, Yasmin, Malqa)",
+    "east": "East Riyadh (Rawdah, Naseem, Qadisiyah)",
+    "west": "West Riyadh (Laban, Irqah, Dhahrat)",
+    "south": "South Riyadh (Shifa, Aziziyah, Dar Al Baida)",
+    "outskirts": "Outskirts of Riyadh"
   }
 }

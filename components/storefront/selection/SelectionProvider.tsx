@@ -2,16 +2,30 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { salePrice, type PublicProduct } from "@/lib/product";
-import { computeTotals, type BundleRule, type Totals } from "@/lib/pricing";
+import { computeTotals, type BundleRule, type CheckoutSettings, type Totals } from "@/lib/pricing";
 
 export type Line = { code: string; qty: number; stitch: boolean };
 export type AppliedCode = { code: string; percent: number };
 export type CodeResult = "applied" | "invalid" | "error";
+export type Packaging = "suit_keeper_bag" | "gift_box";
+export type Checkout = {
+  packaging: Packaging;
+  isGift: boolean;
+  recipientName: string;
+  recipientArea: string;
+  giftNote: string;
+  area: string;
+};
+
+const EMPTY_CHECKOUT: Checkout = { packaging: "suit_keeper_bag", isGift: false, recipientName: "", recipientArea: "", giftNote: "", area: "" };
 
 type SelectionContext = {
   lines: Line[];
   products: Map<string, PublicProduct>;
   bundle: BundleRule | null;
+  settings: CheckoutSettings;
+  checkout: Checkout;
+  updateCheckout: (patch: Partial<Checkout>) => void;
   totals: Totals;
   appliedCode: AppliedCode | null;
   has: (code: string) => boolean;
@@ -33,6 +47,7 @@ export const useSelection = () => useContext(Ctx);
 
 const LINES_KEY = "th_selection";
 const CODE_KEY = "th_code";
+const CHECKOUT_KEY = "th_checkout";
 
 function readJson<T>(key: string): T | null {
   try {
@@ -69,13 +84,14 @@ async function checkCode(code: string): Promise<AppliedCode | "invalid" | "error
 
 const maxQty = (p: PublicProduct | undefined) => Math.max(0, p?.stock ?? 0);
 
-type Props = { products: PublicProduct[]; bundle: BundleRule | null; children: React.ReactNode };
+type Props = { products: PublicProduct[]; bundle: BundleRule | null; settings: CheckoutSettings; children: React.ReactNode };
 
-export default function SelectionProvider({ products: list, bundle, children }: Props) {
+export default function SelectionProvider({ products: list, bundle, settings, children }: Props) {
   const products = useMemo(() => new Map(list.map((p) => [p.code, p])), [list]);
   const [lines, setLines] = useState<Line[]>([]);
   const [appliedCode, setAppliedCode] = useState<AppliedCode | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [checkout, setCheckout] = useState<Checkout>(EMPTY_CHECKOUT);
   const loaded = useRef(false);
 
   // Restore from the device, dropping suits that are gone or sold out, and re-checking the code.
@@ -92,6 +108,18 @@ export default function SelectionProvider({ products: list, bundle, children }: 
           })),
       );
     }
+    const savedCheckout = readJson<Partial<Checkout>>(CHECKOUT_KEY);
+    if (savedCheckout && typeof savedCheckout === "object") {
+      const str = (v: unknown) => (typeof v === "string" ? v.slice(0, 500) : "");
+      setCheckout({
+        packaging: savedCheckout.packaging === "gift_box" ? "gift_box" : "suit_keeper_bag",
+        isGift: Boolean(savedCheckout.isGift),
+        recipientName: str(savedCheckout.recipientName),
+        recipientArea: str(savedCheckout.recipientArea),
+        giftNote: str(savedCheckout.giftNote),
+        area: settings.areas.some((a) => a.area === savedCheckout.area) ? str(savedCheckout.area) : "",
+      });
+    }
     const savedCode = readJson<string>(CODE_KEY);
     if (typeof savedCode === "string") {
       void checkCode(savedCode).then((r) => {
@@ -100,11 +128,19 @@ export default function SelectionProvider({ products: list, bundle, children }: 
       });
     }
     loaded.current = true;
-  }, [products]);
+  }, [products, settings.areas]);
 
   useEffect(() => {
     if (loaded.current) writeJson(LINES_KEY, lines);
   }, [lines]);
+
+  useEffect(() => {
+    if (loaded.current) writeJson(CHECKOUT_KEY, checkout);
+  }, [checkout]);
+
+  const updateCheckout = useCallback((patch: Partial<Checkout>) => setCheckout((c) => ({ ...c, ...patch })), []);
+  const deliveryFee = settings.areas.find((a) => a.area === checkout.area)?.fee ?? 0;
+  const packagingFee = checkout.packaging === "gift_box" ? settings.giftBoxFee : 0;
 
   const totals = useMemo(
     () =>
@@ -115,8 +151,9 @@ export default function SelectionProvider({ products: list, bundle, children }: 
         }),
         bundle,
         appliedCode?.percent ?? 0,
+        { packagingFee, deliveryFee, vatPct: settings.vatPct },
       ),
-    [lines, products, bundle, appliedCode],
+    [lines, products, bundle, appliedCode, packagingFee, deliveryFee, settings.vatPct],
   );
 
   const has = useCallback((code: string) => lines.some((l) => l.code === code), [lines]);
@@ -179,6 +216,9 @@ export default function SelectionProvider({ products: list, bundle, children }: 
     lines,
     products,
     bundle,
+    settings,
+    checkout,
+    updateCheckout,
     totals,
     appliedCode,
     has,

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Modal from "@/components/ui/Modal";
 import type { PublicProduct } from "@/lib/product";
+import { useAreaLabel } from "../useAreaLabel";
 
 export type Tailor = { id: string; name: string; area: string; member_price_note: string | null };
 
@@ -35,6 +36,7 @@ type Props = {
 
 export default function StitchDialog({ product, open, onClose, areas, tailors, canAdd, onAddWithStitching, onToast }: Props) {
   const t = useTranslations("Panel");
+  const areaLabel = useAreaLabel();
   const [area, setArea] = useState(areas[0] ?? "");
   const [m, setM] = useState<Measurements>({});
 
@@ -77,7 +79,7 @@ export default function StitchDialog({ product, open, onClose, areas, tailors, c
         <select value={area} onChange={(e) => setArea(e.target.value)} className="th-field">
           {areas.map((a) => (
             <option key={a} value={a}>
-              {a}
+              {areaLabel(a)}
             </option>
           ))}
         </select>
