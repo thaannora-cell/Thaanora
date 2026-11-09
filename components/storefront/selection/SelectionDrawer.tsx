@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { photoUrl, salePrice } from "@/lib/product";
 import { useSelection } from "./SelectionProvider";
+import { useNativeClose } from "@/components/ui/Modal";
 import CheckoutOptions from "./CheckoutOptions";
 import SendOrder from "./SendOrder";
 import { useAreaLabel } from "../useAreaLabel";
@@ -30,6 +31,8 @@ export default function SelectionDrawer() {
     if (!open && d.open) d.close();
   }, [open]);
 
+  useNativeClose(ref, open, () => sel?.closeDrawer());
+
   if (!sel) return null;
   const { lines, products, bundle, totals, appliedCode, checkout, settings } = sel;
   const price = (n: number) => tRack("price", { amount: n });
@@ -49,7 +52,6 @@ export default function SelectionDrawer() {
     <dialog
       ref={ref}
       aria-labelledby="sel-title"
-      onClose={sel.closeDrawer}
       onClick={(e) => {
         if (e.target === e.currentTarget) sel.closeDrawer();
       }}

@@ -328,5 +328,31 @@
     "giftNote": "رسالة البطاقة: {note}",
     "customer": "الاسم: {name} · واتساب: {phone}",
     "closing": "الدفع نقدًا عند الاستلام. شكرًا لكم!"
+  },
+  "Track": {
+    "eyebrow": "تتبّع الطلب",
+    "title": "تتبّعي طلبكِ",
+    "orderNo": "رقم الطلب",
+    "phone": "رقم الجوال المستخدم في الطلب",
+    "submit": "تتبّع",
+    "checking": "جارٍ التحقق…",
+    "error_invalid": "أدخلي رقم طلب مثل TH-1024 ورقم جوال سعودي.",
+    "error_not_found": "لم نجد طلبًا بهذا الرقم وهذا الجوال. تحققي منهما، أو راسلينا عبر واتساب.",
+    "error_other": "تعذّر التحقق الآن. حاولي مرة أخرى بعد قليل.",
+    "summary": "{suits} طقم · {total} · الدفع عند الاستلام",
+    "step_waiting_confirmation": "تم استلام الطلب",
+    "step_waiting_confirmation_text": "وصلنا طلبكِ عبر واتساب",
+    "step_confirmed": "تم التأكيد",
+    "step_confirmed_text": "أكدنا معكِ القماش والسعر ورسوم التوصيل",
+    "step_packed": "تم التغليف",
+    "step_packed_text": "في حقيبة ثانورا أو علبة الهدية",
+    "step_with_courier": "مع المندوب",
+    "step_with_courier_text": "مندوب محلي، الرياض",
+    "step_delivered_cash_collected": "تم التوصيل",
+    "step_delivered_cash_collected_text": "الدفع نقدًا عند الباب",
+    "courierLine": "شركة التوصيل: {courier} · رقم التتبّع {tracking}",
+    "cancelled": "أُلغي هذا الطلب في {date}. راسلينا عبر واتساب إن أردتِ الطلب مجددًا.",
+    "refused": "أُعيد هذا الطلب إلينا في {date}. راسلينا عبر واتساب إن أردتِ توصيله مرة أخرى.",
+    "note": "حفاظًا على خصوصيتكِ نعرض حالة الطلب فقط، دون أي بيانات شخصية."
   }
 }

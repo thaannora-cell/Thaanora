@@ -328,5 +328,31 @@
     "giftNote": "Card message: {note}",
     "customer": "Name: {name} · WhatsApp: {phone}",
     "closing": "Cash on delivery. Thank you!"
+  },
+  "Track": {
+    "eyebrow": "Order tracking",
+    "title": "Track my order",
+    "orderNo": "Order number",
+    "phone": "Phone number used for the order",
+    "submit": "Track",
+    "checking": "Checking…",
+    "error_invalid": "Please enter an order number like TH-1024 and a Saudi mobile number.",
+    "error_not_found": "We couldn’t find an order with that number and phone. Please check both, or message us on WhatsApp.",
+    "error_other": "We couldn’t check right now. Please try again in a moment.",
+    "summary": "{suits, plural, one {# suit} other {# suits}} · {total} · cash on delivery",
+    "step_waiting_confirmation": "Order received",
+    "step_waiting_confirmation_text": "We got your WhatsApp order",
+    "step_confirmed": "Confirmed",
+    "step_confirmed_text": "We confirmed fabric, price and delivery fee with you",
+    "step_packed": "Packed",
+    "step_packed_text": "In your Thaanora bag or gift box",
+    "step_with_courier": "With the courier",
+    "step_with_courier_text": "Local courier, Riyadh",
+    "step_delivered_cash_collected": "Delivered",
+    "step_delivered_cash_collected_text": "Pay cash at your door",
+    "courierLine": "Courier: {courier} · tracking no. {tracking}",
+    "cancelled": "This order was cancelled on {date}. Message us on WhatsApp if you’d like to order again.",
+    "refused": "This order was returned to us on {date}. Message us on WhatsApp if you’d like it delivered again.",
+    "note": "For your privacy we show only the order status, never personal details."
   }
 }

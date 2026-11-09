@@ -1,4 +1,5 @@
 import { NextIntlClientProvider } from "next-intl";
+import TrackOrderDialog from "@/components/storefront/TrackOrderDialog";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import {
@@ -75,6 +76,7 @@ export default async function LocaleLayout({
       <body className="bg-ivory font-[family-name:var(--font-jost)] text-ink antialiased">
         <NextIntlClientProvider messages={messages}>
           {children}
+          <TrackOrderDialog />
         </NextIntlClientProvider>
       </body>
     </html>

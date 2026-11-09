@@ -246,6 +246,21 @@ html[lang="ar"] .th-dialog-title { font-family: var(--font-amiri); font-weight: 
 html[lang="ur"] .th-dialog-title { font-family: var(--font-urdu); line-height: 1.9; font-size: 26px; }
 html[lang="hi"] .th-dialog-title { font-family: var(--font-hindi); font-weight: 500; line-height: 1.25; font-size: 26px; }
 
+/* Order tracking timeline */
+.th-track li { position: relative; padding-inline-start: 30px; padding-bottom: 18px; font-size: 14px; color: var(--color-muted); }
+.th-track li::before {
+  content: ""; position: absolute; inset-inline-start: 6px; top: 4px;
+  width: 12px; height: 12px; border-radius: 50%; background: var(--color-line);
+}
+.th-track li::after {
+  content: ""; position: absolute; inset-inline-start: 11px; top: 18px; bottom: 0;
+  width: 2px; background: var(--color-line);
+}
+.th-track li:last-child { padding-bottom: 0; }
+.th-track li:last-child::after { display: none; }
+.th-track .th-track-done::before, .th-track .th-track-done::after { background: var(--color-emerald); }
+.th-track .th-track-now::before { background: var(--color-rani); box-shadow: 0 0 0 4px rgba(200,30,94,.2); }
+
 .th-toast {
   position: fixed; inset-inline: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 100;
   margin-inline: auto; width: fit-content; max-width: calc(100% - 32px);

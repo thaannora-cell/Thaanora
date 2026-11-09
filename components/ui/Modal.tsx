@@ -12,6 +12,25 @@ type Props = {
   children: React.ReactNode;
 };
 
+// React's onClose does not fire when the browser closes a <dialog> itself (Esc key),
+// so listen to the native event; otherwise the dialog can't be reopened after Esc.
+// Only a close the page didn't ask for (open is still true) is reported back.
+export function useNativeClose(ref: React.RefObject<HTMLDialogElement | null>, open: boolean, onClose: () => void) {
+  const latest = useRef({ open, onClose });
+  useEffect(() => {
+    latest.current = { open, onClose };
+  });
+  useEffect(() => {
+    const d = ref.current;
+    if (!d) return;
+    const handle = () => {
+      if (latest.current.open) latest.current.onClose();
+    };
+    d.addEventListener("close", handle);
+    return () => d.removeEventListener("close", handle);
+  }, [ref]);
+}
+
 // Native <dialog>: focus is trapped while open, Esc closes it, focus returns to the opener.
 export default function Modal({ open, onClose, eyebrow, title, wide = false, children }: Props) {
   const t = useTranslations("Panel");
@@ -25,11 +44,12 @@ export default function Modal({ open, onClose, eyebrow, title, wide = false, chi
     if (!open && d.open) d.close();
   }, [open]);
 
+  useNativeClose(ref, open, onClose);
+
   return (
     <dialog
       ref={ref}
       aria-labelledby={titleId}
-      onClose={onClose}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
