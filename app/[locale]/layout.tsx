@@ -1,5 +1,6 @@
 import { NextIntlClientProvider } from "next-intl";
 import TrackOrderDialog from "@/components/storefront/TrackOrderDialog";
+import SourcingDialog from "@/components/storefront/SourcingDialog";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import {
@@ -77,6 +78,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
           <TrackOrderDialog />
+          <SourcingDialog />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -12,6 +12,7 @@ import TryOnDialog from "./panel/TryOnDialog";
 import { DEFAULT_FILTERS, brandsOf, filterProducts, type Filters } from "@/lib/filters";
 import { salePrice, stockState, type PublicProduct } from "@/lib/product";
 import { useSelection } from "./selection/SelectionProvider";
+import { openSourcing } from "./SourcingDialog";
 
 const SAVED_KEY = "th_saved";
 
@@ -145,6 +146,9 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
       <div ref={rackAnchor} className="mt-4 pb-1.5 flex flex-wrap justify-between gap-3 text-[13px] text-muted scroll-mt-40">
         <span aria-live="polite" className="tabular-nums">
           {loadFailed ? t("loadError") : t("count", { shown: shown.length, total: products.length })}
+          <button type="button" onClick={openSourcing} className="ms-3 text-emerald underline underline-offset-2">
+            {t("q_source")}
+          </button>
         </span>
         <span className="hidden md:inline">{t("tip")}</span>
       </div>
@@ -162,6 +166,13 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
           onToggleChosen={toggleChosen}
           onAction={onAction}
           emptyMessage={filters.occasion === "saved" ? t("noSaved") : t("noMatch")}
+          emptyAction={
+            filters.occasion === "saved" ? undefined : (
+              <button type="button" className="th-btn mt-3" onClick={openSourcing}>
+                {t("requestAnyDesign")}
+              </button>
+            )
+          }
         />
       )}
 
@@ -181,7 +192,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
             }}
             onToast={showToast}
           />
-          <NotifyDialog product={dialogProduct} open={dialog?.kind === "notify"} onClose={closeDialog} onDone={showToast} />
+          <NotifyDialog product={dialogProduct} open={dialog?.kind === "notify"} onClose={closeDialog} />
           <TryOnDialog
             product={dialogProduct}
             open={dialog?.kind === "try"}

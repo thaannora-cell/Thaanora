@@ -88,7 +88,8 @@
     "count": "{shown} of {total} fabrics",
     "noMatch": "No fabrics match. Try another colour or brand.",
     "noSaved": "No saved fabrics yet. Tap the heart on any fabric to save it.",
-    "loadError": "The fabrics could not be loaded right now. Please refresh in a moment."
+    "loadError": "The fabrics could not be loaded right now. Please refresh in a moment.",
+    "requestAnyDesign": "Request any design"
   },
   "DevProducts": {
     "title": "Products from the database",
@@ -202,8 +203,6 @@
     "sendError": "We couldn’t send this right now. Please try again, or message us on WhatsApp.",
     "sending": "Sending…",
     "confirm": "Confirm",
-    "notifyDone": "Done. We’ll message you when it’s back.",
-    "preorderDone": "Pre-order noted. We confirm it on WhatsApp.",
     "tryEyebrow": "AI try-on · preview",
     "tryTitle": "See it on you before you buy",
     "tryComingSoon": "Virtual try-on is coming soon: you’ll upload a photo and see this suit on you, stitched.",
@@ -354,5 +353,57 @@
     "cancelled": "This order was cancelled on {date}. Message us on WhatsApp if you’d like to order again.",
     "refused": "This order was returned to us on {date}. Message us on WhatsApp if you’d like it delivered again.",
     "note": "For your privacy we show only the order status, never personal details."
+  },
+  "Sourcing": {
+    "eyebrow": "Sourcing on request",
+    "title": "Can’t find your suit? We’ll bring it.",
+    "intro": "Send us any design from a Pakistani brand. We check price and stock in Pakistan and reply on WhatsApp with a quote.",
+    "brand": "Brand",
+    "notSure": "Not sure",
+    "other": "Other",
+    "howMany": "How many",
+    "linkOrCode": "Link or product code",
+    "linkPlaceholder": "Paste a link or a code like EF437-3P26",
+    "screenshot": "Screenshot (optional)",
+    "addScreenshot": "Add a screenshot",
+    "removeScreenshot": "Remove",
+    "screenshotAlt": "Your screenshot",
+    "notes": "Colour, size of order or notes",
+    "notesPlaceholder": "e.g. need it before 20 December",
+    "phone": "Your WhatsApp number",
+    "submit": "Send my request",
+    "sending": "Sending…",
+    "privacy": "Your screenshot is stored privately and only our team can see it.",
+    "error_phone": "Please enter a Saudi mobile number, for example 05X XXX XXXX.",
+    "error_need_design": "Add a link, a code or a screenshot so we know the design.",
+    "error_too_big": "That picture is too large. Please use a screenshot under 4 MB.",
+    "error_not_image": "That file isn’t a picture we can read. Please use a JPG, PNG or WebP screenshot.",
+    "error_other": "We couldn’t send your request right now. Please try again in a moment."
+  },
+  "Requests": {
+    "nameOptional": "Your name (optional)",
+    "yourMessage": "Your WhatsApp message",
+    "sendWhatsapp": "Send on WhatsApp",
+    "copy": "Copy message",
+    "copied": "Copied ✓",
+    "sourcingSaved": "Request received",
+    "notifySaved": "You’re on the list",
+    "preorderSaved": "Pre-order noted",
+    "sentText": "Send this message on WhatsApp so we can reply to you there.",
+    "sentTextCopy": "Copy this message and send it to us on WhatsApp so we can reply to you there."
+  },
+  "RequestMessage": {
+    "sourcingGreeting": "Hello Thaanora, please source this design for me ({reference}):",
+    "brand": "Brand: {brand}",
+    "notSure": "not sure",
+    "link": "Link/code: {link}",
+    "seeScreenshot": "see screenshot",
+    "quantity": "Quantity: {n}",
+    "notes": "Notes: {notes}",
+    "screenshotSaved": "Screenshot: sent with my request on your website",
+    "notify": "Hello Thaanora, please tell me when {name} ({code}) is back in stock ({reference}).",
+    "preorder": "Hello Thaanora, I would like to pre-order {name} ({code}) from the next shipment ({reference}).",
+    "customer": "WhatsApp: {phone}",
+    "customerNamed": "Name: {name} · WhatsApp: {phone}"
   }
 }

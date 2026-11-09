@@ -18,6 +18,7 @@ type Props = {
   onToggleChosen: (code: string) => void;
   onAction: (action: PanelAction, product: PublicProduct) => void;
   emptyMessage: string;
+  emptyAction?: React.ReactNode;
 };
 
 const PHONE = "(max-width: 760px)";
@@ -35,6 +36,7 @@ export default function FabricRack({
   onToggleChosen,
   onAction,
   emptyMessage,
+  emptyAction,
 }: Props) {
   const t = useTranslations("Rack");
   const rackRef = useRef<HTMLDivElement>(null);
@@ -95,9 +97,10 @@ export default function FabricRack({
   if (products.length === 0) {
     return (
       <div className={s.rack} style={{ height: "auto" }}>
-        <p className={s.empty} role="status">
-          {emptyMessage}
-        </p>
+        <div className={s.empty} role="status">
+          <p className="m-0">{emptyMessage}</p>
+          {emptyAction}
+        </div>
       </div>
     );
   }
