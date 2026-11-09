@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import FilterCard from "./FilterCard";
+import FabricRack from "./rack/FabricRack";
 import { DEFAULT_FILTERS, brandsOf, filterProducts, type Filters } from "@/lib/filters";
-import type { PublicProduct } from "@/lib/products";
+import type { PublicProduct } from "@/lib/product";
 
 const SAVED_KEY = "th_saved";
 
@@ -18,6 +19,16 @@ function readSaved(): string[] {
   }
 }
 
+function writeSaved(codes: string[]) {
+  try {
+    window.localStorage.setItem(SAVED_KEY, JSON.stringify(codes));
+  } catch {
+    // Private mode or storage blocked: saving still works for this visit.
+  }
+}
+
+const toggle = (list: string[], code: string) => (list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
+
 type Props = {
   products: PublicProduct[];
   brandOfMonth: string | null;
@@ -28,11 +39,20 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed }: Prop
   const t = useTranslations("Home");
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [saved, setSaved] = useState<string[]>([]);
+  const [chosen, setChosen] = useState<string[]>([]);
+  const [activeCode, setActiveCode] = useState<string | null>(null);
 
   useEffect(() => setSaved(readSaved()), []);
 
   const brands = useMemo(() => brandsOf(products), [products]);
   const shown = useMemo(() => filterProducts(products, filters, saved), [products, filters, saved]);
+
+  const toggleSaved = (code: string) =>
+    setSaved((list) => {
+      const next = toggle(list, code);
+      writeSaved(next);
+      return next;
+    });
 
   return (
     <>
@@ -51,13 +71,19 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed }: Prop
         <span className="hidden md:inline">{t("tip")}</span>
       </div>
 
-      {!loadFailed && shown.length === 0 && (
-        <p className="mt-2 rounded-[20px] border-[1.5px] border-dashed border-line p-5 text-center text-muted">
-          {filters.occasion === "saved" ? t("noSaved") : t("noMatch")}
-        </p>
+      {!loadFailed && (
+        <FabricRack
+          products={shown}
+          activeCode={activeCode}
+          onActivate={setActiveCode}
+          chosen={chosen}
+          saved={saved}
+          brandOfMonth={brandOfMonth}
+          onToggleSaved={toggleSaved}
+          onToggleChosen={(code) => setChosen((list) => toggle(list, code))}
+          emptyMessage={filters.occasion === "saved" ? t("noSaved") : t("noMatch")}
+        />
       )}
-
-      {/* Fabric rack — next step */}
     </>
   );
 }

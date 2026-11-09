@@ -109,5 +109,32 @@
     "label": "पासवर्ड",
     "button": "अंदर जाएँ",
     "wrong": "पासवर्ड सही नहीं है। फिर से कोशिश करें।"
+  },
+  "Rack": {
+    "label": "कपड़े",
+    "tagSold": "बिक गया",
+    "tagSoldOut": "स्टॉक ख़त्म",
+    "tagSaleShort": "−{pct}%",
+    "tagSale": "{pct}% सेल",
+    "tagLeft": "{n} बचे",
+    "tagTrending": "#{rank} ट्रेंडिंग",
+    "tagBrandOfMonth": "इस महीने का ब्रांड",
+    "openLabel": "{name} खोलें, SAR {price}",
+    "soldOutSuffix": ", स्टॉक ख़त्म",
+    "inSelectionSuffix": ", आपकी पसंद में",
+    "prev": "पिछला कपड़ा",
+    "next": "अगला कपड़ा",
+    "modelAlt": "{name}, मॉडल पर",
+    "photoN": "फ़ोटो {n}",
+    "save": "{name} सेव करें",
+    "price": "SAR {amount}",
+    "stockOut": "स्टॉक ख़त्म · अगली खेप के लिए प्री-ऑर्डर करें",
+    "stockLow": "सिर्फ़ {n} बचे",
+    "stockIn": "रियाद में उपलब्ध",
+    "workPrinted": "प्रिंटेड",
+    "workEmbroidered": "कढ़ाईदार",
+    "shirt": "कुर्ता {m} मी",
+    "dupatta": "दुपट्टा {m} मी",
+    "trouser": "सलवार {m} मी"
   }
 }

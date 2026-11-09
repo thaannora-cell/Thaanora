@@ -4,7 +4,8 @@ import TopBar from "@/components/storefront/TopBar";
 import Header from "@/components/storefront/Header";
 import Footer from "@/components/storefront/Footer";
 import ProductThumb from "@/components/storefront/ProductThumb";
-import { getVisibleProducts, salePrice } from "@/lib/products";
+import { getVisibleProducts } from "@/lib/products";
+import { salePrice } from "@/lib/product";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { robots: { index: false, follow: false } };

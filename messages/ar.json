@@ -109,5 +109,32 @@
     "label": "كلمة المرور",
     "button": "دخول",
     "wrong": "كلمة المرور غير صحيحة. حاولي مرة أخرى."
+  },
+  "Rack": {
+    "label": "الأقمشة",
+    "tagSold": "نفد",
+    "tagSoldOut": "نفدت الكمية",
+    "tagSaleShort": "−{pct}٪",
+    "tagSale": "خصم {pct}٪",
+    "tagLeft": "باقي {n}",
+    "tagTrending": "الأكثر طلبًا #{rank}",
+    "tagBrandOfMonth": "ماركة الشهر",
+    "openLabel": "افتحي {name}، {price} ر.س",
+    "soldOutSuffix": "، نفدت الكمية",
+    "inSelectionSuffix": "، في اختياراتكِ",
+    "prev": "القماش السابق",
+    "next": "القماش التالي",
+    "modelAlt": "{name} على عارضة",
+    "photoN": "الصورة {n}",
+    "save": "احفظي {name}",
+    "price": "{amount} ر.س",
+    "stockOut": "نفدت الكمية · اطلبيه مسبقًا للشحنة القادمة",
+    "stockLow": "باقي {n} فقط",
+    "stockIn": "متوفر في الرياض",
+    "workPrinted": "مطبوع",
+    "workEmbroidered": "مطرّز",
+    "shirt": "قميص {m} م",
+    "dupatta": "دوبتا {m} م",
+    "trouser": "بنطال {m} م"
   }
 }

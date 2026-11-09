@@ -1,4 +1,4 @@
-import type { PublicProduct } from "@/lib/products";
+import type { PublicProduct } from "@/lib/product";
 
 export const OCCASIONS = ["all", "new", "Everyday", "Eid", "Wedding", "Birthday", "Anniversary", "Gifts", "sale", "saved"] as const;
 export type Occasion = (typeof OCCASIONS)[number];

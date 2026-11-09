@@ -109,5 +109,32 @@
     "label": "پاس ورڈ",
     "button": "داخل ہوں",
     "wrong": "پاس ورڈ درست نہیں۔ دوبارہ کوشش کریں۔"
+  },
+  "Rack": {
+    "label": "کپڑے",
+    "tagSold": "ختم",
+    "tagSoldOut": "ختم ہو گیا",
+    "tagSaleShort": "−{pct}٪",
+    "tagSale": "{pct}٪ سیل",
+    "tagLeft": "{n} باقی",
+    "tagTrending": "#{rank} مقبول",
+    "tagBrandOfMonth": "اس مہینے کا برانڈ",
+    "openLabel": "{name} کھولیں، {price} ریال",
+    "soldOutSuffix": "، ختم ہو گیا",
+    "inSelectionSuffix": "، آپ کے انتخاب میں",
+    "prev": "پچھلا کپڑا",
+    "next": "اگلا کپڑا",
+    "modelAlt": "{name}، ماڈل پر",
+    "photoN": "تصویر {n}",
+    "save": "{name} محفوظ کریں",
+    "price": "{amount} ریال",
+    "stockOut": "ختم ہو گیا · اگلی کھیپ کے لیے پیشگی آرڈر کریں",
+    "stockLow": "صرف {n} باقی",
+    "stockIn": "ریاض میں دستیاب",
+    "workPrinted": "پرنٹڈ",
+    "workEmbroidered": "کڑھائی والا",
+    "shirt": "قمیض {m} م",
+    "dupatta": "دوپٹہ {m} م",
+    "trouser": "شلوار {m} م"
   }
 }

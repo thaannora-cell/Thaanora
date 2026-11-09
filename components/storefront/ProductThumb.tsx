@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { photoUrl, type PublicProduct } from "@/lib/products";
+import { photoUrl, type PublicProduct } from "@/lib/product";
 
 type Props = {
   product: Pick<PublicProduct, "name" | "brand" | "colour_hex" | "accent_hex" | "product_images">;

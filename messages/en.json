@@ -109,5 +109,32 @@
     "label": "Password",
     "button": "Enter",
     "wrong": "That password is not right. Please try again."
+  },
+  "Rack": {
+    "label": "Fabrics",
+    "tagSold": "Sold",
+    "tagSoldOut": "Sold out",
+    "tagSaleShort": "−{pct}%",
+    "tagSale": "−{pct}% sale",
+    "tagLeft": "{n} left",
+    "tagTrending": "#{rank} trending",
+    "tagBrandOfMonth": "Brand of the month",
+    "openLabel": "Open {name}, SAR {price}",
+    "soldOutSuffix": ", sold out",
+    "inSelectionSuffix": ", in your selection",
+    "prev": "Previous fabric",
+    "next": "Next fabric",
+    "modelAlt": "{name}, worn by a model",
+    "photoN": "Photo {n}",
+    "save": "Save {name}",
+    "price": "SAR {amount}",
+    "stockOut": "Sold out · pre-order for the next shipment",
+    "stockLow": "Only {n} left",
+    "stockIn": "In stock in Riyadh",
+    "workPrinted": "Printed",
+    "workEmbroidered": "Embroidered",
+    "shirt": "Shirt {m} m",
+    "dupatta": "Dupatta {m} m",
+    "trouser": "Trouser {m} m"
   }
 }
