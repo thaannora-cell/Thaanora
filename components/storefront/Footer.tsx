@@ -21,7 +21,7 @@ type Props = {
 export default function Footer({ info, onShop = false }: Props) {
   const t = useTranslations("Footer");
   const year = new Date().getFullYear();
-  const { cr, vat } = info.business;
+  const { legalName, nationalNo, vat } = info.business;
   // "Riyadh, Saudi Arabia" is already in the translated line; show only a fuller street address.
   const address = /^riyadh,?\s*saudi arabia$/i.test(info.business.address) ? "" : info.business.address;
   const join = info.whatsapp ? `https://wa.me/${info.whatsapp}?text=${encodeURIComponent(t("joinMessage"))}` : null;
@@ -123,10 +123,16 @@ export default function Footer({ info, onShop = false }: Props) {
                 <bdi>{address}</bdi>
               </>
             )}
-            {cr && (
+            {legalName && (
               <>
                 {" · "}
-                {t("crNo")} <bdi dir="ltr">{cr}</bdi>
+                {t("operatedBy")} <bdi>{legalName}</bdi> ({t("entity")})
+              </>
+            )}
+            {nationalNo && (
+              <>
+                {" · "}
+                {t("nationalNo")} <bdi dir="ltr">{nationalNo}</bdi>
               </>
             )}
             {vat && (
@@ -135,8 +141,12 @@ export default function Footer({ info, onShop = false }: Props) {
                 {t("vatNo")} <bdi dir="ltr">{vat}</bdi>
               </>
             )}
-            {" · "}
-            {t("vatIncluded")}
+            {info.vatPct > 0 && (
+              <>
+                {" · "}
+                {t("vatIncluded")}
+              </>
+            )}
             {" · "}
             {t("photosNote")}
           </p>

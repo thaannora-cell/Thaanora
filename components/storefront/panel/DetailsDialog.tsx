@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import Modal from "@/components/ui/Modal";
 import { photoUrl, salePrice, stockState, type PublicProduct } from "@/lib/product";
+import { useSelection } from "../selection/SelectionProvider";
 
 const FEEL_KEYS: Record<string, string> = {
   Khaddar: "khaddar",
@@ -28,13 +29,14 @@ export default function DetailsDialog({ product: p, open, onClose }: Props) {
   const stock = stockState(p.stock);
   const price = salePrice(p);
   const feelKey = FEEL_KEYS[p.fabric] ?? "default";
+  const vatPct = useSelection()?.settings.vatPct ?? 0;
 
   const rows: [string, React.ReactNode][] = [
     [
       t("dPrice"),
       <>
         {p.sale_pct > 0 && <s className="me-2 text-muted">{tRack("price", { amount: Number(p.price_sar) })}</s>}
-        {t("inclVat", { price: tRack("price", { amount: price }) })}
+        {vatPct > 0 ? t("inclVat", { price: tRack("price", { amount: price }) }) : tRack("price", { amount: price })}
       </>,
     ],
     [

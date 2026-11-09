@@ -20,7 +20,8 @@ export async function getWhatsappNumber(): Promise<string | null> {
   return /^[1-9]\d{7,14}$/.test(digits) ? digits : null;
 }
 
-const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 15, tailorDiscountPct: 10 };
+// VAT defaults to 0: Thaanora is not VAT-registered yet. Set vat_rate_pct to 15 in settings once it is.
+const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 0, tailorDiscountPct: 10 };
 
 // Public settings only (RLS hides the private ones such as the PKR rate).
 export async function getCheckoutSettings(): Promise<CheckoutSettings> {
@@ -54,7 +55,8 @@ export type SocialKey = "instagram" | "tiktok" | "snapchat";
 export type SiteInfo = {
   whatsapp: string | null;
   social: { key: SocialKey; url: string }[];
-  business: { cr: string; vat: string; address: string };
+  vatPct: number;
+  business: { legalName: string; nationalNo: string; vat: string; address: string };
 };
 
 const SOCIAL_HOSTS: Record<SocialKey, string> = {
@@ -83,9 +85,12 @@ const text = (v: unknown, max = 160) => (typeof v === "string" ? v.trim().slice(
 export async function getSiteInfo(): Promise<SiteInfo> {
   const supabase = getPublicClient();
   const whatsapp = await getWhatsappNumber();
-  if (!supabase) return { whatsapp, social: [], business: { cr: "", vat: "", address: "" } };
-  const { data } = await supabase.from("settings").select("key, value").in("key", ["social_links", "business"]);
-  const get = (k: string) => (data?.find((r) => r.key === k)?.value ?? {}) as Record<string, unknown>;
+  const empty = { legalName: "", nationalNo: "", vat: "", address: "" };
+  if (!supabase) return { whatsapp, social: [], vatPct: DEFAULTS.vatPct, business: empty };
+  const { data } = await supabase.from("settings").select("key, value").in("key", ["social_links", "business", "vat_rate_pct"]);
+  const raw = (k: string) => data?.find((r) => r.key === k)?.value as unknown;
+  const get = (k: string) => (raw(k) ?? {}) as Record<string, unknown>;
+  const vat = raw("vat_rate_pct");
   const links = get("social_links");
   const biz = get("business");
   const social = (Object.keys(SOCIAL_HOSTS) as SocialKey[]).flatMap((key) => {
@@ -95,6 +100,12 @@ export async function getSiteInfo(): Promise<SiteInfo> {
   return {
     whatsapp,
     social,
-    business: { cr: text(biz.cr_number, 40), vat: text(biz.vat_number, 40), address: text(biz.address) },
+    vatPct: typeof vat === "number" && vat >= 0 ? vat : DEFAULTS.vatPct,
+    business: {
+      legalName: text(biz.legal_name),
+      nationalNo: text(biz.national_number, 40) || text(biz.cr_number, 40),
+      vat: text(biz.vat_number, 40),
+      address: text(biz.address),
+    },
   };
 }

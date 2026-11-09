@@ -32,10 +32,12 @@
     "copyright": "© {year} Thaanora · Riyadh, Saudi Arabia",
     "vatIncluded": "Prices include VAT",
     "photosNote": "Product photos belong to each brand",
-    "crNo": "CR No.",
     "vatNo": "VAT No.",
     "social": "Social media",
-    "joinMessage": "Hello Thaanora, please add me to your WhatsApp circle."
+    "joinMessage": "Hello Thaanora, please add me to your WhatsApp circle.",
+    "operatedBy": "Operated by",
+    "entity": "one-person LLC",
+    "nationalNo": "Unified National No."
   },
   "Home": {
     "h1": "Your fabric. Your fit. <em>قماشكِ… على مقاسكِ</em>",
@@ -286,7 +288,8 @@
     "payOnDeliveryNoArea": "Pay on delivery (before delivery fee)",
     "vatIncluded": "Includes {pct}% VAT",
     "vatNote": "All prices include {pct}% VAT. Stitching is quoted separately by your tailor.",
-    "codNote": "Cash on delivery only. We confirm every order on WhatsApp before dispatch. Please keep your phone on."
+    "codNote": "Cash on delivery only. We confirm every order on WhatsApp before dispatch. Please keep your phone on.",
+    "noVatNote": "No VAT is added: Thaanora is not VAT-registered. Stitching is quoted separately by your tailor."
   },
   "Areas": {
     "central": "Central Riyadh (Olaya, Malaz, Sulaimaniyah)",
@@ -332,7 +335,8 @@
     "giftArea": "Recipient’s area: {area}",
     "giftNote": "Card message: {note}",
     "customer": "Name: {name} · WhatsApp: {phone}",
-    "closing": "Cash on delivery. Thank you!"
+    "closing": "Cash on delivery. Thank you!",
+    "totalNoVat": "Total to pay on delivery: {amount}"
   },
   "Track": {
     "eyebrow": "Order tracking",
@@ -490,7 +494,10 @@
       "orders_h": "Orders",
       "orders_p": "An order is final once we confirm it with you on WhatsApp. A discount code applies after any bundle discount; one code per order.",
       "colour_h": "Colour",
-      "colour_p": "Screens show colours slightly differently from fabric in daylight."
-    }
+      "colour_p": "Screens show colours slightly differently from fabric in daylight.",
+      "prices_noVat_p": "In Saudi riyals. No VAT is added, because we are not VAT-registered. Delivery, the gift box and stitching are extra and shown before you confirm."
+    },
+    "who_h": "Who we are",
+    "who_p": "Thaanora is a brand of {company}, a one-person limited liability company registered in Saudi Arabia (Unified National No. {nationalNo})."
   }
 }

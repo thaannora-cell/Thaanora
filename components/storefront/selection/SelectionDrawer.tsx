@@ -218,12 +218,16 @@ export default function SelectionDrawer() {
                 <dt>{checkout.area ? tCheckout("payOnDelivery") : tCheckout("payOnDeliveryNoArea")}</dt>
                 <dd className="m-0">{price(totals.total)}</dd>
               </div>
-              <div className="flex justify-between pt-1 text-[13px] text-muted">
-                <dt>{tCheckout("vatIncluded", { pct: settings.vatPct })}</dt>
-                <dd className="m-0">{tRack("price", { amount: totals.vat.toFixed(2) })}</dd>
-              </div>
+              {settings.vatPct > 0 && (
+                <div className="flex justify-between pt-1 text-[13px] text-muted">
+                  <dt>{tCheckout("vatIncluded", { pct: settings.vatPct })}</dt>
+                  <dd className="m-0">{tRack("price", { amount: totals.vat.toFixed(2) })}</dd>
+                </div>
+              )}
             </dl>
-            <p className="m-0 text-[12px] text-muted">{tCheckout("vatNote", { pct: settings.vatPct })}</p>
+            <p className="m-0 text-[12px] text-muted">
+              {settings.vatPct > 0 ? tCheckout("vatNote", { pct: settings.vatPct }) : tCheckout("noVatNote")}
+            </p>
             <p className="m-0 rounded-xl border border-[#BFDCCB] bg-[#E7F3EC] px-3 py-2.5 text-[13px] text-[#1d3a2d]">
               {tCheckout("codNote")}
             </p>

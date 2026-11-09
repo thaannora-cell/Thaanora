@@ -36,14 +36,14 @@ Motion: subtle animated line icons (scissors snip, truck drives, sparkle twinkle
 - Top bar (rotating offers), header with service pills (Virtual try-on, Tailor network, Sourcing request, Track order), language switcher, bag button with count.
 - Green hero + white filter card: occasion chips (All, New, Everyday, Eid, Wedding, Birthday, Anniversary, Gifts, Sale, Saved), colour dots, search, brand dropdown.
 - **Fabric rack**: products as hanging vertical strips; tapping one opens a panel with the model photo, price, stock, fabric lengths (shirt 3 m, dupatta 2.5 m, trouser 2.5 m), Add, Try on me, Get it stitched, Details & reviews, Share. Phone: stacked shelf.
-- Selection tray (bottom), bundle rule (default: 3+ suits = 10% off), discount codes, packaging choice (free Suit Keeper bag / gift box +SAR 15), gift option, delivery fee by Riyadh area, totals incl. 15% VAT, "Copy/Send order on WhatsApp".
+- Selection tray (bottom), bundle rule (default: 3+ suits = 10% off), discount codes, packaging choice (free Suit Keeper bag / gift box +SAR 15), gift option, delivery fee by Riyadh area, totals (VAT shown only when `vat_rate_pct` > 0), "Copy/Send order on WhatsApp".
 - Order tracking, sourcing request, notify-me/pre-order, tailor network + saved measurements, AI try-on preview (simple face-on-model first), policy pages, floating WhatsApp help button.
 
 ## Back office (owner/staff only)
 Dashboard, Orders (COD statuses: Waiting for confirmation → Confirmed → Packed → With the courier → Delivered · cash collected / Refused at door / Cancelled; courier + tracking no.), Products (photo upload, price, sale %, PKR cost, margin, stock, labels, visible), Stock (adjust, receive shipment), Offers & codes, Seasons & labels (campaigns, brand of the month, top-bar messages), Requests, Tailors, Reports, Settings (WhatsApp number, social links, delivery fees, CR/VAT/address, PKR rate, low-stock level), Staff & access.
 
 ## Data rules
-- Prices in SAR, VAT-inclusive. Store purchase cost in PKR; never show cost to customers.
+- Prices in SAR. The seller is Desert Bloom Poultry Company (one-person LLC, Unified National No. 7054375741); Thaanora is its brand. It is NOT VAT-registered: `vat_rate_pct` = 0 and no VAT wording is shown. When it registers, set `vat_rate_pct` to 15 and the VAT number in `business`; prices are then treated as VAT-inclusive. Store purchase cost in PKR; never show cost to customers.
 - Website reads only visible products and public settings. All writes from the website (orders, requests) go through server routes, never directly from the browser with elevated keys.
 - Row Level Security ON for every table.
 

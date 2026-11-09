@@ -40,7 +40,7 @@ export async function buildOrderMessage(o: Input): Promise<string> {
   if (o.totals.codeDiscount > 0 && o.discountCode) out.push(t("code", { code: o.discountCode, amount: price(o.totals.codeDiscount) }));
   out.push(o.giftBox ? t("giftBox", { amount: price(o.totals.packagingFee) }) : t("keeperBag"));
   out.push(t("delivery", { area, amount: o.totals.deliveryFee > 0 ? price(o.totals.deliveryFee) : t("free") }));
-  out.push(t("total", { amount: price(o.totals.total), pct: o.vatPct }));
+  out.push(o.vatPct > 0 ? t("total", { amount: price(o.totals.total), pct: o.vatPct }) : t("totalNoVat", { amount: price(o.totals.total) }));
   if (o.gift) {
     out.push("");
     out.push(t("giftHeader"));

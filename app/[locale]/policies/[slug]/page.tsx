@@ -14,8 +14,8 @@ export const dynamic = "force-dynamic";
 const SECTIONS: Record<PolicySlug, string[]> = {
   returns: ["exchange", "notReturnable", "faulty", "refunds"],
   delivery: ["where", "fees", "timing", "payment"],
-  privacy: ["collect", "tryon", "use", "storage", "rights"],
-  terms: ["authentic", "prices", "orders", "colour"],
+  privacy: ["who", "collect", "tryon", "use", "storage", "rights"],
+  terms: ["who", "authentic", "prices", "orders", "colour"],
 };
 
 // Numbers the owner can change later (shown in the draft as plain values).
@@ -42,7 +42,12 @@ export default async function PolicyPage({ params }: Params) {
     getSiteInfo(),
     getCheckoutSettings(),
   ]);
-  const vars = { ...VALUES, vat: settings.vatPct };
+  const { legalName, nationalNo } = info.business;
+  const vars = { ...VALUES, vat: settings.vatPct, company: legalName, nationalNo: nationalNo || "—" };
+  // "Who we are" needs the company name from settings; prices wording depends on VAT registration.
+  const sections = SECTIONS[slug].filter((id) => id !== "who" || legalName);
+  const textKey = (id: string) =>
+    slug === "terms" && id === "prices" && settings.vatPct === 0 ? "terms.prices_noVat_p" : `${slug}.${id}_p`;
   const areaLabel = (area: string) => {
     const key = area.split(/\s+/)[0]?.toLowerCase() ?? "";
     return key && tAreas.has(key) ? tAreas(key) : area;
@@ -78,9 +83,9 @@ export default async function PolicyPage({ params }: Params) {
             <p className="m-0 rounded-xl border border-gold/50 bg-gold/10 px-3 py-2.5 text-[13px] text-walnut">{t("draft")}</p>
 
             <div className="th-policy">
-              {SECTIONS[slug].map((id) => (
+              {sections.map((id) => (
                 <section key={id}>
-                  <h2>{t(`${slug}.${id}_h`)}</h2>
+                  <h2>{id === "who" ? t("who_h") : t(`${slug}.${id}_h`)}</h2>
                   {slug === "delivery" && id === "fees" ? (
                     settings.areas.length > 0 ? (
                       <ul>
@@ -94,7 +99,7 @@ export default async function PolicyPage({ params }: Params) {
                       <p>{t("delivery.feesAtCheckout")}</p>
                     )
                   ) : (
-                    <p>{t(`${slug}.${id}_p`, vars)}</p>
+                    <p>{id === "who" ? t("who_p", vars) : t(textKey(id), vars)}</p>
                   )}
                 </section>
               ))}
