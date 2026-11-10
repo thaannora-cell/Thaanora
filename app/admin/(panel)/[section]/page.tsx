@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import PageHead from "@/components/admin/PageHead";
+import SectionDenied from "@/components/admin/SectionDenied";
 import { getSession } from "@/lib/admin/session";
 import { getAdminT } from "@/lib/admin/i18n";
 import { canOpen, isSection } from "@/lib/admin/sections";
@@ -14,14 +15,7 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
   const t = await getAdminT();
   const { role } = session.staff;
 
-  if (!canOpen(role, section)) {
-    return (
-      <div role="alert" className="max-w-[560px] rounded-[18px] border border-rani/30 bg-white p-6">
-        <h1 className="m-0 mb-2 font-[family-name:var(--font-cormorant)] text-[28px] font-semibold text-emerald">{t("noAccess.sectionTitle")}</h1>
-        <p className="m-0 text-[15px] text-muted">{t("noAccess.sectionText", { role: t(`roles.${role}`), section: t(`nav.${section}`) })}</p>
-      </div>
-    );
-  }
+  if (!canOpen(role, section)) return <SectionDenied role={role} section={section} />;
 
   return (
     <>

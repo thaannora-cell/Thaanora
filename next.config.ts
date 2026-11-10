@@ -8,6 +8,8 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
   : "*.supabase.co";
 
 const nextConfig: NextConfig = {
+  // Product photos are resized in the browser first (≈0.2–1 MB); this leaves room without inviting huge uploads.
+  experimental: { serverActions: { bodySizeLimit: "4mb" } },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
