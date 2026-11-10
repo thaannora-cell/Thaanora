@@ -262,7 +262,8 @@
     "addedToast": "انتخاب میں شامل ہو گیا۔",
     "addedUnlockedToast": "شامل ہو گیا۔ {pct}٪ رعایت حاصل۔",
     "addedLeftToast": "شامل ہو گیا۔ {pct}٪ کے لیے {left} اور۔",
-    "orderButton": "واٹس ایپ پر آرڈر"
+    "orderButton": "واٹس ایپ پر آرڈر",
+    "codeTooMany": "بہت زیادہ کوششیں۔ براہِ کرم چند منٹ انتظار کر کے کوڈ دوبارہ آزمائیں۔"
   },
   "Checkout": {
     "packaging": "پیکنگ",

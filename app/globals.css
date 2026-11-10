@@ -369,3 +369,7 @@ html[lang="hi"] body { font-family: var(--font-hindi); }
 .th-policy h2 { margin: 22px 0 4px; font-family: var(--font-jost); font-size: 17px; font-weight: 500; color: var(--color-emerald); }
 .th-policy p, .th-policy li { margin: 0; font-size: 15px; line-height: 1.7; color: var(--color-ink); }
 .th-policy ul { margin: 4px 0 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 2px; }
+
+/* Top bar: each new line rises in gently */
+.th-topbar-line { animation: th-rise .5s ease-out; }
+@media (prefers-reduced-motion: reduce) { .th-topbar-line { animation: none; } }

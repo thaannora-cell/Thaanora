@@ -262,7 +262,8 @@
     "addedToast": "आपकी पसंद में जुड़ गया।",
     "addedUnlockedToast": "जुड़ गया। {pct}% छूट चालू।",
     "addedLeftToast": "जुड़ गया। {pct}% के लिए {left} और।",
-    "orderButton": "व्हाट्सऐप पर ऑर्डर"
+    "orderButton": "व्हाट्सऐप पर ऑर्डर",
+    "codeTooMany": "बहुत ज़्यादा कोशिशें। कृपया कुछ मिनट रुककर कोड फिर से आज़माएँ।"
   },
   "Checkout": {
     "packaging": "पैकिंग",

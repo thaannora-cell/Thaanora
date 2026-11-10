@@ -262,7 +262,8 @@
     "addedToast": "Added to your selection.",
     "addedUnlockedToast": "Added. {pct}% off is on.",
     "addedLeftToast": "Added. {left} more for {pct}% off.",
-    "orderButton": "Order on WhatsApp"
+    "orderButton": "Order on WhatsApp",
+    "codeTooMany": "Too many tries. Please wait a few minutes and try the code again."
   },
   "Checkout": {
     "packaging": "Packaging",

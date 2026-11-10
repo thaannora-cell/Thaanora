@@ -2,10 +2,15 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { isSameOrigin } from "@/lib/http";
 import { findLiveCode } from "@/lib/discounts";
+import { allow } from "@/lib/rate-limit";
 
 // Checks one code at a time; the list of codes is never sent to the browser.
 export async function POST(req: NextRequest) {
   if (!isSameOrigin(req)) return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
+  // At most 10 code checks per 10 minutes from one visitor, so codes can't be guessed by trying many.
+  if (!(await allow(req, "discount", 10, 600))) {
+    return NextResponse.json({ ok: false, error: "too_many" }, { status: 429, headers: { "Retry-After": "600" } });
+  }
 
   let body: { code?: unknown };
   try {

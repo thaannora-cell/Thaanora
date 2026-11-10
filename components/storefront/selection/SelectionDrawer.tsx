@@ -21,7 +21,7 @@ export default function SelectionDrawer() {
   const areaLabel = useAreaLabel();
   const ref = useRef<HTMLDialogElement>(null);
   const [codeInput, setCodeInput] = useState("");
-  const [codeState, setCodeState] = useState<"idle" | "busy" | "invalid" | "error">("idle");
+  const [codeState, setCodeState] = useState<"idle" | "busy" | "invalid" | "error" | "tooMany">("idle");
 
   const open = sel?.drawerOpen ?? false;
   useEffect(() => {
@@ -182,7 +182,7 @@ export default function SelectionDrawer() {
                     autoComplete="off"
                     dir="ltr"
                     aria-invalid={codeState === "invalid" || undefined}
-                    aria-describedby={codeState === "invalid" || codeState === "error" ? "code-msg" : undefined}
+                    aria-describedby={codeState === "invalid" || codeState === "error" || codeState === "tooMany" ? "code-msg" : undefined}
                     className="min-h-[44px] min-w-0 flex-1 rounded-full border border-line bg-white px-3.5 uppercase text-start focus:border-gold focus:outline-none"
                   />
                   <button
@@ -193,9 +193,9 @@ export default function SelectionDrawer() {
                     {t("apply")}
                   </button>
                 </div>
-                {(codeState === "invalid" || codeState === "error") && (
+                {(codeState === "invalid" || codeState === "error" || codeState === "tooMany") && (
                   <p id="code-msg" role="alert" className="m-0 text-[13px] text-rani">
-                    {codeState === "invalid" ? t("codeInvalid") : t("codeError")}
+                    {codeState === "invalid" ? t("codeInvalid") : codeState === "tooMany" ? t("codeTooMany") : t("codeError")}
                   </p>
                 )}
               </form>

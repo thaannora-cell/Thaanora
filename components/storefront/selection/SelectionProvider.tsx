@@ -6,7 +6,7 @@ import { computeTotals, type BundleRule, type CheckoutSettings, type Totals } fr
 
 export type Line = { code: string; qty: number; stitch: boolean };
 export type AppliedCode = { code: string; percent: number };
-export type CodeResult = "applied" | "invalid" | "error";
+export type CodeResult = "applied" | "invalid" | "error" | "tooMany";
 export type PlacedOrder = { orderNo: string; message: string; whatsappUrl: string | null };
 export type Packaging = "suit_keeper_bag" | "gift_box";
 export type Checkout = {
@@ -72,13 +72,14 @@ function writeJson(key: string, value: unknown) {
   }
 }
 
-async function checkCode(code: string): Promise<AppliedCode | "invalid" | "error"> {
+async function checkCode(code: string): Promise<AppliedCode | "invalid" | "error" | "tooMany"> {
   try {
     const res = await fetch("/api/discount", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),
     });
+    if (res.status === 429) return "tooMany";
     if (!res.ok) return "error";
     const data = (await res.json()) as { ok?: boolean; code?: string; percent?: number };
     return data.ok && data.code && data.percent ? { code: data.code, percent: data.percent } : "invalid";

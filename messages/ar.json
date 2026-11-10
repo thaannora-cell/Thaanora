@@ -262,7 +262,8 @@
     "addedToast": "تمت الإضافة إلى اختياراتكِ.",
     "addedUnlockedToast": "تمت الإضافة. خصم {pct}٪ مفعَّل.",
     "addedLeftToast": "تمت الإضافة. {left} أخرى لخصم {pct}٪.",
-    "orderButton": "اطلبي عبر واتساب"
+    "orderButton": "اطلبي عبر واتساب",
+    "codeTooMany": "محاولات كثيرة. يرجى الانتظار بضع دقائق ثم تجربة الكود مجددًا."
   },
   "Checkout": {
     "packaging": "التغليف",

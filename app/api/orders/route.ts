@@ -8,6 +8,8 @@ import { getBundleRule } from "@/lib/offers";
 import { getCheckoutSettings, getWhatsappNumber } from "@/lib/shop-data";
 import { computeTotals } from "@/lib/pricing";
 import { salePrice } from "@/lib/product";
+import { getLiveCampaigns } from "@/lib/campaigns";
+import { campaignSalePct } from "@/lib/campaign-pricing";
 import { buildOrderMessage, type MessageLine } from "@/lib/order-message";
 
 const MAX_LINES = 20;
@@ -53,15 +55,16 @@ export async function POST(req: NextRequest) {
   const supabase = getAdminClient();
   if (!supabase) return fail("unavailable", 503);
 
-  const [settings, bundle, waNumber, productsRes] = await Promise.all([
+  const [settings, bundle, waNumber, productsRes, campaigns] = await Promise.all([
     getCheckoutSettings(),
     getBundleRule(),
     getWhatsappNumber(),
     supabase
       .from("products")
-      .select("id, code, brand, name, price_sar, sale_pct, cost_pkr, stock")
+      .select("id, code, brand, name, price_sar, sale_pct, cost_pkr, stock, occasions")
       .in("code", [...wanted.keys()])
       .eq("visible", true),
+    getLiveCampaigns(supabase),
   ]);
 
   const area = settings.areas.find((a) => a.area === checkout.area);
@@ -78,7 +81,8 @@ export async function POST(req: NextRequest) {
 
   const priced = [...wanted.entries()].map(([code, w]) => {
     const p = products.find((x) => x.code === code)!;
-    return { p, qty: w.qty, stitch: w.stitch, unit: salePrice(p) };
+    // Same price as the rack: the suit's own sale or a live campaign, whichever is larger.
+    return { p, qty: w.qty, stitch: w.stitch, unit: salePrice({ price_sar: Number(p.price_sar), sale_pct: campaignSalePct(p, campaigns) }) };
   });
 
   const codeRaw = text(body.discountCode, 32);

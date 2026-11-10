@@ -1,9 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
-export default function TopBar() {
+const EVERY_MS = 5000;
+
+export default function TopBar({ lines = [] }: { lines?: string[] }) {
   const t = useTranslations("TopBar");
+  const list = lines.length ? lines : [t("promo")];
+  const [i, setI] = useState(0);
+
+  // Rotate when there is more than one line; hold still for reduced motion or while the tab is hidden.
+  useEffect(() => {
+    if (list.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => {
+      if (!document.hidden) setI((n) => n + 1);
+    }, EVERY_MS);
+    return () => window.clearInterval(id);
+  }, [list.length]);
 
   return (
     <div className="bg-emerald text-gold-light text-[13.5px] font-medium">
@@ -31,9 +45,11 @@ export default function TopBar() {
           {t("shipping")}
         </span>
 
-        {/* Centre promo */}
-        <span className="text-center">
-          {t("promo")}
+        {/* Centre promo: live campaigns and top-bar messages from the back office, rotating */}
+        <span className="text-center" aria-live="off">
+          <span key={i} className="th-topbar-line inline-block">
+            {list[i % list.length]}
+          </span>
         </span>
 
         {/* WhatsApp */}
