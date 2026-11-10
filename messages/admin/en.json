@@ -58,13 +58,56 @@
       "catalogue": "You handle products, photos and stock."
     },
     "dashboard": {
-      "hello": "Welcome, {name}",
-      "yourSections": "Your sections",
-      "soon": "Coming in the next steps"
+      "morning": "Good morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "evening": "Good evening, {name}",
+      "today": "{date} · Riyadh",
+      "addProduct": "+ Add product",
+      "kpiWaiting": "Orders to confirm on WhatsApp",
+      "kpiCourier": "With the courier",
+      "kpiCash": "Cash collected (COD)",
+      "kpiRefused": "Refused at door",
+      "latest": "Latest orders",
+      "latestHint": "open Orders to update status",
+      "colOrder": "Order",
+      "colTime": "Time",
+      "colArea": "Area",
+      "colTotal": "Total",
+      "colStatus": "Status",
+      "noOrders": "No orders yet. New WhatsApp orders appear here.",
+      "attention": "Needs attention",
+      "waitingLine": "{count, plural, one {# order waiting} other {# orders waiting}} for WhatsApp confirmation",
+      "requestsLine": "{count, plural, one {# new customer request} other {# new customer requests}}",
+      "open": "Open",
+      "restock": "Restock",
+      "soldOut": "Sold out",
+      "left": "{count} left",
+      "stockLine": "Stock in Riyadh",
+      "stockValue": "{units, plural, one {# suit} other {# suits}} · {value}",
+      "allClear": "Nothing needs attention right now.",
+      "loadFailed": "Some figures couldn't load. Please refresh the page."
     },
     "section": {
       "soonTitle": "Being built",
       "soonText": "This section arrives in a later step. Your sign-in and role already protect it."
+    },
+    "money": "SAR {amount}",
+    "status": {
+      "waiting_confirmation": "Waiting for confirmation",
+      "confirmed": "Confirmed",
+      "packed": "Packed",
+      "with_courier": "With the courier",
+      "delivered_cash_collected": "Delivered · cash collected",
+      "refused_at_door": "Refused at door",
+      "cancelled": "Cancelled"
+    },
+    "areas": {
+      "central": "Central Riyadh",
+      "north": "North Riyadh",
+      "east": "East Riyadh",
+      "west": "West Riyadh",
+      "south": "South Riyadh",
+      "outskirts": "Outskirts"
     }
   }
 }

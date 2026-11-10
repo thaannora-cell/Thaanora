@@ -58,13 +58,56 @@
       "catalogue": "أنت مسؤول عن المنتجات والصور والمخزون."
     },
     "dashboard": {
-      "hello": "أهلًا، {name}",
-      "yourSections": "أقسامك",
-      "soon": "تأتي في الخطوات القادمة"
+      "morning": "صباح الخير، {name}",
+      "afternoon": "مساء الخير، {name}",
+      "evening": "مساء الخير، {name}",
+      "today": "{date} · الرياض",
+      "addProduct": "+ إضافة منتج",
+      "kpiWaiting": "طلبات بانتظار التأكيد على واتساب",
+      "kpiCourier": "مع المندوب",
+      "kpiCash": "النقد المحصّل (عند الاستلام)",
+      "kpiRefused": "رُفض عند الباب",
+      "latest": "أحدث الطلبات",
+      "latestHint": "افتح الطلبات لتحديث الحالة",
+      "colOrder": "الطلب",
+      "colTime": "الوقت",
+      "colArea": "المنطقة",
+      "colTotal": "الإجمالي",
+      "colStatus": "الحالة",
+      "noOrders": "لا توجد طلبات بعد. ستظهر طلبات واتساب الجديدة هنا.",
+      "attention": "يحتاج إلى متابعة",
+      "waitingLine": "{count, plural, one {طلب واحد بانتظار} two {طلبان بانتظار} few {# طلبات بانتظار} many {# طلبًا بانتظار} other {# طلب بانتظار}} التأكيد على واتساب",
+      "requestsLine": "{count, plural, one {استفسار جديد من العملاء} two {استفساران جديدان من العملاء} few {# استفسارات جديدة من العملاء} many {# استفسارًا جديدًا من العملاء} other {# استفسار جديد من العملاء}}",
+      "open": "فتح",
+      "restock": "إعادة التخزين",
+      "soldOut": "نفد",
+      "left": "متبقٍ {count}",
+      "stockLine": "المخزون في الرياض",
+      "stockValue": "{units, plural, one {طقم واحد} two {طقمان} few {# أطقم} many {# طقمًا} other {# طقم}} · {value}",
+      "allClear": "لا شيء يحتاج إلى متابعة الآن.",
+      "loadFailed": "تعذّر تحميل بعض الأرقام. يرجى تحديث الصفحة."
     },
     "section": {
       "soonTitle": "قيد الإنشاء",
       "soonText": "يُضاف هذا القسم في خطوة لاحقة. تسجيل الدخول والدور يحميانه من الآن."
+    },
+    "money": "{amount} ر.س",
+    "status": {
+      "waiting_confirmation": "بانتظار التأكيد",
+      "confirmed": "مؤكَّد",
+      "packed": "مُغلَّف",
+      "with_courier": "مع المندوب",
+      "delivered_cash_collected": "تم التسليم · حُصّل النقد",
+      "refused_at_door": "رُفض عند الباب",
+      "cancelled": "ملغى"
+    },
+    "areas": {
+      "central": "وسط الرياض",
+      "north": "شمال الرياض",
+      "east": "شرق الرياض",
+      "west": "غرب الرياض",
+      "south": "جنوب الرياض",
+      "outskirts": "ضواحي الرياض"
     }
   }
 }
