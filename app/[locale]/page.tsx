@@ -32,7 +32,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return (
     <SelectionProvider products={products} bundle={bundle} settings={settings}>
-      <TopBar lines={topLines} />
+      <TopBar lines={topLines} whatsapp={info.whatsapp} />
       <Header />
       <main className="max-w-[1320px] mx-auto px-4 pb-16 min-h-[60vh]">
         <Hero designs={loaded ? products.length : null} brands={loaded ? brandsOf(products).length : null} />

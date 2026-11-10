@@ -303,13 +303,13 @@
         "hi": "in Hindi"
       },
       "send": {
-        "confirm": "Send confirmation on WhatsApp",
         "confirmed": "Send “confirmed” on WhatsApp",
         "packed": "Send “packed” on WhatsApp",
         "onTheWay": "Send “out for delivery” on WhatsApp",
-        "thanks": "Send thank-you on WhatsApp",
         "cancelled": "Send cancellation on WhatsApp",
-        "refused": "Message the customer on WhatsApp"
+        "refused": "Message the customer on WhatsApp",
+        "received": "Send “order received” on WhatsApp",
+        "delivered": "Send thank-you on WhatsApp"
       },
       "messageHint": "Opens WhatsApp with this text ready, in the language she shopped in. You can edit it before sending.",
       "noPhone": "This order has no valid WhatsApp number.",
@@ -346,7 +346,9 @@
         "invalid": "That isn't a valid value.",
         "saveFailed": "Couldn't save. Please try again.",
         "noStock": "Not enough stock to confirm this order ({detail}). Receive stock first, or change the order with the customer."
-      }
+      },
+      "sendFrom": "Send it from the shop's WhatsApp (<n>{number}</n>) so replies come back to the shop.",
+      "noShopNumber": "The shop's WhatsApp number isn't set yet. The owner can add it in Settings."
     },
     "offers": {
       "title": "Offers & codes",
@@ -525,7 +527,12 @@
       "errors": {
         "forbidden": "Your role can't change requests.",
         "saveFailed": "Couldn't save. Please try again."
-      }
+      },
+      "quoteTitle": "Send a price quote",
+      "quotePrice": "Price in SAR (incl. VAT)",
+      "quoteDays": "Delivery time (days)",
+      "quoteSend": "Send quote on WhatsApp",
+      "quoteFill": "Enter the price and delivery time to prepare the quote."
     },
     "tailors": {
       "title": "Tailor network",
@@ -595,7 +602,8 @@
       "save": "Save settings",
       "saving": "Saving…",
       "done": {
-        "saved": "Settings saved. The website shows the new details now."
+        "saved": "Settings saved. The website shows the new details now.",
+        "templates": "Templates saved. New messages use them now."
       },
       "errors": {
         "forbidden": "Only the owner can change settings.",
@@ -608,8 +616,28 @@
         "nationalNo": "The national number can only have letters, numbers and dashes.",
         "vatNo": "A Saudi VAT number has 15 digits.",
         "pkrRate": "Enter the PKR rate, e.g. 73.73.",
-        "lowStock": "Low-stock level must be a whole number from 0 to 100."
-      }
+        "lowStock": "Low-stock level must be a whole number from 0 to 100.",
+        "tplUnknown": "A template uses a '{'word'}' it can’t fill in (marked in pink). Use only the words listed under it.",
+        "tplLong": "A template can be at most 1,000 characters."
+      },
+      "tplTitle": "WhatsApp message templates",
+      "tplSub": "The ready messages staff send from Orders and Requests. Customers who shop in Urdu or Hindi get the built-in text.",
+      "tplKinds": {
+        "received": "Order received",
+        "confirmed": "Order confirmed",
+        "onTheWay": "Out for delivery",
+        "delivered": "Delivered, thank you",
+        "sourcingQuote": "Sourcing quote"
+      },
+      "tplLang": {
+        "en": "English",
+        "ar": "Arabic"
+      },
+      "tplCanUse": "You can use:",
+      "tplHint": "Words in '{'braces'}' are filled in for each customer. A line is left out when its detail is empty, for example no tracking number yet.",
+      "tplReset": "Use the default",
+      "tplEdited": "Edited",
+      "tplSave": "Save templates"
     },
     "staff": {
       "title": "Staff & access",

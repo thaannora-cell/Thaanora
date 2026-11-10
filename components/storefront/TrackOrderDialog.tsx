@@ -30,8 +30,9 @@ function savedPhone(): string {
   }
 }
 
-// One dialog for the whole site; the header pill and the footer link open it.
-export default function TrackOrderDialog() {
+// One dialog for the whole site; the header pill, the footer link and ?track=TH-1024 links
+// (sent in the "out for delivery" WhatsApp message) open it. whatsapp: the shop's number from Settings.
+export default function TrackOrderDialog({ whatsapp = null }: { whatsapp?: string | null }) {
   const t = useTranslations("Track");
   const tRack = useTranslations("Rack");
   const locale = useLocale();
@@ -48,6 +49,16 @@ export default function TrackOrderDialog() {
       setPhone((p) => p || savedPhone());
     };
     window.addEventListener(OPEN_TRACK_EVENT, onOpen);
+
+    // A tracking link from WhatsApp: open with the order number filled in, then tidy the address.
+    const url = new URL(window.location.href);
+    const fromLink = url.searchParams.get("track")?.trim().toUpperCase() ?? "";
+    if (/^TH-\d{3,7}$/.test(fromLink)) {
+      setOrderNo(fromLink);
+      onOpen();
+      url.searchParams.delete("track");
+      window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+    }
     return () => window.removeEventListener(OPEN_TRACK_EVENT, onOpen);
   }, []);
 
@@ -78,6 +89,8 @@ export default function TrackOrderDialog() {
   const stopped = result && STOPPED.includes(result.status);
   const current = result ? STEPS.indexOf(result.status as (typeof STEPS)[number]) : -1;
   const delivered = result?.status === "delivered_cash_collected";
+  const askNo = result?.orderNo ?? (/^TH-\d{3,7}$/i.test(orderNo.trim()) ? orderNo.trim().toUpperCase() : "");
+  const askUrl = whatsapp && askNo ? `https://wa.me/${whatsapp}?text=${encodeURIComponent(t("askMessage", { orderNo: askNo }))}` : null;
 
   return (
     <Modal open={open} onClose={() => setOpen(false)} eyebrow={t("eyebrow")} title={t("title")}>
@@ -154,6 +167,12 @@ export default function TrackOrderDialog() {
             </ol>
           )}
         </div>
+      )}
+
+      {askUrl && (
+        <a href={askUrl} target="_blank" rel="noopener noreferrer" className="th-btn self-start no-underline">
+          {t("ask")}
+        </a>
       )}
 
       <p className="m-0 text-[12px] text-muted">{t("note")}</p>

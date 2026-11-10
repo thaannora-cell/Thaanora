@@ -8,6 +8,12 @@ import { getAdminLang, getAdminT } from "@/lib/admin/i18n";
 import { canOpen } from "@/lib/admin/sections";
 import { getRequest, requestReply } from "@/lib/admin/requests";
 import { areaKey, orderTime } from "@/lib/admin/format";
+import { getWhatsappNumber } from "@/lib/shop-data";
+import { templateFor } from "@/lib/admin/wa-templates";
+import { displayNumber } from "@/lib/wa-templates";
+import { getTranslations } from "next-intl/server";
+import ShopNumberNote from "@/components/admin/ShopNumberNote";
+import QuoteMessage from "@/components/admin/requests/QuoteMessage";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +29,15 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
   if (!UUID.test(id)) notFound();
   const r = await getRequest(id);
   if (!r) notFound();
-  const [t, lang, reply] = [await getAdminT(), await getAdminLang(), await requestReply(r)];
+  const [t, lang, reply, shop] = [await getAdminT(), await getAdminLang(), await requestReply(r), await getWhatsappNumber()];
+  // Sourcing requests that are still open get a price quote from the owner's template.
+  const quote =
+    reply && r.type === "sourcing" && r.status !== "closed"
+      ? {
+          template: await templateFor("sourcingQuote", r.language),
+          pricePattern: String((await getTranslations({ locale: r.language, namespace: "Rack" })).raw("price")),
+        }
+      : null;
   const k = r.area ? areaKey(r.area) : null;
   const row = (label: string, value: React.ReactNode) => (
     <div className="flex justify-between gap-3 border-b border-[#F0EBE1] py-2 text-[14px] last:border-b-0">
@@ -111,11 +125,28 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
                   {t(`requests.reply.${reply.kind}`)}
                 </a>
                 <p className="m-0 mt-2 text-[12px] text-muted">{t("orders.messageHint")}</p>
+                <ShopNumberNote number={shop} />
               </>
             ) : (
               <p className="m-0 text-[14px] text-muted">{t("orders.noPhone")}</p>
             )}
           </section>
+
+          {reply && quote && (
+            <section aria-labelledby="quote" className={panel}>
+              <h2 id="quote" className={h2}>
+                {t("requests.quoteTitle")} <small className="font-normal text-muted">· {t(`orders.lang.${r.language}`)}</small>
+              </h2>
+              <QuoteMessage
+                template={quote.template}
+                pricePattern={quote.pricePattern}
+                values={{ ...reply.values, shopNumber: shop ? displayNumber(shop) : "" }}
+                phone={reply.phone}
+                locale={r.language}
+              />
+              <ShopNumberNote number={shop} />
+            </section>
+          )}
         </div>
       </div>
     </>

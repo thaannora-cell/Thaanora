@@ -80,7 +80,7 @@ export async function getRequest(id: string): Promise<(RequestRow & { screenshot
 // Ready-to-send WhatsApp reply in the customer's language: what's right for this type of request,
 // or a polite "we can't get it" once it's Closed. Staff press send themselves.
 export type ReplyKind = RequestType | "closed";
-export async function requestReply(r: RequestRow): Promise<{ kind: ReplyKind; text: string; url: string } | null> {
+export async function requestReply(r: RequestRow): Promise<{ kind: ReplyKind; text: string; url: string; phone: string; values: { name: string; ref: string; what: string } } | null> {
   const t = await getTranslations({ locale: r.language, namespace: "RequestReply" });
   const name = r.customer === "—" ? "" : (r.customer.split(/\s+/)[0] ?? "");
   const what = r.what.replace(/^[^·]+·\s*/, "") || r.what; // "CODE · Name" → "Name"
@@ -89,5 +89,5 @@ export async function requestReply(r: RequestRow): Promise<{ kind: ReplyKind; te
   const text = [t(kind, v), "", t("signoff")].join("\n");
   const digits = r.phone.replace(/\D/g, "");
   if (!/^[1-9]\d{7,14}$/.test(digits)) return null;
-  return { kind, text, url: `https://wa.me/${digits}?text=${encodeURIComponent(text)}` };
+  return { kind, text, url: `https://wa.me/${digits}?text=${encodeURIComponent(text)}`, phone: digits, values: v };
 }

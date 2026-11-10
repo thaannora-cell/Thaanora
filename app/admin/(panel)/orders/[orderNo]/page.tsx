@@ -9,6 +9,8 @@ import { getAdminLang, getAdminT } from "@/lib/admin/i18n";
 import { canOpen } from "@/lib/admin/sections";
 import { COURIERS, NEXT, getOrder } from "@/lib/admin/orders";
 import { customerMessage } from "@/lib/admin/customer-message";
+import { getWhatsappNumber } from "@/lib/shop-data";
+import ShopNumberNote from "@/components/admin/ShopNumberNote";
 import { amount, areaKey, orderTime } from "@/lib/admin/format";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +28,8 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
   if (!/^TH-\d{3,7}$/.test(orderNo)) notFound();
   const o = await getOrder(orderNo);
   if (!o) notFound();
-  const [t, lang, msg] = [await getAdminT(), await getAdminLang(), await customerMessage(o)];
+  const shop = await getWhatsappNumber();
+  const [t, lang, msg] = [await getAdminT(), await getAdminLang(), await customerMessage(o, shop)];
   const sar = (n: number) => t("money", { amount: amount(lang, n) });
   const area = (a: string) => {
     const k = areaKey(a);
@@ -100,6 +103,7 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
                   {t(`orders.send.${msg.kind}`)}
                 </a>
                 <p className="m-0 mt-2 text-[12px] text-muted">{t("orders.messageHint")}</p>
+                <ShopNumberNote number={shop} />
               </>
             ) : (
               <p className="m-0 text-[14px] text-muted">{t("orders.noPhone")}</p>

@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { displayNumber } from "@/lib/wa-templates";
 
 const EVERY_MS = 5000;
 
-export default function TopBar({ lines = [] }: { lines?: string[] }) {
+// whatsapp: the shop's number from Settings (digits), or null while it isn't set.
+export default function TopBar({ lines = [], whatsapp = null }: { lines?: string[]; whatsapp?: string | null }) {
   const t = useTranslations("TopBar");
   const list = lines.length ? lines : [t("promo")];
   const [i, setI] = useState(0);
@@ -53,25 +55,32 @@ export default function TopBar({ lines = [] }: { lines?: string[] }) {
         </span>
 
         {/* WhatsApp */}
-        <span className="hidden md:flex items-center gap-2 shrink-0">
-          <svg
-            className="shrink-0"
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--color-rani)"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            aria-hidden="true"
+        {whatsapp ? (
+          <a
+            href={`https://wa.me/${whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex items-center gap-2 shrink-0 text-inherit no-underline hover:underline underline-offset-2"
           >
-            <path
-              className="mi-ring"
-              d="M5 3 H9 L11 8 L8.5 9.5 A11 11 0 0 0 14.5 15.5 L16 13 L21 15 V19 A2 2 0 0 1 19 21 A16 16 0 0 1 3 5 A2 2 0 0 1 5 3Z"
-            />
-          </svg>
-          {t("whatsapp")}
-        </span>
+            <svg
+              className="shrink-0"
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--color-rani)"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path
+                className="mi-ring"
+                d="M5 3 H9 L11 8 L8.5 9.5 A11 11 0 0 0 14.5 15.5 L16 13 L21 15 V19 A2 2 0 0 1 19 21 A16 16 0 0 1 3 5 A2 2 0 0 1 5 3Z"
+              />
+            </svg>
+            {t.rich("whatsappNumber", { number: displayNumber(whatsapp), n: (chunks) => <bdi dir="ltr">{chunks}</bdi> })}
+          </a>
+        ) : null}
 
       </div>
     </div>

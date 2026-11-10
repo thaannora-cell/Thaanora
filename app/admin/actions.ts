@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { getSessionClient } from "@/lib/supabase/server";
 import { ADMIN_LANG_COOKIE } from "@/lib/admin/i18n";
 import { allow } from "@/lib/rate-limit";
+import { siteOrigin } from "@/lib/site-origin";
 
 export type SignInState =
   | { step: "email"; error?: "badEmail" | "badLink" | "tooMany" | "failed"; email?: string }
@@ -16,13 +17,7 @@ const clean = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim(
 const tooMany = (e: { status?: number; code?: string } | null) =>
   e?.status === 429 || /rate_limit/.test(e?.code ?? "");
 
-// This site's own address (localhost while developing, the Vercel address when live).
-async function origin() {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  return `${proto}://${host}`;
-}
+const origin = siteOrigin;
 
 // One form action for the whole sign-in: intent = send | resend | verify | back.
 export async function signInAction(_prev: SignInState, form: FormData): Promise<SignInState> {

@@ -2,7 +2,7 @@
   "TopBar": {
     "shipping": "Direct from Lahore & Karachi to Riyadh",
     "promo": "New arrivals · 10% off this week",
-    "whatsapp": "WhatsApp concierge"
+    "whatsappNumber": "WhatsApp concierge: <n>{number}</n>"
   },
   "Header": {
     "homeLabel": "Thaanora — home",
@@ -365,7 +365,9 @@
     "cancelled": "This order was cancelled on {date}. Message us on WhatsApp if you’d like to order again.",
     "refused": "This order was returned to us on {date}. Message us on WhatsApp if you’d like it delivered again.",
     "note": "For your privacy we show only the order status, never personal details.",
-    "error_too_many": "Too many tries from this connection. Please wait a few minutes and try again."
+    "error_too_many": "Too many tries from this connection. Please wait a few minutes and try again.",
+    "ask": "Ask about this order on WhatsApp",
+    "askMessage": "Hello Thaanora, I have a question about my order {orderNo}."
   },
   "Sourcing": {
     "eyebrow": "Sourcing on request",
@@ -506,18 +508,8 @@
     "who_p": "Thaanora is a brand of {company}, a one-person limited liability company registered in Saudi Arabia (Unified National No. {nationalNo})."
   },
   "CustomerMessage": {
-    "confirmIntro": "Hello {name}, this is Thaanora. We received your order {orderNo}:",
     "item": "{name} × {qty}",
-    "confirmTotal": "Total to pay in cash on delivery: {total}. Delivery to {area}.",
-    "confirmAsk": "Please reply YES to confirm, and send your exact address or a location pin.",
-    "confirmed": "Hello {name}, your order {orderNo} is confirmed. We're preparing it now and will message you when it's on the way. Total to pay on delivery: {total}.",
     "packed": "Hello {name}, your order {orderNo} is packed and will leave with the courier soon.",
-    "onTheWay": "Good news, {name}! Your order {orderNo} is on its way.",
-    "courier": "Courier: {courier}",
-    "tracking": "Tracking number: {tracking}",
-    "haveCash": "Please have {total} ready in cash. You can also follow it on our website under “Track my order”.",
-    "thanks": "Thank you, {name}! Your order {orderNo} has been delivered. We hope you love your fabric.",
-    "thanksStitch": "If you'd like it stitched, reply here and we'll connect you with a tailor from our network. A photo of your finished suit would make our day!",
     "cancelled": "Hello {name}, your order {orderNo} has been cancelled. If this is a mistake or you'd like to order again, just reply to this message.",
     "refused": "Hello {name}, we're sorry the delivery of order {orderNo} didn't work out. If you'd like to try again, just reply to this message.",
     "signoff": "Thaanora · Your fabric. Your fit."
@@ -530,5 +522,12 @@
     "stitching": "Hello {name}, about stitching ({ref}): send us your measurements and preferred neckline, and we'll connect you with a partner tailor near you at the member price.",
     "closed": "Hello {name}, about your request {ref} ({what}): we're sorry, we can't get this design right now. Thank you for asking us; we'll message you if that changes.",
     "signoff": "Thaanora · Your fabric. Your fit."
+  },
+  "WaTemplates": {
+    "received": "Hello {name}, this is Thaanora. We received your order {orderNo}:\n{items}\n\nTotal to pay in cash on delivery: {total}. Delivery to {area}.\nPlease reply YES to confirm, and send your exact address or a location pin.\n\nThaanora · Your fabric. Your fit.",
+    "confirmed": "Hello {name}, your order {orderNo} is confirmed. We're preparing it now and will message you when it's on the way.\nTotal to pay on delivery: {total}.\n\nThaanora · Your fabric. Your fit.",
+    "onTheWay": "Good news, {name}! Your order {orderNo} is out for delivery.\nCourier: {courier}\nTracking number: {trackingNo}\nFollow it here: {trackingLink}\nPlease have {total} ready in cash.\n\nThaanora · Your fabric. Your fit.",
+    "delivered": "Thank you, {name}! Your order {orderNo} has been delivered. We hope you love your fabric.\nIf you'd like it stitched, reply here and we'll connect you with a tailor from our network. A photo of your finished suit would make our day!\n\nThaanora · Your fabric. Your fit.",
+    "sourcingQuote": "Hello {name}, good news about your request {ref} ({what}): we can get it for you.\nPrice: {price}, delivered in Riyadh, cash on delivery.\nDelivery time: about {days} days.\nReply YES to order it and we'll confirm everything here.\n\nThaanora · Your fabric. Your fit."
   }
 }

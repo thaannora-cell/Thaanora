@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import TrackOrderDialog from "@/components/storefront/TrackOrderDialog";
 import SourcingDialog from "@/components/storefront/SourcingDialog";
+import { getWhatsappNumber } from "@/lib/shop-data";
 import { getMessages, getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -28,7 +29,7 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const messages = await getMessages();
+  const [messages, whatsapp] = await Promise.all([getMessages(), getWhatsappNumber()]);
   const isRTL = locale === "ar" || locale === "ur";
 
   return (
@@ -40,7 +41,7 @@ export default async function LocaleLayout({
       <body className="bg-ivory font-[family-name:var(--font-jost)] text-ink antialiased">
         <NextIntlClientProvider messages={messages}>
           {children}
-          <TrackOrderDialog />
+          <TrackOrderDialog whatsapp={whatsapp} />
           <SourcingDialog />
         </NextIntlClientProvider>
       </body>

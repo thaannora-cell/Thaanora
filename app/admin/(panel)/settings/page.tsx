@@ -5,6 +5,8 @@ import { getSession } from "@/lib/admin/session";
 import { getAdminT } from "@/lib/admin/i18n";
 import { canOpen } from "@/lib/admin/sections";
 import { getSettingsForm } from "@/lib/admin/settings";
+import { allDefaults, getSavedTemplates } from "@/lib/admin/wa-templates";
+import TemplatesView from "@/components/admin/settings/TemplatesView";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +14,7 @@ export default async function SettingsPage() {
   const session = await getSession();
   if (session.state !== "staff") redirect("/admin/sign-in");
   if (!canOpen(session.staff.role, "settings")) return <SectionDenied role={session.staff.role} section="settings" />;
-  const [{ form, failed }, t] = [await getSettingsForm(), await getAdminT()];
+  const [{ form, failed }, t, saved, defaults] = await Promise.all([getSettingsForm(), getAdminT(), getSavedTemplates(), allDefaults()]);
   return (
     <>
       {failed && (
@@ -21,6 +23,7 @@ export default async function SettingsPage() {
         </p>
       )}
       <SettingsView form={form} />
+      <TemplatesView saved={saved} defaults={defaults} />
     </>
   );
 }

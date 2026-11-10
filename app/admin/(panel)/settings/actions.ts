@@ -5,6 +5,8 @@ import { getSession } from "@/lib/admin/session";
 import { canOpen } from "@/lib/admin/sections";
 import { getSessionClient } from "@/lib/supabase/server";
 import type { FormResult } from "../offers/actions";
+import { allDefaults } from "@/lib/admin/wa-templates";
+import { SETTINGS_KEY, TEMPLATE_KINDS, TEMPLATE_LANGS, TEMPLATE_MAX, unknownPlaceholders, type Templates } from "@/lib/wa-templates";
 
 // Which settings the website may read. Private ones (PKR rate, low-stock level) stay staff-only.
 const PUBLIC: Record<string, boolean> = {
@@ -98,4 +100,27 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
   revalidatePath("/admin", "layout");
   revalidatePath("/", "layout"); // footer, WhatsApp button, delivery fees at checkout
   return { ok: true, message: JSON.stringify(["saved", {}]), at: Date.now() };
+}
+
+// WhatsApp message templates (owner only). A template left empty or equal to the built-in text isn't
+// stored, so it keeps following the built-in text.
+export async function saveTemplates(_p: FormResult, form: FormData): Promise<FormResult> {
+  const session = await getSession();
+  if (session.state !== "staff" || !canOpen(session.staff.role, "settings")) return fail("forbidden");
+  const defaults = await allDefaults();
+  const value: Templates = {};
+  for (const lang of TEMPLATE_LANGS) {
+    for (const kind of TEMPLATE_KINDS) {
+      const name = `tpl_${lang}_${kind}`;
+      const raw = String(form.get(name) ?? "").replace(/\r\n?/g, "\n").trim();
+      if (raw.length > TEMPLATE_MAX) return fail("tplLong", name);
+      if (unknownPlaceholders(kind, raw).length) return fail("tplUnknown", name);
+      if (raw && raw !== defaults[lang][kind].trim()) (value[lang] ??= {})[kind] = raw;
+    }
+  }
+  const supabase = await getSessionClient();
+  const { error } = await supabase.from("settings").upsert({ key: SETTINGS_KEY, value, is_public: false });
+  if (error) return fail("saveFailed");
+  revalidatePath("/admin", "layout");
+  return { ok: true, message: JSON.stringify(["templates", {}]), at: Date.now() };
 }
