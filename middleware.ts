@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { routing } from "./i18n/routing";
 import { GATE_COOKIE, gateToken, isLocale } from "./lib/site-gate";
 
@@ -32,8 +33,34 @@ export default async function middleware(req: NextRequest) {
     }
   }
 
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) return admin(req);
+
   const res = isApi ? NextResponse.next() : intl(req);
   if (password) res.headers.set("X-Robots-Tag", NOINDEX);
+  return res;
+}
+
+// Back office: no language prefix, never indexed or cached, and the sign-in session is refreshed
+// here (server components can read cookies but not write them).
+async function admin(req: NextRequest) {
+  let res = NextResponse.next({ request: req });
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (url && key) {
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        getAll: () => req.cookies.getAll(),
+        setAll: (list: { name: string; value: string; options: CookieOptions }[]) => {
+          list.forEach(({ name, value }) => req.cookies.set(name, value));
+          res = NextResponse.next({ request: req });
+          list.forEach(({ name, value, options }) => res.cookies.set(name, value, options));
+        },
+      },
+    });
+    await supabase.auth.getUser();
+  }
+  res.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+  res.headers.set("Cache-Control", "private, no-store");
   return res;
 }
 

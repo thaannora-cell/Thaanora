@@ -11,7 +11,7 @@ The approved designs are in `docs/`:
 
 ## Stack
 - Next.js (App Router) + TypeScript, Tailwind CSS
-- Supabase: Postgres database, Storage (product photos), Auth (owner and staff sign-in by phone one-time code)
+- Supabase: Postgres database, Storage (product photos), Auth (back office at /admin: staff sign in with an emailed link or code; roles owner / orders / catalogue enforced by RLS)
 - Hosting: Vercel, connected to GitHub repo `thaannora-cell/Thaanora`
 - i18n: English, Arabic, Urdu, Hindi. Arabic and Urdu are right-to-left (`dir="rtl"`). Use logical CSS (`ms-`, `me-`, `start`, `end`), never left/right.
 

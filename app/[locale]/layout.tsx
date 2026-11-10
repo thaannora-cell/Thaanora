@@ -4,54 +4,10 @@ import SourcingDialog from "@/components/storefront/SourcingDialog";
 import { getMessages, getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  Cinzel,
-  Cormorant_Garamond,
-  Jost,
-  Amiri,
-  Noto_Nastaliq_Urdu,
-  Noto_Sans_Devanagari,
-} from "next/font/google";
 import { routing } from "@/i18n/routing";
+import { fontVars } from "@/lib/fonts";
 import "../globals.css";
 
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  variable: "--font-cinzel",
-  display: "swap",
-});
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
-const jost = Jost({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-jost",
-  display: "swap",
-});
-const amiri = Amiri({
-  subsets: ["arabic"],
-  weight: ["400", "700"],
-  variable: "--font-amiri",
-  display: "swap",
-});
-const urdu = Noto_Nastaliq_Urdu({
-  subsets: ["arabic"],
-  weight: ["400", "600"],
-  variable: "--font-urdu",
-  display: "swap",
-});
-const hindi = Noto_Sans_Devanagari({
-  subsets: ["devanagari"],
-  weight: ["400", "500"],
-  variable: "--font-hindi",
-  display: "swap",
-});
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -79,7 +35,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={isRTL ? "rtl" : "ltr"}
-      className={`${cinzel.variable} ${cormorant.variable} ${jost.variable} ${amiri.variable} ${urdu.variable} ${hindi.variable}`}
+      className={fontVars}
     >
       <body className="bg-ivory font-[family-name:var(--font-jost)] text-ink antialiased">
         <NextIntlClientProvider messages={messages}>

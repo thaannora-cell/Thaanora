@@ -1,0 +1,70 @@
+{
+  "Admin": {
+    "title": "Thaanora Back Office",
+    "backOffice": "Back office",
+    "signIn": {
+      "title": "Back office",
+      "intro": "Sign in with your work email. We'll email you a sign-in link.",
+      "email": "Work email",
+      "send": "Email me a sign-in link",
+      "sending": "Sending…",
+      "codeIntro": "If {email} is on the staff list, a sign-in link is on its way. Open it on this device, in this browser. It can take a minute.",
+      "code": "Or type the code, if your email shows one",
+      "verify": "Sign in",
+      "verifying": "Checking…",
+      "otherEmail": "Use another email",
+      "resend": "Send a new link",
+      "resent": "A new link is on its way.",
+      "badEmail": "Please enter a valid email address.",
+      "badCode": "That code is wrong or has expired. Check the latest email or send a new code.",
+      "tooMany": "Too many tries. Please wait a few minutes and try again.",
+      "failed": "Something went wrong. Please try again.",
+      "toSite": "Back to the website",
+      "badLink": "That sign-in link has expired or was opened in a different browser. Ask for a new link and open it in this browser."
+    },
+    "noAccess": {
+      "title": "No access",
+      "text": "{email} is signed in, but isn't on the Thaanora staff list. Ask the owner to add you, then sign in again.",
+      "sectionTitle": "Not part of your role",
+      "sectionText": "Your role ({role}) doesn't include {section}. Ask the owner if you need it."
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "products": "Products",
+      "stock": "Stock",
+      "offers": "Offers & codes",
+      "seasons": "Seasons & labels",
+      "requests": "Requests",
+      "tailors": "Tailors",
+      "reports": "Reports",
+      "settings": "Settings",
+      "staff": "Staff & access",
+      "label": "Back-office sections",
+      "menu": "Menu",
+      "closeMenu": "Close menu",
+      "viewSite": "View website",
+      "signOut": "Sign out",
+      "language": "Language"
+    },
+    "roles": {
+      "owner": "Owner",
+      "orders": "Orders",
+      "catalogue": "Catalogue"
+    },
+    "roleText": {
+      "owner": "You can see and change everything.",
+      "orders": "You handle orders and customer requests.",
+      "catalogue": "You handle products, photos and stock."
+    },
+    "dashboard": {
+      "hello": "Welcome, {name}",
+      "yourSections": "Your sections",
+      "soon": "Coming in the next steps"
+    },
+    "section": {
+      "soonTitle": "Being built",
+      "soonText": "This section arrives in a later step. Your sign-in and role already protect it."
+    }
+  }
+}

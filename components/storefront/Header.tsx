@@ -203,27 +203,6 @@ export default function Header({ minimal = false }: { minimal?: boolean }) {
         </button>
         )}
 
-        {/* ── Gold crown — back office ───────────────────────── */}
-        <button
-          type="button"
-          aria-label={t("backOfficeLabel")}
-          title={t("backOfficeLabel")}
-          className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gold text-emerald hover:bg-gold-light transition-colors shrink-0 shadow-[0_2px_8px_rgba(200,161,90,0.4)]"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--color-emerald)"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path className="mi-bob" d="M3 18 H21 L19 8 L15 12 L12 5 L9 12 L5 8 Z" />
-          </svg>
-        </button>
 
       </div>
     </header>
