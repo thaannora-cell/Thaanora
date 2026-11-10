@@ -498,5 +498,22 @@
     },
     "who_h": "Who we are",
     "who_p": "Thaanora is a brand of {company}, a one-person limited liability company registered in Saudi Arabia (Unified National No. {nationalNo})."
+  },
+  "CustomerMessage": {
+    "confirmIntro": "Hello {name}, this is Thaanora. We received your order {orderNo}:",
+    "item": "{name} × {qty}",
+    "confirmTotal": "Total to pay in cash on delivery: {total}. Delivery to {area}.",
+    "confirmAsk": "Please reply YES to confirm, and send your exact address or a location pin.",
+    "confirmed": "Hello {name}, your order {orderNo} is confirmed. We're preparing it now and will message you when it's on the way. Total to pay on delivery: {total}.",
+    "packed": "Hello {name}, your order {orderNo} is packed and will leave with the courier soon.",
+    "onTheWay": "Good news, {name}! Your order {orderNo} is on its way.",
+    "courier": "Courier: {courier}",
+    "tracking": "Tracking number: {tracking}",
+    "haveCash": "Please have {total} ready in cash. You can also follow it on our website under “Track my order”.",
+    "thanks": "Thank you, {name}! Your order {orderNo} has been delivered. We hope you love your fabric.",
+    "thanksStitch": "If you'd like it stitched, reply here and we'll connect you with a tailor from our network. A photo of your finished suit would make our day!",
+    "cancelled": "Hello {name}, your order {orderNo} has been cancelled. If this is a mistake or you'd like to order again, just reply to this message.",
+    "refused": "Hello {name}, we're sorry the delivery of order {orderNo} didn't work out. If you'd like to try again, just reply to this message.",
+    "signoff": "Thaanora · Your fabric. Your fit."
   }
 }
