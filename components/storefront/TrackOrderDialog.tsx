@@ -39,7 +39,7 @@ export default function TrackOrderDialog() {
   const [orderNo, setOrderNo] = useState("");
   const [phone, setPhone] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<"invalid" | "not_found" | "other" | null>(null);
+  const [error, setError] = useState<"invalid" | "not_found" | "too_many" | "other" | null>(null);
   const [result, setResult] = useState<Tracked | null>(null);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function TrackOrderDialog() {
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; order?: Tracked };
       if (data.ok && data.order) setResult(data.order);
-      else setError(data.error === "invalid" ? "invalid" : data.error === "not_found" ? "not_found" : "other");
+      else setError(data.error === "too_many" ? "too_many" : data.error === "invalid" ? "invalid" : data.error === "not_found" ? "not_found" : "other");
     } catch {
       setError("other");
     } finally {

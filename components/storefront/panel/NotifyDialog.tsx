@@ -21,7 +21,7 @@ export default function NotifyDialog({ product, open, onClose }: Props) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<"phone" | "other" | null>(null);
+  const [error, setError] = useState<"phone" | "too_many" | "other" | null>(null);
   const [sent, setSent] = useState<SentRequest | null>(null);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function NotifyDialog({ product, open, onClose }: Props) {
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string } & Partial<SentRequest>;
       if (!res.ok || !data.ok || !data.reference || !data.message) {
-        setError(data.error === "phone" ? "phone" : "other");
+        setError(data.error === "phone" ? "phone" : data.error === "too_many" ? "too_many" : "other");
         return;
       }
       setSent({ reference: data.reference, message: data.message, whatsappUrl: data.whatsappUrl ?? null });
@@ -110,7 +110,7 @@ export default function NotifyDialog({ product, open, onClose }: Props) {
             <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             {error && (
               <p id="notify-error" role="alert" className="m-0 text-[13px] text-rani">
-                {error === "phone" ? t("phoneError") : t("sendError")}
+                {error === "phone" ? t("phoneError") : error === "too_many" ? tReq("tooMany") : t("sendError")}
               </p>
             )}
             <button type="submit" disabled={busy} className="th-btn th-btn-pink disabled:opacity-60">

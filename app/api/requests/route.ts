@@ -3,6 +3,7 @@ import { getAdminClient } from "@/lib/supabase/admin";
 import { normaliseSaudiMobile } from "@/lib/phone";
 import { isLocale } from "@/lib/site-gate";
 import { isSameOrigin } from "@/lib/http";
+import { allow, LIMITS, tooMany } from "@/lib/rate-limit";
 import { getWhatsappNumber } from "@/lib/shop-data";
 import { buildRequestMessage } from "@/lib/request-message";
 import type { Locale } from "@/i18n/routing";
@@ -46,6 +47,8 @@ async function respond(
 
 export async function POST(req: NextRequest) {
   if (!isSameOrigin(req)) return bad("forbidden", 403);
+  // At most 6 requests an hour from one visitor (each may carry a screenshot upload).
+  if (!(await allow(req.headers, "requests"))) return NextResponse.json({ ok: false, error: "too_many" }, tooMany(LIMITS.requests.seconds));
   const isForm = (req.headers.get("content-type") ?? "").includes("multipart/form-data");
 
   let fields: Record<string, unknown>;

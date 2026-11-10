@@ -48,6 +48,8 @@ async function admin(req: NextRequest) {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (url && key) {
     const supabase = createServerClient(url, key, {
+      // Only the server reads the sign-in cookie, so page scripts can't (protects the session from XSS).
+      cookieOptions: { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" },
       cookies: {
         getAll: () => req.cookies.getAll(),
         setAll: (list: { name: string; value: string; options: CookieOptions }[]) => {

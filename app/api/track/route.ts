@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { isSameOrigin } from "@/lib/http";
+import { allow, LIMITS, tooMany } from "@/lib/rate-limit";
 import { normaliseSaudiMobile } from "@/lib/phone";
 
 // "1024", "th1024", "TH-1024" → "TH-1024"
@@ -14,6 +15,8 @@ const notFound = () => NextResponse.json({ ok: false, error: "not_found" }, { st
 
 export async function POST(req: NextRequest) {
   if (!isSameOrigin(req)) return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
+  // At most 20 lookups per 10 minutes: order numbers + phone numbers can't be guessed by trying many.
+  if (!(await allow(req.headers, "track"))) return NextResponse.json({ ok: false, error: "too_many" }, tooMany(LIMITS.track.seconds));
 
   let body: { orderNo?: unknown; phone?: unknown };
   try {

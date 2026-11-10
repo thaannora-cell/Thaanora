@@ -644,6 +644,42 @@
         "self": "You can't block yourself or remove your own owner access.",
         "lastOwner": "Thaanora needs at least one active owner."
       }
+    },
+    "reports": {
+      "title": "Reports",
+      "sub": "{from} – {to} · {days, plural, one {# day} other {# days}}",
+      "from": "From",
+      "to": "To",
+      "show": "Show",
+      "csv": "Download CSV",
+      "kSales": "Sales · {orders, plural, one {# order} other {# orders}} confirmed or later",
+      "kSuits": "Suits sold",
+      "kCollected": "Cash collected (COD)",
+      "kRefused": "Refused at door ({refused})",
+      "byDay": "Sales by day",
+      "byDayHint": "orders confirmed or later, by the day they were placed",
+      "asTable": "Show as a table",
+      "day": "Day",
+      "orders": "Orders",
+      "value": "Value",
+      "byBrand": "Sales by brand",
+      "beforeDiscounts": "suit prices before bundle and code discounts",
+      "best": "Best sellers",
+      "noSales": "No sales in this period.",
+      "suitsN": "{count, plural, one {# suit} other {# suits}}",
+      "codTitle": "Cash on delivery",
+      "codHint": "{placed, plural, one {# order} other {# orders}} placed in this period",
+      "stage": "Stage",
+      "cod": {
+        "collected": "Delivered · cash collected",
+        "onTheRoad": "With the courier (cash to collect)",
+        "confirmed": "Confirmed or packed",
+        "waiting": "Waiting for confirmation",
+        "refused": "Refused at door",
+        "cancelled": "Cancelled"
+      },
+      "refusalNote": "Refusal rate: {rate} of finished orders (delivered + refused).",
+      "csvNote": "The CSV has one row per suit ordered, without customer names or phone numbers."
     }
   }
 }

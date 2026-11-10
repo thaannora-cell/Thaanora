@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSessionClient } from "@/lib/supabase/server";
 import { ADMIN_LANG_COOKIE } from "@/lib/admin/i18n";
+import { allow } from "@/lib/rate-limit";
 
 export type SignInState =
   | { step: "email"; error?: "badEmail" | "badLink" | "tooMany" | "failed"; email?: string }
@@ -30,6 +31,12 @@ export async function signInAction(_prev: SignInState, form: FormData): Promise<
   if (intent === "back") return { step: "email", email };
   if (!EMAIL.test(email)) return { step: "email", error: "badEmail", email };
   const supabase = await getSessionClient();
+
+  // Our own limits on top of Supabase's: sign-in emails and codes per visitor.
+  const h = await headers();
+  if (!(await allow(h, intent === "verify" ? "signInVerify" : "signInSend"))) {
+    return intent === "verify" || intent === "resend" ? { step: "code", email, error: "tooMany" } : { step: "email", email, error: "tooMany" };
+  }
 
   if (intent === "verify") {
     // Step 2: check the code. On success the session cookie is set and the back office opens.

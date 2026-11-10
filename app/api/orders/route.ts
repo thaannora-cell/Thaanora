@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { isSameOrigin } from "@/lib/http";
+import { allow, LIMITS, tooMany } from "@/lib/rate-limit";
 import { isLocale } from "@/lib/site-gate";
 import { normaliseSaudiMobile } from "@/lib/phone";
 import { findLiveCode } from "@/lib/discounts";
@@ -24,6 +25,8 @@ const text = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slic
 // Everything the browser sends is re-checked here: products, stock, prices, code, fees.
 export async function POST(req: NextRequest) {
   if (!isSameOrigin(req)) return fail("invalid", 403);
+  // At most 8 orders an hour from one visitor: stops scripts filling the order list.
+  if (!(await allow(req.headers, "orders"))) return NextResponse.json({ ok: false, error: "too_many" }, tooMany(LIMITS.orders.seconds));
 
   let body: Record<string, unknown>;
   try {

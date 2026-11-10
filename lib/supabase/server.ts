@@ -10,6 +10,8 @@ export async function getSessionClient() {
   if (!url || !key) throw new Error("Supabase is not configured");
   const store = await cookies();
   return createServerClient(url, key, {
+    // Only the server reads the sign-in cookie, so page scripts can't (protects the session from XSS).
+    cookieOptions: { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" },
     cookies: {
       getAll: () => store.getAll(),
       setAll: (list: { name: string; value: string; options: CookieOptions }[]) => {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSelection } from "./SelectionProvider";
 
-type ErrorKind = "name" | "phone" | "area" | "stock" | "other";
+type ErrorKind = "name" | "phone" | "area" | "stock" | "too_many" | "other";
 
 // Saves the order through /api/orders, then opens WhatsApp with the message ready to send.
 export default function SendOrder() {
@@ -88,7 +88,7 @@ export default function SendOrder() {
       };
       if (!res.ok || !data.ok || !data.orderNo || !data.message) {
         tab?.close();
-        const known: ErrorKind[] = ["name", "phone", "area", "stock"];
+        const known: ErrorKind[] = ["name", "phone", "area", "stock", "too_many"];
         setError(known.includes(data.error as ErrorKind) ? (data.error as ErrorKind) : "other");
         return;
       }

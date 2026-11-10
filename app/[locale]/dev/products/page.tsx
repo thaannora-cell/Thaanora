@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import TopBar from "@/components/storefront/TopBar";
 import Header from "@/components/storefront/Header";
@@ -12,6 +13,8 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function DevProductsPage() {
+  // A test page for development only: it does not exist on the live site.
+  if (process.env.NODE_ENV === "production") notFound();
   const t = await getTranslations("DevProducts");
   const tHome = await getTranslations("Home");
   const result = await getVisibleProducts();

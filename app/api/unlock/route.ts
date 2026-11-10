@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
 import { GATE_COOKIE, GATE_MAX_AGE, gateToken, isLocale, safeNextPath } from "@/lib/site-gate";
+import { isSameOrigin } from "@/lib/http";
+import { allow } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -10,6 +12,14 @@ export async function POST(req: NextRequest) {
   const expected = process.env.SITE_PASSWORD;
 
   if (!expected) return NextResponse.redirect(new URL(next, req.url), 303);
+
+  // The password can't be guessed by trying many: 10 tries per 15 minutes, and only from this site.
+  if (!isSameOrigin(req) || !(await allow(req.headers, "unlock"))) {
+    const back = new URL(`/${locale}/unlock`, req.url);
+    back.searchParams.set("error", "too_many");
+    back.searchParams.set("next", next);
+    return NextResponse.redirect(back, 303);
+  }
 
   const given = String(form.get("password") ?? "");
   const [a, b] = await Promise.all([gateToken(given), gateToken(expected)]);

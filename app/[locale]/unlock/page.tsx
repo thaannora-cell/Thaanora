@@ -56,7 +56,7 @@ export default async function UnlockPage({
           />
           {error && (
             <p id="unlock-error" role="alert" className="text-[13px] text-rani">
-              {t("wrong")}
+              {error === "too_many" ? t("tooMany") : t("wrong")}
             </p>
           )}
           <button

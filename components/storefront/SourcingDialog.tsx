@@ -33,7 +33,7 @@ async function shrink(file: File): Promise<Blob> {
   }
 }
 
-type ErrorKind = "phone" | "need_design" | "too_big" | "not_image" | "other";
+type ErrorKind = "phone" | "need_design" | "too_big" | "not_image" | "too_many" | "other";
 
 export default function SourcingDialog() {
   const t = useTranslations("Sourcing");
@@ -114,7 +114,7 @@ export default function SourcingDialog() {
       const res = await fetch("/api/requests", { method: "POST", body: form });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string } & Partial<SentRequest>;
       if (!res.ok || !data.ok || !data.reference || !data.message) {
-        const known: ErrorKind[] = ["phone", "need_design", "too_big", "not_image"];
+        const known: ErrorKind[] = ["phone", "need_design", "too_big", "not_image", "too_many"];
         setError(known.includes(data.error as ErrorKind) ? (data.error as ErrorKind) : "other");
         return;
       }

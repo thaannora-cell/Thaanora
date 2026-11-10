@@ -112,7 +112,8 @@
     "subtitle": "This site is not open yet. Enter the password to continue.",
     "label": "Password",
     "button": "Enter",
-    "wrong": "That password is not right. Please try again."
+    "wrong": "That password is not right. Please try again.",
+    "tooMany": "Too many tries from this connection. Please wait a few minutes and try again."
   },
   "Rack": {
     "label": "Fabrics",
@@ -316,7 +317,8 @@
     "openWhatsapp": "Open WhatsApp",
     "copy": "Copy message",
     "copied": "Copied ✓",
-    "keepShopping": "Keep shopping"
+    "keepShopping": "Keep shopping",
+    "error_too_many": "Too many tries from this connection. Please wait a few minutes and try again."
   },
   "OrderMessage": {
     "greeting": "Hello Thaanora, I would like to order ({orderNo}):",
@@ -362,7 +364,8 @@
     "courierLine": "Courier: {courier} · tracking no. {tracking}",
     "cancelled": "This order was cancelled on {date}. Message us on WhatsApp if you’d like to order again.",
     "refused": "This order was returned to us on {date}. Message us on WhatsApp if you’d like it delivered again.",
-    "note": "For your privacy we show only the order status, never personal details."
+    "note": "For your privacy we show only the order status, never personal details.",
+    "error_too_many": "Too many tries from this connection. Please wait a few minutes and try again."
   },
   "Sourcing": {
     "eyebrow": "Sourcing on request",
@@ -388,7 +391,8 @@
     "error_need_design": "Add a link, a code or a screenshot so we know the design.",
     "error_too_big": "That picture is too large. Please use a screenshot under 4 MB.",
     "error_not_image": "That file isn’t a picture we can read. Please use a JPG, PNG or WebP screenshot.",
-    "error_other": "We couldn’t send your request right now. Please try again in a moment."
+    "error_other": "We couldn’t send your request right now. Please try again in a moment.",
+    "error_too_many": "Too many tries from this connection. Please wait a few minutes and try again."
   },
   "Requests": {
     "nameOptional": "Your name (optional)",
@@ -400,7 +404,8 @@
     "notifySaved": "You’re on the list",
     "preorderSaved": "Pre-order noted",
     "sentText": "Send this message on WhatsApp so we can reply to you there.",
-    "sentTextCopy": "Copy this message and send it to us on WhatsApp so we can reply to you there."
+    "sentTextCopy": "Copy this message and send it to us on WhatsApp so we can reply to you there.",
+    "tooMany": "Too many tries from this connection. Please wait a few minutes and try again."
   },
   "RequestMessage": {
     "sourcingGreeting": "Hello Thaanora, please source this design for me ({reference}):",
