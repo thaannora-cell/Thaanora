@@ -1,0 +1,101 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { getSession } from "@/lib/admin/session";
+import { canOpen } from "@/lib/admin/sections";
+import { getSessionClient } from "@/lib/supabase/server";
+import type { FormResult } from "../offers/actions";
+
+// Which settings the website may read. Private ones (PKR rate, low-stock level) stay staff-only.
+const PUBLIC: Record<string, boolean> = {
+  whatsapp_number: true,
+  social_links: true,
+  delivery_fees: true,
+  business: true,
+  pkr_per_sar: false,
+  low_stock_level: false,
+};
+const HOSTS = { instagram: "instagram.com", tiktok: "tiktok.com", snapchat: "snapchat.com" } as const;
+
+const fail = (error: string, field?: string): FormResult => ({ ok: false, error, message: field, at: Date.now() });
+const text = (v: FormDataEntryValue | null, max: number) => String(v ?? "").trim().replace(/\s+/g, " ").slice(0, max);
+
+// A profile link must be https on the network's own site; empty hides it on the website.
+function social(key: keyof typeof HOSTS, raw: string): string | null {
+  if (!raw) return "";
+  try {
+    const u = new URL(raw);
+    const host = u.hostname.replace(/^www\./, "");
+    const ok = u.protocol === "https:" && (host === HOSTS[key] || host.endsWith(`.${HOSTS[key]}`)) && u.pathname.replace(/\/+$/, "") !== "";
+    return ok ? u.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function saveSettings(_p: FormResult, form: FormData): Promise<FormResult> {
+  const session = await getSession();
+  if (session.state !== "staff" || !canOpen(session.staff.role, "settings")) return fail("forbidden");
+  const supabase = await getSessionClient();
+
+  // WhatsApp: + and 8–15 digits (Saudi numbers may be typed as 05…).
+  let wa = text(form.get("whatsapp"), 30).replace(/[\s\-().]/g, "");
+  if (/^05\d{8}$/.test(wa)) wa = `+966${wa.slice(1)}`;
+  if (/^9665\d{8}$/.test(wa)) wa = `+${wa}`;
+  if (!/^\+[1-9]\d{7,14}$/.test(wa)) return fail("whatsapp", "whatsapp");
+
+  const links: Record<string, string> = {};
+  for (const k of Object.keys(HOSTS) as (keyof typeof HOSTS)[]) {
+    const v = social(k, text(form.get(k), 200));
+    if (v === null) return fail("social", k);
+    links[k] = v;
+  }
+
+  const n = Math.min(Number(form.get("feeCount") ?? 0) || 0, 20);
+  const fees: { area: string; fee_sar: number }[] = [];
+  for (let i = 0; i < n; i++) {
+    const area = text(form.get(`fee${i}_area`), 120);
+    const feeText = text(form.get(`fee${i}_fee`), 6);
+    if (!area && !feeText) continue;
+    const fee = Number(feeText);
+    if (!area || !(Number.isFinite(fee) && fee >= 0 && fee <= 1000)) return fail("fee", `fee${i}`);
+    if (fees.some((f) => f.area.toLowerCase() === area.toLowerCase())) return fail("feeDuplicate", `fee${i}`);
+    fees.push({ area, fee_sar: Math.round(fee * 100) / 100 });
+  }
+  if (fees.length === 0) return fail("feesEmpty");
+
+  const business = {
+    legal_name: text(form.get("legalName"), 120),
+    entity_type: text(form.get("entityType"), 80),
+    national_number: text(form.get("nationalNo"), 40),
+    vat_number: text(form.get("vatNo"), 40),
+    address: text(form.get("address"), 160),
+  };
+  if (business.national_number && !/^[0-9A-Za-z\- ]+$/.test(business.national_number)) return fail("nationalNo", "nationalNo");
+  if (business.vat_number && !/^\d{15}$/.test(business.vat_number.replace(/\s/g, ""))) return fail("vatNo", "vatNo");
+
+  const rate = Number(text(form.get("pkrRate"), 10));
+  if (!(rate > 0 && rate < 1000)) return fail("pkrRate", "pkrRate");
+  const low = Number(text(form.get("lowStock"), 4));
+  if (!(Number.isInteger(low) && low >= 0 && low <= 100)) return fail("lowStock", "lowStock");
+
+  const values: Record<string, unknown> = {
+    whatsapp_number: wa,
+    social_links: links,
+    delivery_fees: fees,
+    business,
+    pkr_per_sar: Math.round(rate * 100) / 100,
+    low_stock_level: low,
+  };
+  for (const [key, value] of Object.entries(values)) {
+    const { error, count } = await supabase.from("settings").update({ value }, { count: "exact" }).eq("key", key);
+    if (error) return fail("saveFailed");
+    if (!count) {
+      const ins = await supabase.from("settings").insert({ key, value, is_public: PUBLIC[key] });
+      if (ins.error) return fail("saveFailed");
+    }
+  }
+  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout"); // footer, WhatsApp button, delivery fees at checkout
+  return { ok: true, message: JSON.stringify(["saved", {}]), at: Date.now() };
+}

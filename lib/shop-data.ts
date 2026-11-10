@@ -2,13 +2,16 @@ import "server-only";
 import { getPublicClient } from "@/lib/supabase/public";
 import type { CheckoutSettings, DeliveryArea } from "@/lib/pricing";
 
-export type Tailor = { id: string; name: string; area: string; member_price_note: string | null };
+export type Tailor = { id: string; name: string; area: string; member_price_note: string | null; member_pct: number | null };
 
 export async function getTailors(): Promise<Tailor[]> {
   const supabase = getPublicClient();
   if (!supabase) return [];
-  const { data } = await supabase.from("tailors").select("id, name, area, member_price_note").order("sort_order");
-  return (data ?? []) as Tailor[];
+  const { data, error } = await supabase.from("tailors").select("id, name, area, member_price_note, member_pct").order("sort_order");
+  if (!error) return (data ?? []) as Tailor[];
+  // Before the member_pct column exists, keep showing tailors with the shop-wide discount.
+  const { data: basic } = await supabase.from("tailors").select("id, name, area, member_price_note").order("sort_order");
+  return (basic ?? []).map((t) => ({ ...t, member_pct: null })) as Tailor[];
 }
 
 // The shop's WhatsApp number as digits for wa.me links, or null while it is still a placeholder.

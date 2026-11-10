@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
+import { useSubmit } from "../useSubmit";
+import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import type { CampaignRow, Title } from "@/lib/admin/offers";
 import { removeCampaign, saveCampaign, saveLabels, setCampaignActive } from "@/app/admin/(panel)/seasons/actions";
@@ -33,14 +34,14 @@ const TONE: Record<CampaignRow["state"], string> = {
 function CampaignForm({ c, today, onDone }: { c?: CampaignRow; today: string; onDone?: () => void }) {
   const t = useTranslations("Admin.seasons");
   const tOcc = useTranslations("Admin.products.occ");
-  const [res, act, busy] = useActionState<FormResult, FormData>(async (p, f) => {
+  const [res, act, busy] = useSubmit<FormResult>(async (p, f) => {
     const r = await saveCampaign(p, f);
     if (r.ok) onDone?.();
     return r;
   }, {});
   const [live, setLive] = useState(c?.active ?? true);
   return (
-    <form action={act} key={res.ok && !c ? res.at : "f"} className="flex flex-col gap-3">
+    <form onSubmit={act} key={res.ok && !c ? res.at : "f"} className="flex flex-col gap-3">
       {c && <input type="hidden" name="id" value={c.id} />}
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
         {LANGS.map((l) => (
@@ -98,7 +99,7 @@ export default function SeasonsView({ campaigns, brandOfMonth, brands, messages,
   const [rowRes, setRowRes] = useState<FormResult | null>(null);
   const [pending, start] = useTransition();
   const [msgs, setMsgs] = useState<(Title & { key: string })[]>(() => messages.map((m, i) => ({ ...m, key: `m${i}` })));
-  const [labelsRes, labelsAct, labelsBusy] = useActionState<FormResult, FormData>(saveLabels, {});
+  const [labelsRes, labelsAct, labelsBusy] = useSubmit<FormResult>(saveLabels, {});
 
   const toggle = (c: CampaignRow) => start(async () => setRowRes(await setCampaignActive(c.id, !c.active)));
   const remove = (c: CampaignRow) => {
@@ -172,7 +173,7 @@ export default function SeasonsView({ campaigns, brandOfMonth, brands, messages,
         <h2 id="labels" className={h2}>
           {t("labelsTitle")}
         </h2>
-        <form action={labelsAct} className="flex flex-col gap-3">
+        <form onSubmit={labelsAct} className="flex flex-col gap-3">
           <label className={`${label} max-w-[420px]`}>
             {t("brandOfMonth")}
             <select name="brand" defaultValue={brandOfMonth} className={field}>

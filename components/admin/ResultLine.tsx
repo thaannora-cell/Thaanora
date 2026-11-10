@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import type { FormResult } from "@/app/admin/(panel)/offers/actions";
 
 // Shows a form action's outcome: success messages come back as [key, values]; errors as a key.
-export default function ResultLine({ result, ns }: { result: FormResult | null | undefined; ns: "offers" | "seasons" }) {
+export default function ResultLine({ result, ns }: { result: FormResult | null | undefined; ns: "offers" | "seasons" | "tailors" | "settings" | "staff" }) {
   const t = useTranslations(`Admin.${ns}`);
   let text = "";
   if (result?.ok && result.message) {

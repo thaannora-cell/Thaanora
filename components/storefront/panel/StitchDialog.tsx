@@ -7,7 +7,7 @@ import { stockState, type PublicProduct } from "@/lib/product";
 import { useAreaLabel } from "../useAreaLabel";
 import { useSelection } from "../selection/SelectionProvider";
 
-export type Tailor = { id: string; name: string; area: string; member_price_note: string | null };
+export type Tailor = { id: string; name: string; area: string; member_price_note: string | null; member_pct: number | null };
 
 export const OPEN_TAILORS_EVENT = "th:open-tailors";
 export const openTailors = () => window.dispatchEvent(new Event(OPEN_TAILORS_EVENT));
@@ -105,7 +105,7 @@ export default function StitchDialog({ product, open, onClose, tailors, onToast 
           <li key={x.id} className="flex items-center justify-between gap-2.5 rounded-[14px] border border-line bg-white px-3.5 py-2.5 text-[14px]">
             <span>
               <bdi>{x.name}</bdi>
-              <small className="block text-muted">{t("tailorLine", { pct })}</small>
+              <small className="block text-muted">{t("tailorLine", { pct: x.member_pct ?? pct })}</small>
             </span>
             <span className="shrink-0 rounded-full bg-emerald px-2.5 py-0.5 text-[11px] text-gold-light">{t("verified")}</span>
           </li>

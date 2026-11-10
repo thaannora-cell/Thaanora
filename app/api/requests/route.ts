@@ -14,7 +14,7 @@ const bad = (error: string, status = 400) => NextResponse.json({ ok: false, erro
 const text = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
 // Short, human reference for WhatsApp, e.g. R-3F9A1C.
-const refOf = (id: string) => `R-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
+import { refOf } from "@/lib/request-ref";
 
 // Trust the file's first bytes, not its name or the browser's claimed type.
 function sniffImage(b: Uint8Array): { ext: string; mime: string } | null {

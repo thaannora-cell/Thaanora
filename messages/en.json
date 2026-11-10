@@ -516,5 +516,14 @@
     "cancelled": "Hello {name}, your order {orderNo} has been cancelled. If this is a mistake or you'd like to order again, just reply to this message.",
     "refused": "Hello {name}, we're sorry the delivery of order {orderNo} didn't work out. If you'd like to try again, just reply to this message.",
     "signoff": "Thaanora · Your fabric. Your fit."
+  },
+  "RequestReply": {
+    "there": "there",
+    "sourcing": "Hello {name}, this is Thaanora about your request {ref} ({what}). We're checking with our suppliers in Pakistan and will send you the price and delivery time soon.",
+    "notify_me": "Good news, {name}! {what} is back in stock at Thaanora. Reply here to order it, or order on our website. (Request {ref})",
+    "preorder": "Hello {name}, about your pre-order {ref} for {what}: we've noted it and will confirm the price and arrival date with you here shortly.",
+    "stitching": "Hello {name}, about stitching ({ref}): send us your measurements and preferred neckline, and we'll connect you with a partner tailor near you at the member price.",
+    "closed": "Hello {name}, about your request {ref} ({what}): we're sorry, we can't get this design right now. Thank you for asking us; we'll message you if that changes.",
+    "signoff": "Thaanora · Your fabric. Your fit."
   }
 }

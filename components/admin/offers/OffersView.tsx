@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
+import { useSubmit } from "../useSubmit";
+import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import type { BrandRow, CodeRow } from "@/lib/admin/offers";
 import { addCode, removeCode, saveBrandSale, saveBundle, setCodeActive, type FormResult } from "@/app/admin/(panel)/offers/actions";
@@ -25,9 +26,9 @@ const TONE: Record<CodeRow["state"], string> = {
 
 export default function OffersView({ bundle, codes, brands, today }: Props) {
   const t = useTranslations("Admin.offers");
-  const [bundleRes, bundleAct, bundleBusy] = useActionState<FormResult, FormData>(saveBundle, {});
-  const [saleRes, saleAct, saleBusy] = useActionState<FormResult, FormData>(saveBrandSale, {});
-  const [codeRes, codeAct, codeBusy] = useActionState<FormResult, FormData>(addCode, {});
+  const [bundleRes, bundleAct, bundleBusy] = useSubmit<FormResult>(saveBundle, {});
+  const [saleRes, saleAct, saleBusy] = useSubmit<FormResult>(saveBrandSale, {});
+  const [codeRes, codeAct, codeBusy] = useSubmit<FormResult>(addCode, {});
   const [rowRes, setRowRes] = useState<FormResult | null>(null);
   const [pending, start] = useTransition();
   const [bundleOn, setBundleOn] = useState(bundle?.active ?? true);
@@ -57,7 +58,7 @@ export default function OffersView({ bundle, codes, brands, today }: Props) {
           <h2 id="bundle" className={h2}>
             {t("bundleTitle")}
           </h2>
-          <form action={bundleAct} className="flex flex-col gap-3">
+          <form onSubmit={bundleAct} className="flex flex-col gap-3">
             <div className="flex items-center gap-2.5">
               <Toggle on={bundleOn} label={t("bundleOn")} onChange={() => setBundleOn((v) => !v)} />
               <span className="text-[14px]">{t("bundleText")}</span>
@@ -85,7 +86,7 @@ export default function OffersView({ bundle, codes, brands, today }: Props) {
           <h2 id="brandsale" className={h2}>
             {t("brandSaleTitle")}
           </h2>
-          <form action={saleAct} className="flex flex-col gap-3">
+          <form onSubmit={saleAct} className="flex flex-col gap-3">
             <div className="grid grid-cols-[1fr_110px] gap-2.5">
               <label className={label}>
                 {t("brand")}
@@ -157,7 +158,7 @@ export default function OffersView({ bundle, codes, brands, today }: Props) {
         )}
         <ResultLine result={rowRes} ns="offers" />
 
-        <form action={codeAct} className="mt-3 flex flex-col gap-3 border-t border-[#F0EBE1] pt-3">
+        <form onSubmit={codeAct} className="mt-3 flex flex-col gap-3 border-t border-[#F0EBE1] pt-3">
           <div className="grid grid-cols-2 gap-2.5 md:grid-cols-5">
             <label className={label}>
               {t("newCode")}
