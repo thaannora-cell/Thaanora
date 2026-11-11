@@ -57,6 +57,21 @@ export async function issueInvoice(orderId: string): Promise<InvoiceOutcome> {
       const { data: known } = await db.from("zoho_contacts").select("contact_id").eq("phone", phone).maybeSingle();
       customerId = known?.contact_id ?? null;
     }
+    // If the customer was deleted in Zoho Books meanwhile, forget it and make a new one. (Only checked
+    // before creating an invoice; network trouble here still fails the try and is retried later.)
+    if (customerId && !invoiceId) {
+      const still = await zoho(c, "GET", `/contacts/${encodeURIComponent(customerId)}`).then(
+        () => true,
+        (e: unknown) => {
+          if (e instanceof ZohoError && !e.retry) return false;
+          throw e;
+        },
+      );
+      if (!still) {
+        await db.from("zoho_contacts").delete().eq("phone", phone);
+        customerId = null;
+      }
+    }
     if (!customerId) {
       const made = await zoho<{ contact?: { contact_id: string } }>(c, "POST", "/contacts", {
         contact_name: `${String(claimed.customer_name).slice(0, 80)} · ${phone}`,
