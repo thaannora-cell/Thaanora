@@ -529,5 +529,10 @@
     "onTheWay": "Good news, {name}! Your order {orderNo} is out for delivery.\nCourier: {courier}\nTracking number: {trackingNo}\nFollow it here: {trackingLink}\nPlease have {total} ready in cash.\n\nThaanora · Your fabric. Your fit.",
     "delivered": "Thank you, {name}! Your order {orderNo} has been delivered. We hope you love your fabric.\nIf you'd like it stitched, reply here and we'll connect you with a tailor from our network. A photo of your finished suit would make our day!\n\nThaanora · Your fabric. Your fit.",
     "sourcingQuote": "Hello {name}, good news about your request {ref} ({what}): we can get it for you.\nPrice: {price}, delivered in Riyadh, cash on delivery.\nDelivery time: about {days} days.\nReply YES to order it and we'll confirm everything here.\n\nThaanora · Your fabric. Your fit."
+  },
+  "Invoice": {
+    "giftBox": "Gift box",
+    "delivery": "Delivery",
+    "notes": "Cash on delivery · Order {orderNo} · Prices include VAT"
   }
 }

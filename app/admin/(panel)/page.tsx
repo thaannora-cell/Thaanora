@@ -46,6 +46,17 @@ export default async function Dashboard() {
         </Link>
       </li>
     ),
+    ...(orders?.invoices ?? []).map((x) => (
+      <li key={`inv-${x.orderNo}`} className={line}>
+        <span>
+          <span className="rounded-full bg-[#FBE7EE] px-2 py-0.5 text-[11px] font-medium text-rani">{t("orders.invoice.title")}</span>{" "}
+          {t(x.failed ? "dashboard.invoiceLine" : "dashboard.invoiceMissing", { orderNo: x.orderNo })}
+        </span>
+        <Link href={`/admin/orders/${x.orderNo}`} className={smallBtn}>
+          {t("dashboard.open")}
+        </Link>
+      </li>
+    )),
     ...(stock?.soldOut ?? []).map((x) =>
       stockLine(x, <span className="rounded-full bg-[#5C635F] px-2 py-0.5 text-[11px] font-medium text-white">{t("dashboard.soldOut")}</span>),
     ),

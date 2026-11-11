@@ -24,6 +24,7 @@ export type DashboardData = {
     refused: number;
     latest: LatestOrder[];
     newRequests: number;
+    invoices: { orderNo: string; failed: boolean }[]; // delivered orders without a Zoho invoice
   };
   stock: null | {
     soldOut: StockItem[];
@@ -79,7 +80,18 @@ export async function getDashboard(role: StaffRole): Promise<DashboardData> {
             status: o.status as OrderStatus,
           })),
           newRequests: requests.count ?? 0,
+          invoices: [],
         };
+        // Delivered but no invoice in Zoho Books yet (failed or never tried). Read on its own, so the
+        // dashboard still works if this query fails.
+        const inv = await supabase
+          .from("orders")
+          .select("order_no, invoice_status")
+          .eq("status", "delivered_cash_collected")
+          .in("invoice_status", ["none", "failed"])
+          .order("status_changed_at", { ascending: false })
+          .limit(8);
+        if (!inv.error) data.orders.invoices = (inv.data ?? []).map((r) => ({ orderNo: r.order_no, failed: r.invoice_status === "failed" }));
       })(),
     );
   }

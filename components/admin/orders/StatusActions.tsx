@@ -26,7 +26,7 @@ export default function StatusActions({ orderId, status, next, suits }: { orderI
     setConfirming(null);
     start(async () => {
       const r = await setOrderStatus(orderId, to);
-      setMessage(r.ok ? { text: t("statusSaved", { status: tStatus(to) }) } : { text: t(`errors.${r.error}`, { detail: r.detail ?? "" }), bad: true });
+      setMessage(r.ok ? { text: [t("statusSaved", { status: tStatus(to) }), r.invoice === "issued" ? t("invoice.madeNow") : r.invoice === "failed" ? t("invoice.failedNow") : ""].filter(Boolean).join(" "), bad: r.invoice === "failed" } : { text: t(`errors.${r.error}`, { detail: r.detail ?? "" }), bad: true });
     });
   };
 

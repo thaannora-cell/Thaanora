@@ -85,7 +85,9 @@
       "stockLine": "Stock in Riyadh",
       "stockValue": "{units, plural, one {# suit} other {# suits}} · {value}",
       "allClear": "Nothing needs attention right now.",
-      "loadFailed": "Some figures couldn't load. Please refresh the page."
+      "loadFailed": "Some figures couldn't load. Please refresh the page.",
+      "invoiceLine": "Invoice failed · {orderNo}",
+      "invoiceMissing": "No invoice yet · {orderNo}"
     },
     "section": {
       "soonTitle": "Being built",
@@ -348,7 +350,24 @@
         "noStock": "Not enough stock to confirm this order ({detail}). Receive stock first, or change the order with the customer."
       },
       "sendFrom": "Send it from the shop's WhatsApp (<n>{number}</n>) so replies come back to the shop.",
-      "noShopNumber": "The shop's WhatsApp number isn't set yet. The owner can add it in Settings."
+      "noShopNumber": "The shop's WhatsApp number isn't set yet. The owner can add it in Settings.",
+      "invoice": {
+        "title": "VAT invoice (Zoho Books)",
+        "later": "Created automatically in Zoho Books when the order is Delivered · cash collected.",
+        "issued": "Simplified tax invoice <b>{no}</b> created in Zoho Books, cash payment recorded.",
+        "view": "View invoice",
+        "customerLink": "Customer link",
+        "failed": "The invoice couldn’t be created in Zoho Books ({count, plural, one {# try} other {# tries}}).",
+        "pending": "Creating the invoice in Zoho Books…",
+        "none": "No invoice yet.",
+        "retry": "Retry",
+        "create": "Create invoice",
+        "working": "Working…",
+        "madeNow": "Invoice created in Zoho Books.",
+        "failedNow": "The invoice couldn’t be created in Zoho Books yet. It’s listed under Needs attention.",
+        "busy": "The invoice is being created right now. Refresh in a moment.",
+        "retryHint": "It is also retried automatically every morning."
+      }
     },
     "offers": {
       "title": "Offers & codes",

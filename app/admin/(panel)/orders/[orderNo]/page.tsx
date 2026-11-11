@@ -11,6 +11,7 @@ import { COURIERS, NEXT, getOrder } from "@/lib/admin/orders";
 import { customerMessage } from "@/lib/admin/customer-message";
 import { getWhatsappNumber } from "@/lib/shop-data";
 import ShopNumberNote from "@/components/admin/ShopNumberNote";
+import InvoiceRetry from "@/components/admin/orders/InvoiceRetry";
 import { amount, areaKey, orderTime } from "@/lib/admin/format";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,8 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
     const k = areaKey(a);
     return k ? t(`areas.${k}`) : a;
   };
+  // An invoice still "pending" after 5 minutes was interrupted; let staff try again.
+  const stuck = o.invoice.status === "pending" && (!o.invoice.triedAt || Date.parse(o.invoice.triedAt) < Date.now() - 5 * 60 * 1000);
   const suits = o.items.reduce((n, i) => n + i.qty, 0);
   const ended = o.status === "cancelled" || o.status === "refused_at_door";
   const reached = PATH.indexOf(o.status as (typeof PATH)[number]);
@@ -107,6 +110,55 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
               </>
             ) : (
               <p className="m-0 text-[14px] text-muted">{t("orders.noPhone")}</p>
+            )}
+          </section>
+
+          <section aria-labelledby="inv" className={panel}>
+            <h2 id="inv" className={h2}>
+              {t("orders.invoice.title")}
+            </h2>
+            {o.status !== "delivered_cash_collected" && o.invoice.status !== "issued" ? (
+              <p className="m-0 text-[14px] text-muted">{t("orders.invoice.later")}</p>
+            ) : o.invoice.status === "issued" ? (
+              <div className="flex flex-col gap-2">
+                <p className="m-0 text-[14px]">
+                  {t.rich("orders.invoice.issued", { no: o.invoice.no ?? "—", b: (c) => <b dir="ltr" className="font-medium text-emerald">{c}</b> })}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {o.invoice.hasPdf && (
+                    <a
+                      href={`/admin/orders/${o.orderNo}/invoice`}
+                      target="_blank"
+                      rel="noopener"
+                      className="inline-flex min-h-[44px] items-center rounded-full bg-emerald px-5 text-[15px] font-medium text-ivory-white no-underline"
+                    >
+                      {t("orders.invoice.view")}
+                    </a>
+                  )}
+                  {o.invoice.url && (
+                    <a href={o.invoice.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center rounded-full border border-[#CFC3AA] bg-white px-5 text-[14px] text-emerald no-underline">
+                      {t("orders.invoice.customerLink")}
+                    </a>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <p role={o.invoice.status === "failed" ? "alert" : undefined} className={`m-0 text-[14px] ${o.invoice.status === "failed" ? "text-rani" : "text-muted"}`}>
+                  {o.invoice.status === "failed"
+                    ? t("orders.invoice.failed", { count: o.invoice.attempts })
+                    : o.invoice.status === "pending"
+                      ? t("orders.invoice.pending")
+                      : t("orders.invoice.none")}
+                </p>
+                {o.invoice.error && (
+                  <p className="m-0 rounded-xl bg-[#FBEFF3] px-3 py-2 text-[13px] text-[#7A1238]" dir="auto">
+                    {o.invoice.error}
+                  </p>
+                )}
+                {(o.invoice.status !== "pending" || stuck) && <InvoiceRetry orderId={o.id} label={o.invoice.status === "failed" ? "retry" : "create"} />}
+                <p className="m-0 text-[12px] text-muted">{t("orders.invoice.retryHint")}</p>
+              </div>
             )}
           </section>
 

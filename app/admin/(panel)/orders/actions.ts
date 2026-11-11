@@ -5,8 +5,9 @@ import { getSession } from "@/lib/admin/session";
 import { canOpen } from "@/lib/admin/sections";
 import { getSessionClient } from "@/lib/supabase/server";
 import { isStatus } from "@/lib/admin/orders";
+import { issueInvoice, type InvoiceOutcome } from "@/lib/invoices";
 
-export type OrderResult = { ok: true } | { ok: false; error: "forbidden" | "notFound" | "noStock" | "saveFailed" | "invalid"; detail?: string };
+export type OrderResult = { ok: true; invoice?: InvoiceOutcome } | { ok: false; error: "forbidden" | "notFound" | "noStock" | "saveFailed" | "invalid"; detail?: string };
 
 async function ordersClient() {
   const session = await getSession();
@@ -30,10 +31,25 @@ export async function setOrderStatus(orderId: string, status: string): Promise<O
     return { ok: false, error: "saveFailed" };
   }
   if (!data) return { ok: false, error: "notFound" };
+  // Cash collected: the simplified tax invoice is created in Zoho Books straight away. If Zoho can't be
+  // reached the order shows under "Needs attention" and is retried (button on the order, and daily).
+  const invoice = status === "delivered_cash_collected" ? await issueInvoice(orderId) : undefined;
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${data.order_no}`);
   revalidatePath("/admin");
-  return { ok: true };
+  return { ok: true, invoice };
+}
+
+// "Retry" / "Create invoice" on a delivered order.
+export async function retryInvoice(orderId: string): Promise<OrderResult> {
+  const supabase = await ordersClient();
+  if (!supabase) return { ok: false, error: "forbidden" };
+  const { data } = await supabase.from("orders").select("order_no").eq("id", orderId).maybeSingle();
+  if (!data) return { ok: false, error: "notFound" };
+  const invoice = await issueInvoice(orderId);
+  revalidatePath(`/admin/orders/${data.order_no}`);
+  revalidatePath("/admin");
+  return { ok: true, invoice };
 }
 
 const clean = (v: FormDataEntryValue | null, max: number) =>

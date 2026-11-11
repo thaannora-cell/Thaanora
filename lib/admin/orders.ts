@@ -59,6 +59,7 @@ export type OrderDetail = OrderListItem & {
   notes: string | null;
   statusChangedAt: string;
   items: { id: string; code: string; name: string; unitPrice: number; qty: number; stitching: boolean }[];
+  invoice: { status: "none" | "pending" | "issued" | "failed"; no: string | null; url: string | null; hasPdf: boolean; error: string | null; attempts: number; triedAt: string | null };
 };
 
 const LIST_COLUMNS = "id, order_no, created_at, customer_name, area, total_sar, status, courier, tracking_no, order_items (product_name, qty)";
@@ -102,13 +103,14 @@ export async function listOrders(status: OrderStatus | null, query: string) {
 
 export async function getOrder(orderNo: string): Promise<OrderDetail | null> {
   const supabase = await getSessionClient();
-  const { data: o } = await supabase
-    .from("orders")
-    .select(
-      "id, order_no, created_at, status_changed_at, customer_name, customer_phone, language, area, address, packaging, is_gift, gift_note, recipient_name, recipient_area, discount_code, subtotal_sar, bundle_discount_sar, code_discount_sar, packaging_fee_sar, delivery_fee_sar, total_sar, vat_sar, status, courier, tracking_no, notes, order_items (id, product_code, product_name, unit_price_sar, qty, wants_stitching)",
-    )
-    .eq("order_no", orderNo)
-    .maybeSingle();
+  const INVOICE = "invoice_status, invoice_no, invoice_url, invoice_zoho_id, invoice_error, invoice_attempts, invoice_tried_at, ";
+  const BASE = "id, order_no, created_at, status_changed_at, customer_name, customer_phone, language, area, address, packaging, is_gift, gift_note, recipient_name, recipient_area, discount_code, subtotal_sar, bundle_discount_sar, code_discount_sar, packaging_fee_sar, delivery_fee_sar, total_sar, vat_sar, status, courier, tracking_no, notes, order_items (id, product_code, product_name, unit_price_sar, qty, wants_stitching)";
+  const read = (cols: string) => supabase.from("orders").select(cols).eq("order_no", orderNo).maybeSingle();
+  let res = await read(INVOICE + BASE);
+  // Before the invoices migration runs, the invoice columns don't exist yet: show the order without them.
+  if (res.error?.code === "42703") res = await read(BASE);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const o = res.data as any;
   if (!o) return null;
   type Item = { id: string; product_code: string; product_name: string; unit_price_sar: number; qty: number; wants_stitching: boolean };
   const items = (o.order_items ?? []) as Item[];
@@ -128,6 +130,16 @@ export async function getOrder(orderNo: string): Promise<OrderDetail | null> {
     codeDiscount: Number(o.code_discount_sar),
     packagingFee: Number(o.packaging_fee_sar),
     deliveryFee: Number(o.delivery_fee_sar),
+    invoice: {
+      status: o.invoice_status ?? "none",
+      no: o.invoice_no ?? null,
+      // Only Zoho's own https links are kept as the customer link.
+      url: typeof o.invoice_url === "string" && /^https:\/\/[^/]*\.zoho(apis)?\.[a-z.]+\//i.test(o.invoice_url) ? o.invoice_url : null,
+      hasPdf: Boolean(o.invoice_zoho_id),
+      error: o.invoice_error ?? null,
+      attempts: o.invoice_attempts ?? 0,
+      triedAt: o.invoice_tried_at ?? null,
+    },
     vat: Number(o.vat_sar),
     notes: o.notes,
     statusChangedAt: o.status_changed_at,

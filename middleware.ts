@@ -13,7 +13,8 @@ export default async function middleware(req: NextRequest) {
   const isApi = pathname.startsWith("/api/");
 
   if (password) {
-    const isUnlock = pathname === "/api/unlock" || /^\/[a-z]{2}\/unlock\/?$/.test(pathname);
+    // The daily jobs check their own secret (CRON_SECRET), so the test-site password doesn't block them.
+    const isUnlock = pathname === "/api/unlock" || pathname.startsWith("/api/cron/") || /^\/[a-z]{2}\/unlock\/?$/.test(pathname);
     const unlocked = req.cookies.get(GATE_COOKIE)?.value === (await gateToken(password));
 
     if (!unlocked && !isUnlock) {
