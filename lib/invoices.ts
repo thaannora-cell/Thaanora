@@ -93,7 +93,7 @@ export async function issueInvoice(orderId: string): Promise<InvoiceOutcome> {
       const made = await zoho<{ invoice?: { invoice_id: string; invoice_number: string; invoice_url?: string; total: number } }>(c, "POST", "/invoices", body);
       if (!made.invoice?.invoice_id) throw new ZohoError("Zoho didn't return an invoice id.", true);
       invoiceId = made.invoice.invoice_id;
-      await save({ invoice_zoho_id: invoiceId, invoice_no: made.invoice.invoice_number, invoice_url: made.invoice.invoice_url ?? null });
+      await save({ invoice_zoho_id: invoiceId, invoice_no: made.invoice.invoice_number, invoice_url: made.invoice.invoice_url?.trim() ?? null });
     }
 
     // 3. Check Zoho's total matches the cash collected, then mark it sent and record the cash payment.
@@ -119,7 +119,7 @@ export async function issueInvoice(orderId: string): Promise<InvoiceOutcome> {
     await save({
       invoice_status: "issued",
       invoice_no: inv.invoice_number,
-      invoice_url: inv.invoice_url ?? null,
+      invoice_url: inv.invoice_url?.trim() ?? null,
       invoice_paid: true,
       invoice_attempts: attempts,
       invoice_error: null,
