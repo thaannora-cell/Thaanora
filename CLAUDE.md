@@ -4,6 +4,8 @@ Thaanora (ثانورا) sells original Pakistani unstitched women's suits in Riy
 Tagline: "Your fabric. Your fit." · Arabic: قماشكِ… على مقاسكِ
 Orders are placed on WhatsApp and paid **cash on delivery (COD) only**. No online payments.
 
+**Phase 3B in progress — see docs/PHASE-3B-PLAN.md**
+
 The approved designs are in `docs/`:
 - `docs/thaanora-website-prototype.html` — the approved website AND back office (open it in a browser; the gold crown button opens the back office, PIN 1234). This file is the visual and functional reference. Match it.
 - `docs/Thaanora-Brand-Guidelines.pdf` — logo, colours, fonts, patterns, do's and don'ts.
