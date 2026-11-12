@@ -1,4 +1,4 @@
-// Pre-launch password gate. Runs in middleware (Edge) and in the unlock route, so it only uses Web Crypto.
+// Pre-launch password gate. Runs in proxy.ts and in the unlock route; uses only Web Crypto.
 import { routing, type Locale } from "@/i18n/routing";
 
 export const GATE_COOKIE = "th_gate";

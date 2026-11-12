@@ -18,7 +18,7 @@ export async function getSessionClient() {
         try {
           list.forEach(({ name, value, options }) => store.set(name, value, options));
         } catch {
-          // Called from a server component: cookies are read-only there. The middleware refreshes them.
+          // Called from a server component: cookies are read-only there. proxy.ts refreshes them.
         }
       },
     },

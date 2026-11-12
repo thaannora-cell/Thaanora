@@ -7,7 +7,7 @@ import { GATE_COOKIE, gateToken, isLocale } from "./lib/site-gate";
 const intl = createMiddleware(routing);
 const NOINDEX = "noindex, nofollow";
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const password = process.env.SITE_PASSWORD;
   const { pathname, search } = req.nextUrl;
   const isApi = pathname.startsWith("/api/");

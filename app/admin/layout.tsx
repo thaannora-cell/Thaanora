@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getAdminT();
-  // The middleware also sends X-Robots-Tag: noindex for every /admin address.
+  // proxy.ts also sends X-Robots-Tag: noindex for every /admin address.
   return { title: t("title"), robots: { index: false, follow: false, nocache: true } };
 }
 
