@@ -45,7 +45,8 @@
       "closeMenu": "Close menu",
       "viewSite": "View website",
       "signOut": "Sign out",
-      "language": "Language"
+      "language": "Language",
+      "notifications": "Notifications"
     },
     "roles": {
       "owner": "Owner",
@@ -87,7 +88,8 @@
       "allClear": "Nothing needs attention right now.",
       "loadFailed": "Some figures couldn't load. Please refresh the page.",
       "invoiceLine": "Invoice failed · {orderNo}",
-      "invoiceMissing": "No invoice yet · {orderNo}"
+      "invoiceMissing": "No invoice yet · {orderNo}",
+      "whatsappLine": "{count, plural, one {# WhatsApp message} other {# WhatsApp messages}} for customers to send"
     },
     "section": {
       "soonTitle": "Being built",
@@ -737,6 +739,29 @@
       },
       "refusalNote": "Refusal rate: {rate} of finished orders (delivered + refused).",
       "csvNote": "The CSV has one row per suit ordered, without customer names or phone numbers."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "sub": "Customers with an account get updates on the website. Those who asked for WhatsApp too appear here.",
+      "queueTitle": "WhatsApp messages to send ({count})",
+      "queueHint": "Open WhatsApp, press send, and it's ticked off. Sending an order update from the order page ticks it off too.",
+      "empty": "Nothing to send. You're all caught up.",
+      "open": "Open in WhatsApp",
+      "skip": "Skip",
+      "markedSent": "Marked as sent.",
+      "markedSkipped": "Skipped.",
+      "noPhone": "This mobile can't be opened in WhatsApp.",
+      "types": {
+        "order_status": "Order update",
+        "request_update": "Request update",
+        "back_in_stock": "Back in stock",
+        "price_drop": "Price drop",
+        "new_arrival": "New arrival",
+        "new_offer": "New offer",
+        "level_up": "Circle level",
+        "birthday_gift": "Birthday gift",
+        "announcement": "Announcement"
+      }
     }
   }
 }

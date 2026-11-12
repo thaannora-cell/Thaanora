@@ -12,7 +12,7 @@ import { useSelection } from "./selection/SelectionProvider";
 // On pages other than the shop (policies) the service pills and bag are left out:
 // they only work on the shop page. A "Back to the shop" link takes their place.
 // account: the signed-in customer's initial (My Thaanora), or null for guests.
-export default function Header({ minimal = false, account = null }: { minimal?: boolean; account?: { initial: string } | null }) {
+export default function Header({ minimal = false, account = null }: { minimal?: boolean; account?: { initial: string; unread?: number | null } | null }) {
   const t = useTranslations("Header");
   const locale = useLocale();
   const selection = useSelection();
@@ -170,6 +170,27 @@ export default function Header({ minimal = false, account = null }: { minimal?: 
 
         {/* ── Language switcher ──────────────────────────────── */}
         <LangSwitcher />
+
+        {/* ── Notifications bell (signed-in customers) ──────── */}
+        {account && typeof account.unread === "number" && (
+          <Link
+            href="/account/notifications"
+            aria-label={t("notifications", { count: account.unread })}
+            className="relative flex items-center justify-center w-10 h-10 rounded-full border border-line bg-ivory-white text-emerald hover:border-gold transition-colors shrink-0 no-underline"
+          >
+            {account.unread > 0 && (
+              <span aria-hidden="true" className="absolute -top-1 -end-1 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-rani px-1 text-[11px] font-semibold text-white tabular-nums shadow-[0_0_0_2px_var(--color-ivory-white)]">
+                {account.unread > 9 ? "9+" : account.unread}
+              </span>
+            )}
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--color-emerald)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <g className={account.unread > 0 ? "mi-ring" : undefined}>
+                <path d="M6 17 V11 A6 6 0 0 1 18 11 V17 L19.5 18.5 H4.5 Z" />
+                <path d="M10 21 A2 2 0 0 0 14 21" />
+              </g>
+            </svg>
+          </Link>
+        )}
 
         {/* ── My Thaanora (account) ──────────────────────────── */}
         <Link

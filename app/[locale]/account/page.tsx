@@ -6,6 +6,7 @@ import AccountShell, { Card } from "@/components/account/AccountShell";
 import ClaimOrder from "@/components/account/ClaimOrder";
 import { getAccount } from "@/lib/customer/account";
 import { myOrders } from "@/lib/customer/orders";
+import { unreadCount } from "@/lib/customer/notifications";
 import { customerSignOut } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -54,7 +55,7 @@ export default async function AccountHome({ params, searchParams }: Props) {
   }
 
   const c = account.customer;
-  const [latest] = await myOrders(c.id, 1);
+  const [[latest], unread] = await Promise.all([myOrders(c.id, 1), unreadCount()]);
   const date = (iso: string) => new Intl.DateTimeFormat(`${locale}-u-ca-gregory`, { day: "numeric", month: "long", year: "numeric" }).format(new Date(iso));
   const birthday = c.birthday ? new Intl.DateTimeFormat(`${locale}-u-ca-gregory`, { day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${c.birthday}T00:00:00Z`)) : null;
   const row = (label: string, value: React.ReactNode) => (
@@ -74,7 +75,12 @@ export default async function AccountHome({ params, searchParams }: Props) {
           </h1>
           <p className="m-0 text-[14px] text-muted">{sp.welcome ? t("welcomeDone") : t("overviewIntro")}</p>
         </div>
-        {signOutButton}
+        <div className="flex items-center gap-4">
+          <Link href="/account/notifications" className="min-h-[40px] text-[14px] font-medium text-emerald underline underline-offset-2">
+            {t("notificationsLink", { count: unread })}
+          </Link>
+          {signOutButton}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

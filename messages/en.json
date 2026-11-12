@@ -13,7 +13,8 @@
     "bagLabel": "Open your selection ({count, plural, =0 {empty} one {# suit} other {# suits}})",
     "backToShop": "Back to the shop",
     "account": "My Thaanora: sign in",
-    "accountSignedIn": "My Thaanora"
+    "accountSignedIn": "My Thaanora",
+    "notifications": "Notifications: {count, plural, =0 {none new} one {# new} other {# new}}"
   },
   "Footer": {
     "brandDesc": "Original Pakistani unstitched suits for women across Riyadh. Every order is confirmed on WhatsApp before dispatch.",
@@ -618,8 +619,94 @@
     },
     "signOut": "Sign out",
     "deactivated": "This account is deactivated. To use it again, message us on WhatsApp.",
-    "comingSoon": "Coming soon to My Thaanora: notifications, favourites, your tailor, offers and Thaanora Circle.",
+    "comingSoon": "Coming soon to My Thaanora: your orders, favourites, your tailor, offers and Thaanora Circle.",
     "accountFor": "Account email: <b>{email}</b>",
-    "birthdayShort": "Birthday"
+    "birthdayShort": "Birthday",
+    "notificationsLink": "Notifications{count, plural, =0 {} other { (#)}}"
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "unread": "{count, plural, =0 {You're all caught up.} one {# new} other {# new}}",
+    "markAll": "Mark all as read",
+    "empty": "No notifications yet. We'll tell you here when your order moves.",
+    "new": "New",
+    "prefsTitle": "What we tell you about",
+    "prefsIntro": "Choose for each: on the website only, or also on WhatsApp. Our team sends WhatsApp messages to <b>{phone}</b>.",
+    "channel": {
+      "site": "Website",
+      "site_whatsapp": "Website + WhatsApp"
+    },
+    "saved": "Saved",
+    "saveFailed": "Couldn't save that choice. Please try again.",
+    "orderText": {
+      "confirmed": "We've confirmed your order and are preparing it.",
+      "packed": "Your suits are packed and ready for the courier.",
+      "with_courier": "It's on its way. Please have the cash ready.",
+      "delivered_cash_collected": "Delivered. We hope you love your fabric!",
+      "cancelled": "This order was cancelled. Message us if you'd like to order again.",
+      "refused_at_door": "This order came back to us. Message us if you'd like it delivered again.",
+      "waiting_confirmation": "We received your order and will confirm it on WhatsApp."
+    },
+    "kinds": {
+      "sourcing": "Sourcing",
+      "notify_me": "Notify-me",
+      "preorder": "Pre-order",
+      "stitching": "Stitching"
+    },
+    "requestStatus": {
+      "in_progress": "in progress",
+      "done": "done",
+      "closed": "closed"
+    },
+    "requestText": {
+      "in_progress": "We're working on it and will message you soon.",
+      "done": "It's done. Check WhatsApp for the details.",
+      "closed": "We couldn't get this one. Thank you for asking us."
+    },
+    "types": {
+      "order_status": {
+        "label": "Order updates",
+        "title": "Order {orderNo}: {status}"
+      },
+      "request_update": {
+        "label": "Your requests (sourcing, notify me, pre-order)",
+        "title": "{kind} request: {status}"
+      },
+      "back_in_stock": {
+        "label": "Favourites back in stock",
+        "title": "{name} is back in stock",
+        "body": "Order it before it goes again."
+      },
+      "price_drop": {
+        "label": "Price drops on favourites",
+        "title": "{name} is now {price}",
+        "body": "A suit you saved costs less now."
+      },
+      "new_arrival": {
+        "label": "New arrivals from brands you like",
+        "title": "New from {brand}",
+        "body": "Fresh designs just arrived on the rack."
+      },
+      "new_offer": {
+        "label": "New offers",
+        "title": "A new offer for you",
+        "body": ""
+      },
+      "level_up": {
+        "label": "Thaanora Circle level",
+        "title": "You're now {level}",
+        "body": "Your new Circle benefits start with your next order."
+      },
+      "birthday_gift": {
+        "label": "Birthday gift",
+        "title": "Happy birthday! {pct}% off for you",
+        "body": "Your birthday gift is waiting in My Thaanora."
+      },
+      "announcement": {
+        "label": "News from Thaanora",
+        "title": "News from Thaanora",
+        "body": ""
+      }
+    }
   }
 }

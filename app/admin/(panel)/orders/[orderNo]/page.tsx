@@ -12,6 +12,7 @@ import { customerMessage } from "@/lib/admin/customer-message";
 import { getWhatsappNumber } from "@/lib/shop-data";
 import ShopNumberNote from "@/components/admin/ShopNumberNote";
 import InvoiceRetry from "@/components/admin/orders/InvoiceRetry";
+import OrderWhatsappLink from "@/components/admin/orders/OrderWhatsappLink";
 import { amount, areaKey, orderTime } from "@/lib/admin/format";
 
 export const dynamic = "force-dynamic";
@@ -97,14 +98,13 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
                 <pre className="m-0 mb-3 max-h-[260px] overflow-auto whitespace-pre-wrap rounded-xl bg-[#F4F7F4] p-3 font-[family-name:var(--font-jost)] text-[13px] text-ink" dir="auto">
                   {msg.text}
                 </pre>
-                <a
+                <OrderWhatsappLink
                   href={msg.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  orderNo={o.orderNo}
                   className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-rani px-5 text-[15px] font-medium text-white no-underline"
                 >
                   {t(`orders.send.${msg.kind}`)}
-                </a>
+                </OrderWhatsappLink>
                 <p className="m-0 mt-2 text-[12px] text-muted">{t("orders.messageHint")}</p>
                 <ShopNumberNote number={shop} />
               </>

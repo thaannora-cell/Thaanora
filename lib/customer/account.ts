@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { getSessionClient } from "@/lib/supabase/server";
+import { unreadCount } from "./notifications";
 
 export type Customer = {
   id: string;
@@ -43,10 +44,12 @@ export async function currentCustomerId(): Promise<string | null> {
   return a.state === "customer" ? a.customer.id : null;
 }
 
-// For the header: the first letter of her name when signed in.
-export async function accountBadge(): Promise<{ initial: string } | null> {
+// For the header: the first letter of her name and her unread notifications, when signed in.
+export async function accountBadge(): Promise<{ initial: string; unread: number | null } | null> {
   const a = await getAccount();
-  if (a.state === "customer") return { initial: a.customer.name.trim().charAt(0).toUpperCase() || "•" };
-  if (a.state === "new") return { initial: "•" };
+  if (a.state === "customer") {
+    return { initial: a.customer.name.trim().charAt(0).toUpperCase() || "•", unread: await unreadCount() };
+  }
+  if (a.state === "new") return { initial: "•", unread: null };
   return null;
 }

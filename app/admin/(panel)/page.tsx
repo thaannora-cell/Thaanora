@@ -46,6 +46,14 @@ export default async function Dashboard() {
         </Link>
       </li>
     ),
+    orders && orders.whatsapp > 0 && (
+      <li key="whatsapp" className={line}>
+        <span>{t("dashboard.whatsappLine", { count: orders.whatsapp })}</span>
+        <Link href="/admin/notifications" className={smallBtn}>
+          {t("dashboard.open")}
+        </Link>
+      </li>
+    ),
     ...(orders?.invoices ?? []).map((x) => (
       <li key={`inv-${x.orderNo}`} className={line}>
         <span>

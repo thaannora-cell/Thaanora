@@ -25,6 +25,7 @@ export type DashboardData = {
     latest: LatestOrder[];
     newRequests: number;
     invoices: { orderNo: string; failed: boolean }[]; // delivered orders without a Zoho invoice
+    whatsapp: number; // customers' notifications waiting to be sent on WhatsApp
   };
   stock: null | {
     soldOut: StockItem[];
@@ -81,7 +82,10 @@ export async function getDashboard(role: StaffRole): Promise<DashboardData> {
           })),
           newRequests: requests.count ?? 0,
           invoices: [],
+          whatsapp: 0,
         };
+        const wa = await supabase.from("notifications").select("id", { count: "exact", head: true }).eq("whatsapp_status", "pending");
+        if (!wa.error) data.orders.whatsapp = wa.count ?? 0;
         // Delivered but no invoice in Zoho Books yet (failed or never tried). Read on its own, so the
         // dashboard still works if this query fails.
         const inv = await supabase

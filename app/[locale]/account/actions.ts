@@ -10,6 +10,7 @@ import { allow } from "@/lib/rate-limit";
 import { siteOrigin } from "@/lib/site-origin";
 import { normaliseSaudiMobile } from "@/lib/phone";
 import { isLocale } from "@/lib/site-gate";
+import { isNotificationType, notificationHref } from "@/lib/notifications";
 
 // ── Sign in with an email code ──────────────────────────────────────────────
 export type CustomerSignInState =
@@ -134,4 +135,33 @@ export async function claimOrder(orderNoRaw: string, phoneRaw: string, locale: s
   }
   revalidatePath(`/${isLocale(locale) ? locale : "en"}/account`);
   return { ok: true, orderNo };
+}
+
+// ── Notifications (Row Level Security: only her own rows) ────────────────────────────────
+export async function openNotification(id: string, locale: string) {
+  const loc2 = isLocale(locale) ? locale : "en";
+  const account = await getAccount();
+  if (account.state !== "customer") redirect(`/${loc2}/account/sign-in`);
+  const supabase = await getSessionClient();
+  const { data } = await supabase.from("notifications").update({ read_at: new Date().toISOString() }).eq("id", id).select("type, data").maybeSingle();
+  revalidatePath(`/${loc2}`, "layout");
+  redirect(data && isNotificationType(data.type) ? notificationHref({ type: data.type, data: (data.data ?? {}) as Record<string, string> }, loc2) : `/${loc2}/account/notifications`);
+}
+
+export async function markAllRead(locale: string) {
+  const account = await getAccount();
+  if (account.state !== "customer") return;
+  const supabase = await getSessionClient();
+  await supabase.from("notifications").update({ read_at: new Date().toISOString() }).is("read_at", null);
+  revalidatePath(`/${isLocale(locale) ? locale : "en"}`, "layout");
+}
+
+export async function setNotificationChannel(type: string, channel: string): Promise<{ ok: boolean }> {
+  const account = await getAccount();
+  if (account.state !== "customer" || !isNotificationType(type) || (channel !== "site" && channel !== "site_whatsapp")) return { ok: false };
+  const supabase = await getSessionClient();
+  const { error } = await supabase
+    .from("notification_prefs")
+    .upsert({ customer_id: account.customer.id, type, channel, updated_at: new Date().toISOString() }, { onConflict: "customer_id,type" });
+  return { ok: !error };
 }
