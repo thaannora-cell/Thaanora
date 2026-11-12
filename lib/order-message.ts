@@ -18,6 +18,7 @@ type Input = {
   customerName: string;
   customerPhone: string;
   vatPct: number;
+  address?: string | null; // a saved address from My Thaanora, with a map link
 };
 
 // The text the customer sends us on WhatsApp, in the language she shopped in.
@@ -40,6 +41,7 @@ export async function buildOrderMessage(o: Input): Promise<string> {
   if (o.totals.codeDiscount > 0 && o.discountCode) out.push(t("code", { code: o.discountCode, amount: price(o.totals.codeDiscount) }));
   out.push(o.giftBox ? t("giftBox", { amount: price(o.totals.packagingFee) }) : t("keeperBag"));
   out.push(t("delivery", { area, amount: o.totals.deliveryFee > 0 ? price(o.totals.deliveryFee) : t("free") }));
+  if (o.address) out.push(t("address", { address: o.address }));
   out.push(o.vatPct > 0 ? t("total", { amount: price(o.totals.total), pct: o.vatPct }) : t("totalNoVat", { amount: price(o.totals.total) }));
   if (o.gift) {
     out.push("");

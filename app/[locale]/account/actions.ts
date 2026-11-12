@@ -11,6 +11,8 @@ import { siteOrigin } from "@/lib/site-origin";
 import { normaliseSaudiMobile } from "@/lib/phone";
 import { isLocale } from "@/lib/site-gate";
 import { isNotificationType, notificationHref } from "@/lib/notifications";
+import { favoriteCodes, visibleProductIds } from "@/lib/customer/favorites";
+import { getCheckoutSettings } from "@/lib/shop-data";
 
 // ── Sign in with an email code ──────────────────────────────────────────────
 export type CustomerSignInState =
@@ -210,4 +212,116 @@ export async function cancelMyOrder(orderNo: string, locale: string): Promise<Ca
   const loc2 = isLocale(locale) ? locale : "en";
   revalidatePath(`/${loc2}`, "layout");
   return { ok: true };
+}
+
+// ── Favourites (the hearts on the rack) ───────────────────────────────────────────────────
+// Signed in: hearts made on this device before signing in are added to her account, and the
+// answer is everything she has saved, so every device shows the same hearts.
+export async function syncFavourites(localCodes: string[]): Promise<string[] | null> {
+  const account = await getAccount();
+  if (account.state !== "customer") return null;
+  const ids = await visibleProductIds(Array.isArray(localCodes) ? localCodes : []);
+  if (ids.size) {
+    const supabase = await getSessionClient();
+    await supabase
+      .from("favorites")
+      .upsert([...ids.values()].map((product_id) => ({ customer_id: account.customer.id, product_id })), { onConflict: "customer_id,product_id", ignoreDuplicates: true });
+  }
+  return favoriteCodes(account.customer.id);
+}
+
+export async function setFavourite(code: string, on: boolean): Promise<{ ok: boolean }> {
+  const account = await getAccount();
+  if (account.state !== "customer") return { ok: false };
+  const id = (await visibleProductIds([code])).get(code);
+  if (!id) return { ok: false };
+  const supabase = await getSessionClient();
+  const { error } = on
+    ? await supabase.from("favorites").upsert({ customer_id: account.customer.id, product_id: id }, { onConflict: "customer_id,product_id", ignoreDuplicates: true })
+    : await supabase.from("favorites").delete().eq("customer_id", account.customer.id).eq("product_id", id);
+  return { ok: !error };
+}
+
+// ── Saved addresses (Row Level Security: only her own) ───────────────────────────────────
+export type AddressState = { ok?: boolean; error?: "label" | "name" | "phone" | "area" | "pin" | "tooMany" | "failed" | "signedOut"; field?: string; at?: number };
+
+const oneLine = (v: FormDataEntryValue | null, max: number) => String(v ?? "").trim().replace(/\s+/g, " ").slice(0, max);
+
+export async function saveAddress(_prev: AddressState, form: FormData): Promise<AddressState> {
+  const account = await getAccount();
+  if (account.state !== "customer") return { error: "signedOut", at: Date.now() };
+  const locale = loc(form.get("locale"));
+  const id = String(form.get("id") ?? "");
+  const label = oneLine(form.get("label"), 40);
+  if (!label) return { error: "label", field: "label", at: Date.now() };
+  const recipientName = oneLine(form.get("recipientName"), 80);
+  if (!recipientName) return { error: "name", field: "recipientName", at: Date.now() };
+  const phoneRaw = oneLine(form.get("recipientPhone"), 20);
+  const recipientPhone = phoneRaw ? normaliseSaudiMobile(phoneRaw) : null;
+  if (phoneRaw && !recipientPhone) return { error: "phone", field: "recipientPhone", at: Date.now() };
+  const area = oneLine(form.get("area"), 120);
+  const { areas } = await getCheckoutSettings();
+  if (!areas.some((a) => a.area === area)) return { error: "area", field: "area", at: Date.now() };
+  const latRaw = String(form.get("lat") ?? "").trim();
+  const lngRaw = String(form.get("lng") ?? "").trim();
+  let lat: number | null = null;
+  let lng: number | null = null;
+  if (latRaw || lngRaw) {
+    lat = Number(latRaw);
+    lng = Number(lngRaw);
+    if (!(lat >= 15 && lat <= 33 && lng >= 34 && lng <= 56)) return { error: "pin", field: "pin", at: Date.now() };
+    lat = Math.round(lat * 1e6) / 1e6;
+    lng = Math.round(lng * 1e6) / 1e6;
+  }
+  const row = {
+    label,
+    recipient_name: recipientName,
+    recipient_phone: recipientPhone,
+    area,
+    district: oneLine(form.get("district"), 80) || null,
+    details: String(form.get("details") ?? "").trim().slice(0, 300) || null,
+    lat,
+    lng,
+    is_gift: form.get("isGift") === "on",
+  };
+
+  const supabase = await getSessionClient();
+  const { data: existing } = await supabase.from("addresses").select("id, is_default");
+  const list = existing ?? [];
+  const makeDefault = form.get("isDefault") === "on" || list.length === 0 || (list.length === 1 && list[0].id === id);
+  if (makeDefault) await supabase.from("addresses").update({ is_default: false }).neq("id", id || "00000000-0000-0000-0000-000000000000");
+  if (id) {
+    const { error } = await supabase.from("addresses").update({ ...row, is_default: makeDefault || list.find((a) => a.id === id)?.is_default === true }).eq("id", id);
+    if (error) return { error: "failed", at: Date.now() };
+  } else {
+    if (list.length >= 10) return { error: "tooMany", at: Date.now() };
+    const { error } = await supabase.from("addresses").insert({ ...row, customer_id: account.customer.id, is_default: makeDefault });
+    if (error) return { error: "failed", at: Date.now() };
+  }
+  revalidatePath(`/${locale}/account/addresses`);
+  redirect(`/${locale}/account/addresses`);
+}
+
+export async function deleteAddress(id: string, locale: string) {
+  const account = await getAccount();
+  if (account.state !== "customer") return;
+  const supabase = await getSessionClient();
+  const { data: gone } = await supabase.from("addresses").delete().eq("id", id).select("is_default").maybeSingle();
+  // Keep one default if any address is left.
+  if (gone?.is_default) {
+    const { data: next } = await supabase.from("addresses").select("id").order("created_at").limit(1).maybeSingle();
+    if (next) await supabase.from("addresses").update({ is_default: true }).eq("id", next.id);
+  }
+  revalidatePath(`/${isLocale(locale) ? locale : "en"}/account/addresses`);
+}
+
+export async function makeDefaultAddress(id: string, locale: string) {
+  const account = await getAccount();
+  if (account.state !== "customer") return;
+  const supabase = await getSessionClient();
+  const { data: own } = await supabase.from("addresses").select("id").eq("id", id).maybeSingle();
+  if (!own) return;
+  await supabase.from("addresses").update({ is_default: false }).neq("id", id);
+  await supabase.from("addresses").update({ is_default: true }).eq("id", id);
+  revalidatePath(`/${isLocale(locale) ? locale : "en"}/account/addresses`);
 }

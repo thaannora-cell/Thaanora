@@ -83,6 +83,19 @@ export default async function AccountHome({ params, searchParams }: Props) {
         </div>
       </div>
 
+      <nav aria-label={t("quickLinks")} className="mb-4 flex flex-wrap gap-2">
+        {([
+          ["/account/orders", t("allOrders")],
+          ["/account/favourites", t("favouritesLink")],
+          ["/account/addresses", t("addressesLink")],
+          ["/account/notifications", t("notificationsLink", { count: unread })],
+        ] as const).map(([href, label]) => (
+          <Link key={href} href={href} className="th-pill inline-flex min-h-[40px] items-center rounded-full border border-line bg-ivory-white px-4 text-[14px] text-emerald no-underline hover:border-gold">
+            {label}
+          </Link>
+        ))}
+      </nav>
+
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card labelledBy="latest">
           <div className="mb-3 flex items-center justify-between gap-2">

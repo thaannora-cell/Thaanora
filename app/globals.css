@@ -373,3 +373,11 @@ html[lang="hi"] body { font-family: var(--font-hindi); }
 /* Top bar: each new line rises in gently */
 .th-topbar-line { animation: th-rise .5s ease-out; }
 @media (prefers-reduced-motion: reduce) { .th-topbar-line { animation: none; } }
+
+/* ── Map pin for saved addresses (Leaflet) ───────────────────────── */
+.th-map-pin span {
+  display: block; width: 28px; height: 28px; border-radius: 50% 50% 50% 0;
+  background: var(--color-rani); border: 3px solid var(--color-gold-light);
+  transform: rotate(-45deg); box-shadow: 0 4px 10px rgba(0,0,0,.25);
+}
+.leaflet-container { font-family: inherit; }

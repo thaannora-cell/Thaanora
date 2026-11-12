@@ -20,7 +20,8 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" }, // no other site can show ours in a frame (click-jacking)
           { key: "Content-Security-Policy", value: "frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" }, // other sites never see full addresses
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+          // Location only for our own pages ("Use my location" on a saved address); the browser still asks her.
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self), payment=(), usb=()" },
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" }, // always https
         ],
       },

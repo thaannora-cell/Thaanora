@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useSelection } from "./SelectionProvider";
 import { useAreaLabel } from "../useAreaLabel";
 
@@ -88,12 +89,43 @@ export default function CheckoutOptions() {
         </div>
       )}
 
+      {/* Signed in with saved addresses: pick one (it also sets the area, and a gift recipient's details). */}
+      {sel.customer && sel.customer.addresses.length > 0 && (
+        <label className="flex flex-col gap-1.5 text-[13px] text-muted">
+          {t("deliverTo")}
+          <select
+            className="th-field"
+            value={checkout.addressId}
+            onChange={(e) => {
+              const a = sel.customer?.addresses.find((x) => x.id === e.target.value);
+              if (!a) return updateCheckout({ addressId: "" });
+              updateCheckout({
+                addressId: a.id,
+                area: settings.areas.some((x) => x.area === a.area) ? a.area : checkout.area,
+                ...(a.isGift ? { isGift: true, recipientName: a.recipientName, recipientArea: areaLabel(a.area) } : {}),
+              });
+            }}
+          >
+            <option value="">{t("otherAddress")}</option>
+            {sel.customer.addresses.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.label} · {a.recipientName} · {areaLabel(a.area)}
+              </option>
+            ))}
+          </select>
+          <Link href="/account/addresses" className="self-start text-[12px] text-emerald underline underline-offset-2">
+            {t("manageAddresses")}
+          </Link>
+        </label>
+      )}
+
       <label className="flex flex-col gap-1.5 text-[13px] text-muted">
         {t("deliveryArea")}
         <select
           className="th-field"
           value={checkout.area}
-          onChange={(e) => updateCheckout({ area: e.target.value })}
+          // Choosing an area by hand means it's not the saved address any more.
+          onChange={(e) => updateCheckout({ area: e.target.value, addressId: "" })}
           aria-describedby={checkout.area ? undefined : "area-hint"}
         >
           <option value="" disabled>

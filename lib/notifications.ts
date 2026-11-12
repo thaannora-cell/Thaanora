@@ -28,5 +28,7 @@ export type NotificationRow = {
 // Where tapping a notification takes her. Order updates open that order in My Thaanora.
 export function notificationHref(n: Pick<NotificationRow, "type" | "data">, locale: string): string {
   if (n.type === "order_status" && /^TH-\d{3,7}$/.test(n.data.orderNo ?? "")) return `/${locale}/account/orders/${n.data.orderNo}`;
+  // A favourite back in stock or cheaper: open that suit on the rack.
+  if ((n.type === "back_in_stock" || n.type === "price_drop") && /^[\w.-]{1,64}$/.test(n.data.code ?? "")) return `/${locale}?p=${encodeURIComponent(n.data.code)}`;
   return `/${locale}/account`;
 }

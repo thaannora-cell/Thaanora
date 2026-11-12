@@ -13,6 +13,8 @@ import { getLiveCampaigns } from "@/lib/campaigns";
 import { campaignSalePct } from "@/lib/campaign-pricing";
 import { buildOrderMessage, type MessageLine } from "@/lib/order-message";
 import { currentCustomerId } from "@/lib/customer/account";
+import { addressLine } from "@/lib/customer/addresses";
+import { getSessionClient } from "@/lib/supabase/server";
 
 const MAX_LINES = 20;
 const MAX_QTY = 10;
@@ -142,8 +144,21 @@ export async function POST(req: NextRequest) {
 
   // Signed in to My Thaanora: the order goes into her account (guests stay guests).
   const customerId = await currentCustomerId();
+  // A saved address she chose: read again from her account (never trusted from the browser), and only
+  // if it's for the delivery area she picked.
+  let address: string | null = null;
+  const addressId = typeof checkout.addressId === "string" ? checkout.addressId : "";
+  if (customerId && /^[0-9a-f-]{36}$/i.test(addressId)) {
+    const session = await getSessionClient();
+    const { data: a } = await session.from("addresses").select("label, recipient_name, recipient_phone, area, district, details, lat, lng").eq("id", addressId).maybeSingle();
+    if (a && a.area === area.area) {
+      const who = [a.recipient_name, a.recipient_phone ? `0${String(a.recipient_phone).slice(4)}` : null].filter(Boolean).join(" ");
+      const where = addressLine({ district: a.district, details: a.details, lat: a.lat === null ? null : Number(a.lat), lng: a.lng === null ? null : Number(a.lng) });
+      address = [`${a.label}: ${who}`, where].filter(Boolean).join(" · ").slice(0, 600);
+    }
+  }
   const linked = customerId
-    ? !(await supabase.from("orders").update({ customer_id: customerId }).eq("id", created.new_order_id)).error
+    ? !(await supabase.from("orders").update({ customer_id: customerId, ...(address ? { address } : {}) }).eq("id", created.new_order_id)).error
     : false;
 
   const lines: MessageLine[] = priced.map((l) => ({
@@ -167,6 +182,7 @@ export async function POST(req: NextRequest) {
     customerName: name,
     customerPhone: phone,
     vatPct: settings.vatPct,
+    address,
   });
 
   return NextResponse.json(

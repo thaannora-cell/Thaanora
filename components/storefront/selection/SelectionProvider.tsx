@@ -18,9 +18,14 @@ export type Checkout = {
   area: string;
   customerName: string;
   customerPhone: string;
+  addressId: string; // a saved address (My Thaanora), or ""
 };
 
-const EMPTY_CHECKOUT: Checkout = { packaging: "suit_keeper_bag", isGift: false, recipientName: "", recipientArea: "", giftNote: "", area: "", customerName: "", customerPhone: "" };
+// Signed in to My Thaanora: her name, mobile and saved addresses, to fill the checkout.
+export type SavedAddress = { id: string; label: string; recipientName: string; area: string; isDefault: boolean; isGift: boolean };
+export type SavedCustomer = { name: string; phone: string; addresses: SavedAddress[] };
+
+const EMPTY_CHECKOUT: Checkout = { packaging: "suit_keeper_bag", isGift: false, recipientName: "", recipientArea: "", giftNote: "", area: "", customerName: "", customerPhone: "", addressId: "" };
 
 type SelectionContext = {
   lines: Line[];
@@ -44,6 +49,7 @@ type SelectionContext = {
   drawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
+  customer: SavedCustomer | null;
 };
 
 const Ctx = createContext<SelectionContext | null>(null);
@@ -90,9 +96,9 @@ async function checkCode(code: string): Promise<AppliedCode | "invalid" | "error
 
 const maxQty = (p: PublicProduct | undefined) => Math.max(0, p?.stock ?? 0);
 
-type Props = { products: PublicProduct[]; bundle: BundleRule | null; settings: CheckoutSettings; children: React.ReactNode };
+type Props = { products: PublicProduct[]; bundle: BundleRule | null; settings: CheckoutSettings; customer?: SavedCustomer | null; children: React.ReactNode };
 
-export default function SelectionProvider({ products: list, bundle, settings, children }: Props) {
+export default function SelectionProvider({ products: list, bundle, settings, customer = null, children }: Props) {
   const products = useMemo(() => new Map(list.map((p) => [p.code, p])), [list]);
   const [lines, setLines] = useState<Line[]>([]);
   const [appliedCode, setAppliedCode] = useState<AppliedCode | null>(null);
@@ -129,7 +135,18 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
         area: settings.areas.some((a) => a.area === savedCheckout.area) ? str(savedCheckout.area) : "",
         customerName: str(savedCheckout.customerName),
         customerPhone: str(savedCheckout.customerPhone),
+        addressId: customer?.addresses.some((a) => a.id === savedCheckout.addressId) ? str(savedCheckout.addressId) : "",
       });
+    }
+    // Signed in: fill what is still empty from her account (name, mobile, default address).
+    if (customer) {
+      const home = customer.addresses.find((a) => a.isDefault && !a.isGift) ?? customer.addresses.find((a) => !a.isGift);
+      setCheckout((c) => ({
+        ...c,
+        customerName: c.customerName || customer.name,
+        customerPhone: c.customerPhone || customer.phone,
+        ...(!c.area && !c.addressId && home && settings.areas.some((a) => a.area === home.area) ? { area: home.area, addressId: home.id } : {}),
+      }));
     }
     const savedCode = readJson<string>(CODE_KEY);
     if (typeof savedCode === "string") {
@@ -146,7 +163,7 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
       url.searchParams.delete("bag");
       window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
     }
-  }, [products, settings.areas]);
+  }, [products, settings.areas, customer]);
 
   useEffect(() => {
     if (restored) writeJson(LINES_KEY, lines);
@@ -236,7 +253,7 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
     setLines([]);
     setAppliedCode(null);
     writeJson(CODE_KEY, null);
-    setCheckout((c) => ({ ...EMPTY_CHECKOUT, area: c.area, customerName: c.customerName, customerPhone: c.customerPhone }));
+    setCheckout((c) => ({ ...EMPTY_CHECKOUT, area: c.area, customerName: c.customerName, customerPhone: c.customerPhone, addressId: c.addressId }));
   }, []);
 
   const value: SelectionContext = {
@@ -259,6 +276,7 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
     placedOrder,
     orderPlaced,
     drawerOpen,
+    customer,
     openDrawer: () => setDrawerOpen(true),
     closeDrawer: () => {
       setDrawerOpen(false);

@@ -293,7 +293,10 @@
     "vatIncluded": "Includes {pct}% VAT",
     "vatNote": "All prices include {pct}% VAT. Stitching is quoted separately by your tailor.",
     "codNote": "Cash on delivery only. We confirm every order on WhatsApp before dispatch. Please keep your phone on.",
-    "noVatNote": "No VAT is added: Thaanora is not VAT-registered. Stitching is quoted separately by your tailor."
+    "noVatNote": "No VAT is added: Thaanora is not VAT-registered. Stitching is quoted separately by your tailor.",
+    "deliverTo": "Deliver to",
+    "otherAddress": "Another address (tell us on WhatsApp)",
+    "manageAddresses": "Manage my addresses"
   },
   "Areas": {
     "central": "Central Riyadh (Olaya, Malaz, Sulaimaniyah)",
@@ -345,7 +348,8 @@
     "giftNote": "Card message: {note}",
     "customer": "Name: {name} · WhatsApp: {phone}",
     "closing": "Cash on delivery. Thank you!",
-    "totalNoVat": "Total to pay on delivery: {amount}"
+    "totalNoVat": "Total to pay on delivery: {amount}",
+    "address": "Address: {address}"
   },
   "Track": {
     "eyebrow": "Order tracking",
@@ -619,11 +623,14 @@
     },
     "signOut": "Sign out",
     "deactivated": "This account is deactivated. To use it again, message us on WhatsApp.",
-    "comingSoon": "Coming soon to My Thaanora: favourites, your tailor, offers and Thaanora Circle.",
+    "comingSoon": "Coming soon to My Thaanora: your tailor, offers and Thaanora Circle.",
     "accountFor": "Account email: <b>{email}</b>",
     "birthdayShort": "Birthday",
     "notificationsLink": "Notifications{count, plural, =0 {} other { (#)}}",
-    "allOrders": "All orders"
+    "allOrders": "All orders",
+    "quickLinks": "My Thaanora sections",
+    "favouritesLink": "Favourites",
+    "addressesLink": "Addresses"
   },
   "Notifications": {
     "title": "Notifications",
@@ -743,5 +750,64 @@
     "cannotCancel": "This order can't be cancelled any more. Message us on WhatsApp and we'll help.",
     "cancelFailed": "Something went wrong. Please try again.",
     "invoice": "View invoice {no}"
+  },
+  "Favourites": {
+    "title": "Favourites",
+    "intro": "Suits you saved with the heart on the rack. We'll tell you when one is back in stock or cheaper.",
+    "empty": "No favourites yet. Tap the heart on any suit to save it.",
+    "browse": "Browse the rack",
+    "soldOut": "Sold out",
+    "fewLeft": "Only {count} left",
+    "inStock": "In stock",
+    "view": "View on the rack",
+    "remove": "Remove"
+  },
+  "Addresses": {
+    "title": "Addresses",
+    "intro": "Your delivery addresses and the people you send gifts to.",
+    "add": "+ Add an address",
+    "newTitle": "New address",
+    "editTitle": "Edit address",
+    "cancel": "Cancel",
+    "label": "Name for this address",
+    "home": "Home",
+    "work": "Work",
+    "family": "Family",
+    "area": "Delivery area",
+    "chooseArea": "Choose the area",
+    "recipientName": "Recipient",
+    "recipientPhone": "Recipient's mobile",
+    "district": "District",
+    "details": "Street, building, floor",
+    "detailsPlaceholder": "e.g. King Fahd Rd, building 12, 3rd floor, flat 7",
+    "pin": "Map pin (optional): helps the driver find the door",
+    "mapLabel": "Map: tap to place the pin",
+    "useLocation": "Use my location",
+    "locating": "Finding you…",
+    "clearPin": "Remove pin",
+    "pinSet": "Pin placed. Drag it to adjust.",
+    "pinHint": "Tap the map to place a pin.",
+    "locationDenied": "We couldn't get your location. Tap the map instead.",
+    "makeDefault": "Use as my default address",
+    "isGift": "This is a gift recipient",
+    "isGiftNote": "Choosing it at checkout marks the order as a gift for them.",
+    "save": "Save address",
+    "saving": "Saving…",
+    "default": "Default",
+    "gift": "Gift recipient",
+    "onMap": "Open in Maps",
+    "edit": "Edit",
+    "setDefault": "Make default",
+    "delete": "Delete",
+    "errors": {
+      "label": "Give this address a name, e.g. Home.",
+      "name": "Please enter the recipient's name.",
+      "phone": "Please enter a Saudi mobile number, e.g. 05X XXX XXXX.",
+      "area": "Please choose a delivery area.",
+      "pin": "The pin must be in Saudi Arabia.",
+      "tooMany": "You can save up to 10 addresses.",
+      "failed": "We couldn't save that. Please try again.",
+      "signedOut": "You've been signed out. Please sign in again."
+    }
   }
 }

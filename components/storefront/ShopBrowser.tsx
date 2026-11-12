@@ -14,8 +14,12 @@ import { DEFAULT_FILTERS, brandsOf, filterProducts, type Filters } from "@/lib/f
 import { salePrice, type PublicProduct } from "@/lib/product";
 import { useSelection } from "./selection/SelectionProvider";
 import { openSourcing } from "./SourcingDialog";
+import { setFavourite, syncFavourites } from "@/app/[locale]/account/actions";
 
 const SAVED_KEY = "th_saved";
+// Set once this device's guest hearts have joined the signed-in account; from then on the account's list
+// is the truth (so a heart removed on another device doesn't come back). Cleared when browsing as a guest.
+const MERGED_KEY = "th_saved_merged";
 
 function readSaved(): string[] {
   try {
@@ -44,9 +48,10 @@ type Props = {
   brandOfMonth: string | null;
   loadFailed: boolean;
   tailors: Tailor[];
+  signedIn?: boolean; // My Thaanora: hearts are kept on her account too
 };
 
-export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailors }: Props) {
+export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailors, signedIn = false }: Props) {
   const t = useTranslations("Home");
   const tPanel = useTranslations("Panel");
   const tRack = useTranslations("Rack");
@@ -70,7 +75,29 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
     toastTimer.current = window.setTimeout(() => setToast(null), 2800);
   }, []);
 
-  useEffect(() => setSaved(readSaved()), []);
+  // Hearts from this device; when signed in, they join her account and every device shows the same ones.
+  useEffect(() => {
+    const local = readSaved();
+    setSaved(local);
+    let merged = false;
+    try {
+      merged = window.localStorage.getItem(MERGED_KEY) === "1";
+      if (!signedIn) window.localStorage.removeItem(MERGED_KEY);
+    } catch {
+      /* storage blocked */
+    }
+    if (!signedIn) return;
+    void syncFavourites(merged ? [] : local).then((codes) => {
+      if (!codes) return;
+      setSaved(codes);
+      writeSaved(codes);
+      try {
+        window.localStorage.setItem(MERGED_KEY, "1");
+      } catch {
+        /* storage blocked */
+      }
+    });
+  }, [signedIn]);
 
   // The header pill and the footer link open the tailor network screen.
   useEffect(() => {
@@ -120,12 +147,15 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
   const shown = useMemo(() => filterProducts(products, filters, saved), [products, filters, saved]);
   const dialogProduct = dialog ? products.find((p) => p.code === dialog.code) ?? null : null;
 
-  const toggleSaved = (code: string) =>
+  const toggleSaved = (code: string) => {
+    const on = !saved.includes(code);
     setSaved((list) => {
       const next = toggle(list, code);
       writeSaved(next);
       return next;
     });
+    if (signedIn) void setFavourite(code, on);
+  };
 
   const share = async (p: PublicProduct) => {
     const url = `${window.location.origin}/${locale}?p=${encodeURIComponent(p.code)}`;
