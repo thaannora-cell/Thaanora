@@ -7,6 +7,7 @@ import { allow, LIMITS, tooMany } from "@/lib/rate-limit";
 import { getWhatsappNumber } from "@/lib/shop-data";
 import { buildRequestMessage } from "@/lib/request-message";
 import type { Locale } from "@/i18n/routing";
+import { currentCustomerId } from "@/lib/customer/account";
 
 const SCREENSHOT_BUCKET = "request-screenshots";
 const MAX_SCREENSHOT_BYTES = 4 * 1024 * 1024; // Vercel limits request bodies to ~4.5 MB
@@ -91,6 +92,7 @@ export async function POST(req: NextRequest) {
         customer_name: name || null,
         language: locale,
         details: `${product.code} · ${product.name}`,
+        customer_id: await currentCustomerId(),
       })
       .select("id")
       .single();
@@ -143,6 +145,7 @@ export async function POST(req: NextRequest) {
       details: notes || null,
       screenshot_path: screenshotPath,
       language: locale,
+      customer_id: await currentCustomerId(),
     })
     .select("id")
     .single();

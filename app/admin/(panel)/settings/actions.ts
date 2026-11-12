@@ -16,6 +16,7 @@ const PUBLIC: Record<string, boolean> = {
   business: true,
   pkr_per_sar: false,
   low_stock_level: false,
+  customer_signin_method: true,
 };
 const HOSTS = { instagram: "instagram.com", tiktok: "tiktok.com", snapchat: "snapchat.com" } as const;
 
@@ -81,6 +82,12 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
   const low = Number(text(form.get("lowStock"), 4));
   if (!(Number.isInteger(low) && low >= 0 && low <= 100)) return fail("lowStock", "lowStock");
 
+  // Customer sign-in: only the email code works until SMS (Taqnyat) is connected at go-live.
+  const SIGNIN_READY = ["email"];
+  const method = text(form.get("signinMethod"), 10) || "email";
+  if (!["email", "sms", "both"].includes(method)) return fail("signinMethod", "signinMethod");
+  if (!SIGNIN_READY.includes(method)) return fail("signinNotReady", "signinMethod");
+
   const values: Record<string, unknown> = {
     whatsapp_number: wa,
     social_links: links,
@@ -88,6 +95,7 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
     business,
     pkr_per_sar: Math.round(rate * 100) / 100,
     low_stock_level: low,
+    customer_signin_method: method,
   };
   for (const [key, value] of Object.entries(values)) {
     const { error, count } = await supabase.from("settings").update({ value }, { count: "exact" }).eq("key", key);

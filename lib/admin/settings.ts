@@ -14,6 +14,7 @@ export type SettingsForm = {
   address: string;
   pkrRate: number | null;
   lowStock: number;
+  signinMethod: "email" | "sms" | "both";
 };
 
 // Every setting, public and private, read as the owner (RLS: "owner writes settings").
@@ -44,6 +45,7 @@ export async function getSettingsForm(): Promise<{ form: SettingsForm; failed: b
       address: s(biz.address),
       pkrRate: Number.isFinite(rate) && rate > 0 ? rate : null,
       lowStock: Number.isFinite(low) && low >= 0 ? low : 3,
+      signinMethod: (["email", "sms", "both"] as const).find((m) => m === get("customer_signin_method")) ?? "email",
     },
     failed: Boolean(error),
   };

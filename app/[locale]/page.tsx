@@ -1,4 +1,5 @@
 import TopBar from "@/components/storefront/TopBar";
+import { accountBadge } from "@/lib/customer/account";
 import Header from "@/components/storefront/Header";
 import Footer from "@/components/storefront/Footer";
 import Hero from "@/components/storefront/Hero";
@@ -18,7 +19,7 @@ export const dynamic = "force-dynamic";
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const campaigns = await getLiveCampaigns();
-  const [result, brandOfMonth, tailors, settings, bundle, info, topLines] = await Promise.all([
+  const [result, brandOfMonth, tailors, settings, bundle, info, topLines, account] = await Promise.all([
     getVisibleProducts(campaigns),
     getBrandOfMonth(),
     getTailors(),
@@ -26,6 +27,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     getBundleRule(),
     getSiteInfo(),
     getTopBarLines(locale, campaigns),
+    accountBadge(),
   ]);
   const products = result.status === "ok" ? result.products : [];
   const loaded = result.status === "ok";
@@ -33,7 +35,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <SelectionProvider products={products} bundle={bundle} settings={settings}>
       <TopBar lines={topLines} whatsapp={info.whatsapp} />
-      <Header />
+      <Header account={account} />
       <main className="max-w-[1320px] mx-auto px-4 pb-16 min-h-[60vh]">
         <Hero designs={loaded ? products.length : null} brands={loaded ? brandsOf(products).length : null} />
         <ShopBrowser products={products} brandOfMonth={brandOfMonth} loadFailed={!loaded} tailors={tailors} />

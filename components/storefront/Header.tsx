@@ -11,7 +11,8 @@ import { useSelection } from "./selection/SelectionProvider";
 
 // On pages other than the shop (policies) the service pills and bag are left out:
 // they only work on the shop page. A "Back to the shop" link takes their place.
-export default function Header({ minimal = false }: { minimal?: boolean }) {
+// account: the signed-in customer's initial (My Thaanora), or null for guests.
+export default function Header({ minimal = false, account = null }: { minimal?: boolean; account?: { initial: string } | null }) {
   const t = useTranslations("Header");
   const locale = useLocale();
   const selection = useSelection();
@@ -169,6 +170,25 @@ export default function Header({ minimal = false }: { minimal?: boolean }) {
 
         {/* ── Language switcher ──────────────────────────────── */}
         <LangSwitcher />
+
+        {/* ── My Thaanora (account) ──────────────────────────── */}
+        <Link
+          href="/account"
+          aria-label={account ? t("accountSignedIn") : t("account")}
+          className="relative flex items-center justify-center w-10 h-10 rounded-full border border-line bg-ivory-white text-emerald hover:border-gold transition-colors shrink-0 no-underline"
+        >
+          {account ? (
+            <span aria-hidden="true" className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-emerald font-[family-name:var(--font-cinzel)] text-[14px] font-semibold text-gold-light">
+              {account.initial}
+            </span>
+          ) : (
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--color-emerald)" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+              <circle cx="12" cy="8.5" r="3.8" />
+              <path d="M4.5 20.5 C5.5 16.2 8.4 14.2 12 14.2 C15.6 14.2 18.5 16.2 19.5 20.5" />
+              <path className="mi-twinkle" d="M19 3.5 L19.6 5.2 L21.3 5.8 L19.6 6.4 L19 8.1 L18.4 6.4 L16.7 5.8 L18.4 5.2Z" stroke="var(--color-gold)" strokeWidth="1" fill="var(--color-gold)" />
+            </svg>
+          )}
+        </Link>
 
         {/* ── Bag button ─────────────────────────────────────── */}
         {!minimal && (

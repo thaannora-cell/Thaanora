@@ -21,6 +21,9 @@ export const LIMITS = {
   unlock: { max: 10, seconds: 900 }, // test-site password: 10 per 15 minutes
   signInSend: { max: 5, seconds: 900 }, // back-office sign-in emails: 5 per 15 minutes
   signInVerify: { max: 10, seconds: 900 }, // back-office codes typed: 10 per 15 minutes
+  accountSend: { max: 5, seconds: 900 }, // customer sign-in emails: 5 per 15 minutes
+  accountVerify: { max: 10, seconds: 900 }, // customer codes typed: 10 per 15 minutes
+  claim: { max: 10, seconds: 900 }, // "add an earlier order" tries: 10 per 15 minutes
 } as const;
 export type LimitName = keyof typeof LIMITS;
 

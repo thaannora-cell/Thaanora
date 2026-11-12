@@ -122,6 +122,25 @@ export default function SettingsView({ form: s }: { form: SettingsForm }) {
           </div>
           <p className="m-0 mt-2 text-[12px] text-muted">{t("pricingHint")}</p>
         </section>
+
+        <section aria-labelledby="signin" className={panel}>
+          <h2 id="signin" className={h2}>
+            {t("signinTitle")}
+          </h2>
+          <label className={label}>
+            {t("signinMethod")}
+            <select name="signinMethod" defaultValue={s.signinMethod} aria-invalid={bad("signinMethod")} className={field}>
+              <option value="email">{t("signin.email")}</option>
+              <option value="sms" disabled>
+                {t("signin.sms")}
+              </option>
+              <option value="both" disabled>
+                {t("signin.both")}
+              </option>
+            </select>
+          </label>
+          <p className="m-0 mt-2 text-[12px] text-muted">{t("signinHint")}</p>
+        </section>
       </div>
 
       <div className="sticky bottom-0 mt-4 flex flex-wrap items-center gap-3 border-t border-[#E1E6DF] bg-[#EEF1EC]/95 py-3 backdrop-blur">

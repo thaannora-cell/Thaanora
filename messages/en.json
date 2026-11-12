@@ -11,7 +11,9 @@
     "sourcing": "Sourcing request",
     "trackOrder": "Track order",
     "bagLabel": "Open your selection ({count, plural, =0 {empty} one {# suit} other {# suits}})",
-    "backToShop": "Back to the shop"
+    "backToShop": "Back to the shop",
+    "account": "My Thaanora: sign in",
+    "accountSignedIn": "My Thaanora"
   },
   "Footer": {
     "brandDesc": "Original Pakistani unstitched suits for women across Riyadh. Every order is confirmed on WhatsApp before dispatch.",
@@ -318,7 +320,11 @@
     "copy": "Copy message",
     "copied": "Copied ✓",
     "keepShopping": "Keep shopping",
-    "error_too_many": "Too many tries from this connection. Please wait a few minutes and try again."
+    "error_too_many": "Too many tries from this connection. Please wait a few minutes and try again.",
+    "saveOrderTitle": "Save this order",
+    "saveOrderText": "Create your account to follow this order and keep your details for next time.",
+    "saveOrderCta": "Create your account",
+    "savedToAccount": "This order is saved in My Thaanora."
   },
   "OrderMessage": {
     "greeting": "Hello Thaanora, I would like to order ({orderNo}):",
@@ -534,5 +540,86 @@
     "giftBox": "Gift box",
     "delivery": "Delivery",
     "notes": "Cash on delivery · Order {orderNo} · Prices include VAT"
+  },
+  "Account": {
+    "title": "My Thaanora",
+    "signInTitle": "Sign in to My Thaanora",
+    "signInIntro": "Your orders and details in one place. We email you a 6-digit code: no password needed.",
+    "email": "Email",
+    "send": "Email me a code",
+    "sending": "Sending…",
+    "codeIntro": "We sent a 6-digit code to <b>{email}</b>. It works for a few minutes. Check Spam if you don't see it.",
+    "code": "6-digit code",
+    "verify": "Sign in",
+    "verifying": "Checking…",
+    "resend": "Send a new code",
+    "resent": "A new code is on its way.",
+    "otherEmail": "Use another email",
+    "guestNote": "No account needed to order: you can always order as a guest.",
+    "errors": {
+      "badEmail": "Please enter a valid email address.",
+      "badCode": "That code didn't work. Check it, or ask for a new one.",
+      "badLink": "That sign-in link has expired or was opened in another browser. Use the code instead.",
+      "tooMany": "Too many tries. Please wait a few minutes and try again.",
+      "failed": "We couldn't send the email right now. Please try again shortly."
+    },
+    "welcomeTitle": "Welcome to Thaanora",
+    "welcomeIntro": "Tell us a little about you. We confirm every order with you on WhatsApp, on this mobile.",
+    "welcomeDone": "Your account is ready. Earlier orders from this device are added automatically.",
+    "name": "Name",
+    "phone": "Mobile (WhatsApp)",
+    "phoneHint": "Saudi mobile, for example 05X XXX XXXX",
+    "language": "Preferred language",
+    "birthday": "Birthday (optional)",
+    "birthdayHint": "So we can send you a birthday gift.",
+    "noBirthday": "Not added",
+    "create": "Create my account",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "profileErrors": {
+      "name": "Please enter your name.",
+      "phone": "Please enter a Saudi mobile number, for example 05X XXX XXXX.",
+      "birthday": "Please enter a real date in the past.",
+      "failed": "We couldn't save that. Please try again.",
+      "signedOut": "You've been signed out. Please sign in again."
+    },
+    "hello": "Hello, {name}",
+    "overviewIntro": "Your orders and details, all in one place.",
+    "detailsTitle": "Your details",
+    "edit": "Edit",
+    "backToAccount": "← My Thaanora",
+    "emailLine": "Signed in as {email}",
+    "latestTitle": "Your latest order",
+    "noOrders": "No orders yet. Your next order will appear here.",
+    "orderLine": "{suits, plural, one {# suit} other {# suits}} · {total} · {date}",
+    "status": {
+      "waiting_confirmation": "Order received",
+      "confirmed": "Confirmed",
+      "packed": "Packed",
+      "with_courier": "With the courier",
+      "delivered_cash_collected": "Delivered",
+      "cancelled": "Cancelled",
+      "refused_at_door": "Returned to us"
+    },
+    "claimTitle": "Add an earlier order",
+    "claimIntro": "Ordered before without an account? Add it with the order number and the mobile used for it.",
+    "orderNo": "Order number",
+    "orderPhone": "Mobile used for the order",
+    "claim": "Add to my account",
+    "claiming": "Adding…",
+    "claimed": "{orderNo} is now in your account.",
+    "autoClaimed": "Your order {orderNo} was added to your account.",
+    "claimErrors": {
+      "invalid": "Please enter an order number like TH-1024 and a Saudi mobile number.",
+      "not_found": "We couldn't find an order with that number and mobile that can be added.",
+      "too_many": "Too many tries. Please wait a few minutes and try again.",
+      "failed": "Something went wrong. Please try again."
+    },
+    "signOut": "Sign out",
+    "deactivated": "This account is deactivated. To use it again, message us on WhatsApp.",
+    "comingSoon": "Coming soon to My Thaanora: notifications, favourites, your tailor, offers and Thaanora Circle.",
+    "accountFor": "Account email: <b>{email}</b>",
+    "birthdayShort": "Birthday"
   }
 }

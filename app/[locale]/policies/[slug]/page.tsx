@@ -7,6 +7,7 @@ import Footer from "@/components/storefront/Footer";
 import WhatsAppHelp from "@/components/storefront/WhatsAppHelp";
 import { getCheckoutSettings, getSiteInfo } from "@/lib/shop-data";
 import { POLICIES, isPolicy, type PolicySlug } from "@/lib/policies";
+import { accountBadge } from "@/lib/customer/account";
 
 export const dynamic = "force-dynamic";
 
@@ -35,12 +36,13 @@ export default async function PolicyPage({ params }: Params) {
   if (!isPolicy(slug)) notFound();
   setRequestLocale(locale);
 
-  const [t, tFooter, tAreas, info, settings] = await Promise.all([
+  const [t, tFooter, tAreas, info, settings, account] = await Promise.all([
     getTranslations("Policies"),
     getTranslations("Footer"),
     getTranslations("Areas"),
     getSiteInfo(),
     getCheckoutSettings(),
+    accountBadge(),
   ]);
   const { legalName, nationalNo } = info.business;
   const vars = { ...VALUES, vat: settings.vatPct, company: legalName, nationalNo: nationalNo || "—" };
@@ -56,7 +58,7 @@ export default async function PolicyPage({ params }: Params) {
 
   return (
     <>
-      <Header minimal />
+      <Header minimal account={account} />
       <main className="mx-auto max-w-[1320px] px-4 pb-16 pt-8 md:pt-12">
         <div className="mx-auto grid max-w-[1040px] grid-cols-1 gap-8 md:grid-cols-[220px_1fr]">
           <nav aria-label={tFooter("legalPolicies")} className="order-2 md:order-1">

@@ -637,7 +637,9 @@
         "pkrRate": "Enter the PKR rate, e.g. 73.73.",
         "lowStock": "Low-stock level must be a whole number from 0 to 100.",
         "tplUnknown": "A template uses a '{'word'}' it can’t fill in (marked in pink). Use only the words listed under it.",
-        "tplLong": "A template can be at most 1,000 characters."
+        "tplLong": "A template can be at most 1,000 characters.",
+        "signinMethod": "Choose how customers sign in.",
+        "signinNotReady": "SMS sign-in isn't connected yet. Keep Email for now."
       },
       "tplTitle": "WhatsApp message templates",
       "tplSub": "The ready messages staff send from Orders and Requests. Customers who shop in Urdu or Hindi get the built-in text.",
@@ -656,7 +658,15 @@
       "tplHint": "Words in '{'braces'}' are filled in for each customer. A line is left out when its detail is empty, for example no tracking number yet.",
       "tplReset": "Use the default",
       "tplEdited": "Edited",
-      "tplSave": "Save templates"
+      "tplSave": "Save templates",
+      "signinTitle": "Customer accounts",
+      "signinMethod": "How customers sign in",
+      "signin": {
+        "email": "Email code",
+        "sms": "SMS code (at go-live)",
+        "both": "Email or SMS (at go-live)"
+      },
+      "signinHint": "SMS sign-in needs the Taqnyat connection, planned for go-live. Until then customers sign in with a 6-digit email code."
     },
     "staff": {
       "title": "Staff & access",

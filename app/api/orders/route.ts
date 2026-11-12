@@ -12,6 +12,7 @@ import { salePrice } from "@/lib/product";
 import { getLiveCampaigns } from "@/lib/campaigns";
 import { campaignSalePct } from "@/lib/campaign-pricing";
 import { buildOrderMessage, type MessageLine } from "@/lib/order-message";
+import { currentCustomerId } from "@/lib/customer/account";
 
 const MAX_LINES = 20;
 const MAX_QTY = 10;
@@ -139,6 +140,12 @@ export async function POST(req: NextRequest) {
 
   if (error || !created) return fail("unavailable", 503);
 
+  // Signed in to My Thaanora: the order goes into her account (guests stay guests).
+  const customerId = await currentCustomerId();
+  const linked = customerId
+    ? !(await supabase.from("orders").update({ customer_id: customerId }).eq("id", created.new_order_id)).error
+    : false;
+
   const lines: MessageLine[] = priced.map((l) => ({
     name: l.p.name,
     brand: l.p.brand,
@@ -167,6 +174,7 @@ export async function POST(req: NextRequest) {
       ok: true,
       orderNo: created.new_order_no,
       total: totals.total,
+      linked,
       codeDropped: Boolean(codeRaw) && !live,
       message,
       whatsappUrl: waNumber ? `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}` : null,

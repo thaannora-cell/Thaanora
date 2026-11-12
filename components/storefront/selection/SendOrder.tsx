@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useSelection } from "./SelectionProvider";
+import { LAST_ORDER_KEY } from "@/lib/customer/last-order";
 
 type ErrorKind = "name" | "phone" | "area" | "stock" | "too_many" | "other";
 
@@ -47,6 +49,17 @@ export default function SendOrder() {
             {copied ? t("copied") : t("copy")}
           </button>
         </div>
+        {placed.linked ? (
+          <p className="m-0 text-[13px]">{t("savedToAccount")}</p>
+        ) : (
+          <div className="flex flex-col gap-1.5 rounded-xl border border-[#BFDCCB] bg-white/70 p-3">
+            <p className="m-0 text-[14px] font-medium text-emerald">{t("saveOrderTitle")}</p>
+            <p className="m-0 text-[13px]">{t("saveOrderText")}</p>
+            <Link href="/account/sign-in" className="self-start text-[14px] font-medium text-emerald underline underline-offset-2">
+              {t("saveOrderCta")}
+            </Link>
+          </div>
+        )}
         <button type="button" className="self-start text-[13px] text-emerald underline underline-offset-2" onClick={sel.closeDrawer}>
           {t("keepShopping")}
         </button>
@@ -85,6 +98,7 @@ export default function SendOrder() {
         orderNo?: string;
         message?: string;
         whatsappUrl?: string | null;
+        linked?: boolean;
       };
       if (!res.ok || !data.ok || !data.orderNo || !data.message) {
         tab?.close();
@@ -92,7 +106,15 @@ export default function SendOrder() {
         setError(known.includes(data.error as ErrorKind) ? (data.error as ErrorKind) : "other");
         return;
       }
-      const result = { orderNo: data.orderNo, message: data.message, whatsappUrl: data.whatsappUrl ?? null };
+      const result = { orderNo: data.orderNo, message: data.message, whatsappUrl: data.whatsappUrl ?? null, linked: Boolean(data.linked) };
+      // A guest order: remember it on this device so creating an account adds it automatically.
+      if (!result.linked) {
+        try {
+          window.localStorage.setItem(LAST_ORDER_KEY, JSON.stringify({ orderNo: result.orderNo, phone: checkout.customerPhone }));
+        } catch {
+          /* private mode: she can still add it by hand */
+        }
+      }
       if (result.whatsappUrl && tab) tab.location.href = result.whatsappUrl;
       else tab?.close();
       sel.orderPlaced(result);

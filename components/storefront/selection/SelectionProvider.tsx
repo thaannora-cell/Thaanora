@@ -7,7 +7,7 @@ import { computeTotals, type BundleRule, type CheckoutSettings, type Totals } fr
 export type Line = { code: string; qty: number; stitch: boolean };
 export type AppliedCode = { code: string; percent: number };
 export type CodeResult = "applied" | "invalid" | "error" | "tooMany";
-export type PlacedOrder = { orderNo: string; message: string; whatsappUrl: string | null };
+export type PlacedOrder = { orderNo: string; message: string; whatsappUrl: string | null; linked?: boolean };
 export type Packaging = "suit_keeper_bag" | "gift_box";
 export type Checkout = {
   packaging: Packaging;
