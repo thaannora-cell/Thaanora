@@ -25,8 +25,8 @@ export type NotificationRow = {
   createdAt: string;
 };
 
-// Where tapping a notification takes her. Order updates open "Track my order" for that order.
+// Where tapping a notification takes her. Order updates open that order in My Thaanora.
 export function notificationHref(n: Pick<NotificationRow, "type" | "data">, locale: string): string {
-  if (n.type === "order_status" && /^TH-\d{3,7}$/.test(n.data.orderNo ?? "")) return `/${locale}?track=${n.data.orderNo}`;
+  if (n.type === "order_status" && /^TH-\d{3,7}$/.test(n.data.orderNo ?? "")) return `/${locale}/account/orders/${n.data.orderNo}`;
   return `/${locale}/account`;
 }

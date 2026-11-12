@@ -85,15 +85,22 @@ export default async function AccountHome({ params, searchParams }: Props) {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card labelledBy="latest">
-          <h2 id="latest" className="m-0 mb-3 text-[16px] font-semibold text-emerald">
-            {t("latestTitle")}
-          </h2>
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <h2 id="latest" className="m-0 text-[16px] font-semibold text-emerald">
+              {t("latestTitle")}
+            </h2>
+            {latest && (
+              <Link href="/account/orders" className="min-h-[36px] text-[14px] text-emerald underline underline-offset-2">
+                {t("allOrders")}
+              </Link>
+            )}
+          </div>
           {latest ? (
             <div className="flex flex-col gap-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <b dir="ltr" className="font-medium text-emerald">
+                <Link href={`/account/orders/${latest.orderNo}`} dir="ltr" className="font-medium text-emerald underline underline-offset-2">
                   {latest.orderNo}
-                </b>
+                </Link>
                 <span className={`rounded-full px-2.5 py-0.5 text-[12px] font-medium ${STATUS_TONE[latest.status] ?? "bg-[#F6EEDC] text-gold-ink"}`}>
                   {t(`status.${latest.status}`)}
                 </span>

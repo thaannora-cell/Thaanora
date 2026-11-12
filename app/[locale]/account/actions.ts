@@ -165,3 +165,49 @@ export async function setNotificationChannel(type: string, channel: string): Pro
     .upsert({ customer_id: account.customer.id, type, channel, updated_at: new Date().toISOString() }, { onConflict: "customer_id,type" });
   return { ok: !error };
 }
+
+// ── Cancel her own order while it's still "Waiting for confirmation" ──────────────────────
+export type CancelResult = { ok: true } | { ok: false; error: "notAllowed" | "failed" };
+
+export async function cancelMyOrder(orderNo: string, locale: string): Promise<CancelResult> {
+  const account = await getAccount();
+  if (account.state !== "customer" || !/^TH-\d{3,7}$/.test(orderNo)) return { ok: false, error: "notAllowed" };
+  const db = getAdminClient();
+  if (!db) return { ok: false, error: "failed" };
+  const { data: o } = await db.from("orders").select("id, status, notes").eq("order_no", orderNo).eq("customer_id", account.customer.id).maybeSingle();
+  if (!o || o.status !== "waiting_confirmation") return { ok: false, error: "notAllowed" };
+
+  // A note for the team on the order page, then the cancel (only if it's still waiting at that moment).
+  const stamp = new Date().toISOString().slice(0, 16).replace("T", " ");
+  const note = `Cancelled by the customer on the website (${stamp} UTC).`;
+  const { data: done, error } = await db
+    .from("orders")
+    .update({ status: "cancelled", notes: o.notes ? `${o.notes}\n${note}` : note })
+    .eq("id", o.id)
+    .eq("status", "waiting_confirmation")
+    .select("id")
+    .maybeSingle();
+  if (error) return { ok: false, error: "failed" };
+  if (!done) return { ok: false, error: "notAllowed" };
+
+  // She cancelled it herself: no "your order was cancelled" message for her, on the site or WhatsApp.
+  const now = new Date().toISOString();
+  await db
+    .from("notifications")
+    .update({ read_at: now })
+    .eq("customer_id", account.customer.id)
+    .eq("type", "order_status")
+    .eq("data->>orderNo", orderNo)
+    .is("read_at", null);
+  await db
+    .from("notifications")
+    .update({ whatsapp_status: "skipped", whatsapp_done_at: now })
+    .eq("customer_id", account.customer.id)
+    .eq("type", "order_status")
+    .eq("data->>orderNo", orderNo)
+    .eq("whatsapp_status", "pending");
+
+  const loc2 = isLocale(locale) ? locale : "en";
+  revalidatePath(`/${loc2}`, "layout");
+  return { ok: true };
+}

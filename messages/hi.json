@@ -614,10 +614,11 @@
     },
     "signOut": "साइन आउट",
     "deactivated": "यह अकाउंट निष्क्रिय है। दोबारा इस्तेमाल के लिए हमें WhatsApp पर संदेश भेजें।",
-    "comingSoon": "जल्द ही माय थानौरा में: आपके ऑर्डर, पसंदीदा, आपका दर्ज़ी, ऑफ़र और थानौरा सर्कल।",
+    "comingSoon": "जल्द ही माय थानौरा में: पसंदीदा, आपका दर्ज़ी, ऑफ़र और थानौरा सर्कल।",
     "accountFor": "अकाउंट ईमेल: <b>{email}</b>",
     "birthdayShort": "जन्मदिन",
-    "notificationsLink": "सूचनाएँ{count, plural, =0 {} other { (#)}}"
+    "notificationsLink": "सूचनाएँ{count, plural, =0 {} other { (#)}}",
+    "allOrders": "सभी ऑर्डर"
   },
   "Notifications": {
     "title": "सूचनाएँ",
@@ -703,5 +704,39 @@
         "body": ""
       }
     }
+  },
+  "Orders": {
+    "title": "मेरे ऑर्डर",
+    "empty": "अभी कोई ऑर्डर नहीं।",
+    "shop": "रैक देखें",
+    "backToOrders": "← मेरे ऑर्डर",
+    "placed": "ऑर्डर की तारीख {date}",
+    "statusTitle": "स्थिति",
+    "courier": "कूरियर: {courier}",
+    "tracking": "ट्रैकिंग नंबर",
+    "deliveryTo": "डिलीवरी: {area} · भुगतान डिलीवरी पर",
+    "suitsTitle": "{count, plural, one {# सूट} other {# सूट}}",
+    "stitching": "सिलाई का अनुरोध",
+    "subtotal": "उप-योग",
+    "bundle": "बंडल ऑफ़र",
+    "code": "कोड {code}",
+    "bag": "सूट कीपर बैग",
+    "giftBox": "गिफ़्ट बॉक्स",
+    "free": "मुफ़्त",
+    "delivery": "डिलीवरी",
+    "total": "कुल (डिलीवरी पर नकद)",
+    "vat": "VAT सहित",
+    "gift": "{name} के लिए तोहफ़ा",
+    "actionsTitle": "ऑर्डर के विकल्प",
+    "orderAgain": "फिर से ऑर्डर करें",
+    "someUnavailable": "इस ऑर्डर के {count} सूट अभी उपलब्ध नहीं हैं, इसलिए नहीं जुड़ेंगे।",
+    "cancel": "यह ऑर्डर रद्द करें",
+    "cancelConfirm": "हाँ, ऑर्डर रद्द करें",
+    "cancelHint": "हमारी पुष्टि से पहले आप रद्द कर सकती हैं। पुष्टि के लिए फिर से दबाएँ।",
+    "cancelling": "रद्द हो रहा है…",
+    "cancelled": "आपका ऑर्डर रद्द हो गया।",
+    "cannotCancel": "यह ऑर्डर अब रद्द नहीं हो सकता। WhatsApp पर संदेश भेजें, हम मदद करेंगे।",
+    "cancelFailed": "कुछ गलत हो गया। दोबारा कोशिश करें।",
+    "invoice": "इनवॉइस {no} देखें"
   }
 }

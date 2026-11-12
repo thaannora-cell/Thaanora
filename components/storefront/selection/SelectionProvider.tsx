@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { salePrice, type PublicProduct } from "@/lib/product";
 import { computeTotals, type BundleRule, type CheckoutSettings, type Totals } from "@/lib/pricing";
 
@@ -99,7 +99,9 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [checkout, setCheckout] = useState<Checkout>(EMPTY_CHECKOUT);
   const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
-  const loaded = useRef(false);
+  // Saving starts only after the saved bag has been restored (otherwise the first render's empty bag
+  // would overwrite it, which React's double start in development makes visible).
+  const [restored, setRestored] = useState(false);
 
   // Restore from the device, dropping suits that are gone or sold out, and re-checking the code.
   useEffect(() => {
@@ -136,16 +138,23 @@ export default function SelectionProvider({ products: list, bundle, settings, ch
         else if (r === "invalid") writeJson(CODE_KEY, null);
       });
     }
-    loaded.current = true;
+    setRestored(true);
+    // "Order again" from My Thaanora lands here with ?bag=open: show the bag, then tidy the address.
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("bag") === "open") {
+      setDrawerOpen(true);
+      url.searchParams.delete("bag");
+      window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+    }
   }, [products, settings.areas]);
 
   useEffect(() => {
-    if (loaded.current) writeJson(LINES_KEY, lines);
-  }, [lines]);
+    if (restored) writeJson(LINES_KEY, lines);
+  }, [lines, restored]);
 
   useEffect(() => {
-    if (loaded.current) writeJson(CHECKOUT_KEY, checkout);
-  }, [checkout]);
+    if (restored) writeJson(CHECKOUT_KEY, checkout);
+  }, [checkout, restored]);
 
   const updateCheckout = useCallback((patch: Partial<Checkout>) => setCheckout((c) => ({ ...c, ...patch })), []);
   const deliveryFee = settings.areas.find((a) => a.area === checkout.area)?.fee ?? 0;

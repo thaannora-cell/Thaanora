@@ -1,5 +1,6 @@
 import "server-only";
 import { getSessionClient } from "@/lib/supabase/server";
+import { safeInvoiceUrl } from "@/lib/invoice-link";
 import type { OrderStatus } from "./dashboard";
 
 export const STATUSES: OrderStatus[] = [
@@ -134,7 +135,7 @@ export async function getOrder(orderNo: string): Promise<OrderDetail | null> {
       status: o.invoice_status ?? "none",
       no: o.invoice_no ?? null,
       // Only Zoho's own https links are kept as the customer link.
-      url: typeof o.invoice_url === "string" && /^https:\/\/([a-z0-9-]+\.)*zoho(apis|securepay)?\.(com|sa|eu|in|ae|jp|ca|com\.au|com\.cn)\/\S*$/i.test(o.invoice_url.trim()) ? o.invoice_url.trim() : null,
+      url: safeInvoiceUrl(o.invoice_url),
       hasPdf: Boolean(o.invoice_zoho_id),
       error: o.invoice_error ?? null,
       attempts: o.invoice_attempts ?? 0,

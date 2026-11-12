@@ -619,10 +619,11 @@
     },
     "signOut": "Sign out",
     "deactivated": "This account is deactivated. To use it again, message us on WhatsApp.",
-    "comingSoon": "Coming soon to My Thaanora: your orders, favourites, your tailor, offers and Thaanora Circle.",
+    "comingSoon": "Coming soon to My Thaanora: favourites, your tailor, offers and Thaanora Circle.",
     "accountFor": "Account email: <b>{email}</b>",
     "birthdayShort": "Birthday",
-    "notificationsLink": "Notifications{count, plural, =0 {} other { (#)}}"
+    "notificationsLink": "Notifications{count, plural, =0 {} other { (#)}}",
+    "allOrders": "All orders"
   },
   "Notifications": {
     "title": "Notifications",
@@ -708,5 +709,39 @@
         "body": ""
       }
     }
+  },
+  "Orders": {
+    "title": "My orders",
+    "empty": "No orders yet.",
+    "shop": "Browse the rack",
+    "backToOrders": "← My orders",
+    "placed": "Placed {date}",
+    "statusTitle": "Status",
+    "courier": "Courier: {courier}",
+    "tracking": "Tracking no.",
+    "deliveryTo": "Delivery to {area} · cash on delivery",
+    "suitsTitle": "{count, plural, one {# suit} other {# suits}}",
+    "stitching": "Stitching requested",
+    "subtotal": "Subtotal",
+    "bundle": "Bundle offer",
+    "code": "Code {code}",
+    "bag": "Suit Keeper bag",
+    "giftBox": "Keepsake gift box",
+    "free": "Free",
+    "delivery": "Delivery",
+    "total": "Total (cash on delivery)",
+    "vat": "VAT included",
+    "gift": "A gift for {name}",
+    "actionsTitle": "Order actions",
+    "orderAgain": "Order again",
+    "someUnavailable": "{count, plural, one {# suit from this order isn't available now} other {# suits from this order aren't available now}}, so it won't be added.",
+    "cancel": "Cancel this order",
+    "cancelConfirm": "Yes, cancel the order",
+    "cancelHint": "You can cancel until we confirm your order. Tap again to confirm.",
+    "cancelling": "Cancelling…",
+    "cancelled": "Your order is cancelled.",
+    "cannotCancel": "This order can't be cancelled any more. Message us on WhatsApp and we'll help.",
+    "cancelFailed": "Something went wrong. Please try again.",
+    "invoice": "View invoice {no}"
   }
 }
