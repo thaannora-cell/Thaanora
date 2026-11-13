@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { issueInvoice, ordersNeedingInvoice } from "@/lib/invoices";
+import { getAdminClient } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -17,5 +18,8 @@ export async function GET(req: Request) {
     const r = await issueInvoice(id);
     results[r] = (results[r] ?? 0) + 1;
   }
+  // Also daily: anonymous trending counts are kept for 30 days only.
+  const db = getAdminClient();
+  if (db) await db.from("product_events").delete().lt("created_at", new Date(Date.now() - 30 * 86400000).toISOString());
   return NextResponse.json({ tried: ids.length, results }, { headers: { "Cache-Control": "no-store" } });
 }

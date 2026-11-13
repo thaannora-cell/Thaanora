@@ -24,6 +24,7 @@ export const LIMITS = {
   accountSend: { max: 5, seconds: 900 }, // customer sign-in emails: 5 per 15 minutes
   accountVerify: { max: 10, seconds: 900 }, // customer codes typed: 10 per 15 minutes
   claim: { max: 10, seconds: 900 }, // "add an earlier order" tries: 10 per 15 minutes
+  events: { max: 60, seconds: 600 }, // trending counts (suit opened / added): 60 per 10 minutes
 } as const;
 export type LimitName = keyof typeof LIMITS;
 

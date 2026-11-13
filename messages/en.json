@@ -101,7 +101,15 @@
     "noSaved": "No saved fabrics yet. Tap the heart on any fabric to save it.",
     "loadError": "The fabrics could not be loaded right now. Please refresh in a moment.",
     "requestAnyDesign": "Request any design",
-    "rackEmptySeeBelow": "None of these are on the rack right now. See them in the collection below."
+    "rackEmptySeeBelow": "None of these are on the rack right now. See them in the collection below.",
+    "trendingEyebrow": "This week",
+    "trendingTitle": "Trending in Riyadh",
+    "picksEyebrow": "Thaanora recommends",
+    "picksTitle": "Our picks",
+    "picksIntro": "Chosen by us, with a note on why we love them.",
+    "forYouEyebrow": "Thaanora recommends",
+    "forYouTitle": "For you",
+    "forYouIntro": "Based on the suits you saved and ordered."
   },
   "DevProducts": {
     "title": "Products from the database",
@@ -643,7 +651,9 @@
     "favouritesLink": "Favourites",
     "addressesLink": "Addresses",
     "tailorLink": "My tailor",
-    "toFinishOrder": "Sign in to finish your order. Your bag is saved."
+    "toFinishOrder": "Sign in to finish your order. Your bag is saved.",
+    "forYouTitle": "Picked for you",
+    "ourPicksTitle": "Our picks for you"
   },
   "Notifications": {
     "title": "Notifications",

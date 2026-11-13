@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import AccountShell, { Card } from "@/components/account/AccountShell";
 import ClaimOrder from "@/components/account/ClaimOrder";
+import PickedForYou from "@/components/account/PickedForYou";
 import { getAccount } from "@/lib/customer/account";
 import { myOrders } from "@/lib/customer/orders";
 import { unreadCount } from "@/lib/customer/notifications";
@@ -149,6 +150,8 @@ export default async function AccountHome({ params, searchParams }: Props) {
             {row(t("birthdayShort"), birthday ?? <span className="text-muted">{t("noBirthday")}</span>)}
           </dl>
         </Card>
+
+        <PickedForYou customerId={c.id} locale={locale} />
 
         <Card labelledBy="claim" className="md:col-span-2">
           <h2 id="claim" className="m-0 text-[16px] font-semibold text-emerald">

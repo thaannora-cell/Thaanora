@@ -25,10 +25,13 @@ export async function getVisibleProducts(campaigns?: LiveCampaign[]): Promise<Pr
       .eq("visible", true)
       .order("sort_order")
       .order("sort_order", { referencedTable: "product_images" });
-  const [first, live] = await Promise.all([read(`${PUBLIC_PRODUCT_COLUMNS}, on_rack`), campaigns ?? getLiveCampaigns(supabase)]);
-  // Before the rack migration has run, on_rack doesn't exist yet: read without it (nothing on the rack).
-  const { data, error } = first.error?.code === "42703" ? await read(PUBLIC_PRODUCT_COLUMNS) : first;
+  const [first, live] = await Promise.all([read(`${PUBLIC_PRODUCT_COLUMNS}, on_rack, is_pick, pick_note`), campaigns ?? getLiveCampaigns(supabase)]);
+  // Before the newer migrations have run, those columns don't exist yet: read without them.
+  const { data, error } =
+    first.error?.code === "42703"
+      ? await read(`${PUBLIC_PRODUCT_COLUMNS}, on_rack`).then((r) => (r.error?.code === "42703" ? read(PUBLIC_PRODUCT_COLUMNS) : r))
+      : first;
   if (error) return { status: "error", message: error.message };
   const products = (data ?? []) as unknown as PublicProduct[];
-  return { status: "ok", products: products.map((p) => ({ ...p, on_rack: p.on_rack === true, sale_pct: campaignSalePct(p, live) })) };
+  return { status: "ok", products: products.map((p) => ({ ...p, on_rack: p.on_rack === true, is_pick: p.is_pick === true, pick_note: p.pick_note ?? {}, sale_pct: campaignSalePct(p, live) })) };
 }

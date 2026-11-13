@@ -209,7 +209,13 @@
       "placeGrid": "Collection grid (below)",
       "rackUsed": "Rack: {used} of {max} places used",
       "labelRack": "Rack",
-      "rackCounter": "Rack {used}/{max}"
+      "rackCounter": "Rack {used}/{max}",
+      "pickLabel": "Our pick (recommended on the home page)",
+      "pickNote_en": "Note (English)",
+      "pickNote_ar": "Note (Arabic)",
+      "pickNote_ur": "Note (Urdu)",
+      "pickNote_hi": "Note (Hindi)",
+      "labelPick": "Pick"
     },
     "stock": {
       "title": "Stock",

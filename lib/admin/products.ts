@@ -27,6 +27,8 @@ export type AdminProduct = {
   occasions: string[];
   visible: boolean;
   on_rack: boolean;
+  is_pick: boolean;
+  pick_note: Partial<Record<"en" | "ar" | "ur" | "hi", string>>;
   sort_order: number;
   product_images: AdminPhoto[];
 };
@@ -46,7 +48,7 @@ export async function getProductsPage(): Promise<ProductsPage> {
     supabase
       .from("products")
       .select(
-        "id, code, brand, name, fabric, work, price_sar, sale_pct, cost_pkr, colour_family, colour_hex, accent_hex, stock, is_new, trending_rank, occasions, visible, on_rack, sort_order, product_images (id, storage_path, width, height, sort_order)",
+        "id, code, brand, name, fabric, work, price_sar, sale_pct, cost_pkr, colour_family, colour_hex, accent_hex, stock, is_new, trending_rank, occasions, visible, on_rack, is_pick, pick_note, sort_order, product_images (id, storage_path, width, height, sort_order)",
       )
       .order("sort_order")
       .order("sort_order", { referencedTable: "product_images" }),

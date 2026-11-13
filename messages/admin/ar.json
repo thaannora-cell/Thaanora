@@ -209,7 +209,13 @@
       "placeGrid": "شبكة المجموعة (في الأسفل)",
       "rackUsed": "الرف: {used} من {max} أماكن مستخدمة",
       "labelRack": "الرف",
-      "rackCounter": "الرف {used}/{max}"
+      "rackCounter": "الرف {used}/{max}",
+      "pickLabel": "من اختياراتنا (يظهر في الصفحة الرئيسية)",
+      "pickNote_en": "الملاحظة (الإنجليزية)",
+      "pickNote_ar": "الملاحظة (العربية)",
+      "pickNote_ur": "الملاحظة (الأردية)",
+      "pickNote_hi": "الملاحظة (الهندية)",
+      "labelPick": "اختيارنا"
     },
     "stock": {
       "title": "المخزون",

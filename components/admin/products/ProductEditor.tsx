@@ -56,6 +56,8 @@ export default function ProductEditor({ product, products, rate, onClose, onSave
     is_new: product?.is_new ?? true,
     visible: product?.visible ?? true,
     on_rack: product?.on_rack ?? false,
+    is_pick: product?.is_pick ?? false,
+    pick_note: (product?.pick_note ?? {}) as Partial<Record<"en" | "ar" | "ur" | "hi", string>>,
     colour_family: product?.colour_family ?? "green",
     colour_hex: product?.colour_hex ?? "#0E3B2E",
     accent_hex: product?.accent_hex ?? "#E6CB8E",
@@ -337,6 +339,31 @@ export default function ProductEditor({ product, products, rate, onClose, onSave
             {t("showOnSite")}
           </label>
         </div>
+
+        {/* Our picks: recommended on the home page, with a short note in each language. */}
+        <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
+          <label className="flex min-h-[38px] items-center gap-1.5 self-start rounded-full border border-[#E1D8C6] bg-white px-3 text-[14px] text-emerald">
+            <input type="checkbox" checked={f.is_pick} onChange={(e) => set("is_pick", e.target.checked)} />
+            {t("pickLabel")}
+          </label>
+          {f.is_pick && (
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {(["en", "ar", "ur", "hi"] as const).map((l) => (
+                <label key={l} className="flex flex-col gap-1 text-[12px] text-muted">
+                  {t(`pickNote_${l}`)}
+                  <input
+                    dir={l === "ar" || l === "ur" ? "rtl" : "ltr"}
+                    lang={l}
+                    maxLength={140}
+                    value={f.pick_note[l] ?? ""}
+                    onChange={(e) => set("pick_note", { ...f.pick_note, [l]: e.target.value })}
+                    className="min-h-[40px] rounded-xl border border-[#DDD3C0] bg-white px-3 text-[14px] text-ink focus:border-gold focus:outline-none"
+                  />
+                </label>
+              ))}
+            </div>
+          )}
+        </fieldset>
 
         {/* Where it shows on the website: the rack at the top (max 17) or the collection grid below. */}
         <fieldset className="m-0 flex flex-col gap-1.5 border-0 p-0">

@@ -30,6 +30,8 @@ export type PublicProduct = {
   occasions: string[];
   sort_order: number;
   on_rack: boolean; // on the rack at the top (else in the collection grid)
+  is_pick: boolean; // "Our picks"
+  pick_note: Partial<Record<string, string>>; // the owner's note per language
   product_images: ProductImage[];
 };
 

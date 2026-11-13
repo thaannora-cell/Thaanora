@@ -56,6 +56,7 @@ export default function ProductsView({ products, rate, lowLevel, brandOfMonth, l
   const labels = (p: AdminProduct) => (
     <span className="flex flex-wrap gap-1">
       {p.on_rack && <span className={`${chip} border border-gold bg-white text-gold-ink`}>{t("labelRack")}</span>}
+      {p.is_pick && <span className={`${chip} bg-[#FBE7EE] text-rani`}>{t("labelPick")}</span>}
       {p.is_new && <span className={`${chip} bg-gold text-emerald`}>{t("labelNew")}</span>}
       {p.trending_rank && <span className={`${chip} bg-emerald text-gold-light`}>#{p.trending_rank}</span>}
       {brandOfMonth && p.brand === brandOfMonth && <span className={`${chip} bg-[#EEF2EE] text-emerald`}>{t("labelBrandOfMonth")}</span>}

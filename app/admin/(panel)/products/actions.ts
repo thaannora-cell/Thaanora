@@ -21,6 +21,8 @@ export type ProductInput = {
   is_new: boolean;
   visible: boolean;
   on_rack: boolean; // on the rack at the top (max 17) or in the collection grid
+  is_pick: boolean; // "Our picks" on the home page
+  pick_note: Partial<Record<"en" | "ar" | "ur" | "hi", string>>;
   colour_family: string;
   colour_hex: string;
   accent_hex: string;
@@ -55,6 +57,10 @@ function validate(p: ProductInput): ActionResult<{ row: Omit<ProductInput, "stoc
     is_new: Boolean(p.is_new),
     visible: Boolean(p.visible),
     on_rack: Boolean(p.on_rack),
+    is_pick: Boolean(p.is_pick),
+    pick_note: Object.fromEntries(
+      (["en", "ar", "ur", "hi"] as const).map((l) => [l, s(p.pick_note?.[l], 140)]).filter(([, v]) => v),
+    ),
     colour_family: p.colour_family,
     colour_hex: s(p.colour_hex, 7).toUpperCase(),
     accent_hex: s(p.accent_hex, 7).toUpperCase(),

@@ -16,6 +16,9 @@ import { useSelection } from "./selection/SelectionProvider";
 import { openSourcing } from "./SourcingDialog";
 import CollectionGrid from "./CollectionGrid";
 import ProductActions from "./panel/ProductActions";
+import ProductRow from "./ProductRow";
+import { trackSuit } from "@/lib/track";
+import type { Recommendations } from "@/lib/recommend";
 import { setFavourite, syncFavourites } from "@/app/[locale]/account/actions";
 
 const SAVED_KEY = "th_saved";
@@ -55,9 +58,10 @@ type Props = {
   loadFailed: boolean;
   tailors: Tailor[];
   signedIn?: boolean; // My Thaanora: hearts are kept on her account too
+  recommendations?: Recommendations; // Trending, Our picks, For you (signed in)
 };
 
-export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailors, signedIn = false }: Props) {
+export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailors, signedIn = false, recommendations }: Props) {
   const t = useTranslations("Home");
   const tPanel = useTranslations("Panel");
   const tRack = useTranslations("Rack");
@@ -145,6 +149,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
       showToast(tSel("removedToast"));
       return;
     }
+    trackSuit(code, "add");
     const count = selection.totals.count + 1;
     const b = selection.bundle;
     showToast(
@@ -161,7 +166,21 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
   const collection = useMemo(() => shown.filter((p) => !rackBase.includes(p)), [shown, rackBase]);
   const rack = rackBase;
   // A collection card opens the suit in a pop-up on the same page (details plus the shop actions).
-  const openFromCollection = (code: string) => setDialog({ kind: "details", code, fromGrid: true });
+  const openFromCollection = (code: string) => {
+    setDialog({ kind: "details", code, fromGrid: true });
+    trackSuit(code, "view");
+  };
+  // Opening a strip on the rack also counts as a view (for Trending).
+  const openOnRack = (code: string) => {
+    setActiveCode(code);
+    trackSuit(code, "view");
+  };
+  const byCode = useMemo(() => new Map(products.map((p) => [p.code, p])), [products]);
+  const rowItems = (codes: { code: string; note?: string | null }[]) =>
+    codes.flatMap(({ code, note }) => {
+      const product = byCode.get(code);
+      return product ? [{ product, note }] : [];
+    });
   const dialogProduct = dialog ? products.find((p) => p.code === dialog.code) ?? null : null;
 
   const toggleSaved = (code: string) => {
@@ -224,7 +243,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
         <FabricRack
           products={rack}
           activeCode={activeCode}
-          onActivate={setActiveCode}
+          onActivate={openOnRack}
           chosen={chosen}
           stitching={stitching}
           saved={saved}
@@ -241,6 +260,40 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
             )
           }
         />
+      )}
+
+      {!loadFailed && recommendations && (
+        <>
+          <ProductRow
+            id="row-trending"
+            eyebrow={t("trendingEyebrow")}
+            title={t("trendingTitle")}
+            items={rowItems(recommendations.trending.map((code) => ({ code })))}
+            saved={saved}
+            onOpen={openFromCollection}
+            onToggleSaved={toggleSaved}
+          />
+          <ProductRow
+            id="row-picks"
+            eyebrow={t("picksEyebrow")}
+            title={t("picksTitle")}
+            intro={t("picksIntro")}
+            items={rowItems(recommendations.picks)}
+            saved={saved}
+            onOpen={openFromCollection}
+            onToggleSaved={toggleSaved}
+          />
+          <ProductRow
+            id="row-foryou"
+            eyebrow={t("forYouEyebrow")}
+            title={t("forYouTitle")}
+            intro={t("forYouIntro")}
+            items={rowItems(recommendations.forYou.map((code) => ({ code })))}
+            saved={saved}
+            onOpen={openFromCollection}
+            onToggleSaved={toggleSaved}
+          />
+        </>
       )}
 
       {!loadFailed && <CollectionGrid products={collection} saved={saved} onOpen={openFromCollection} onToggleSaved={toggleSaved} />}
