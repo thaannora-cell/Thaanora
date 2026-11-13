@@ -38,6 +38,7 @@ export default function SendOrder() {
       <div className="flex flex-col gap-3 rounded-[18px] border border-[#BFDCCB] bg-[#E7F3EC] p-4 text-[#1d3a2d]" role="status">
         <p className="m-0 text-[15px] font-medium">{t("placedTitle", { orderNo: placed.orderNo })}</p>
         <p className="m-0 text-[14px]">{placed.whatsappUrl ? t("placedText") : t("placedNoWhatsapp")}</p>
+        {placed.needsCall && <p className="m-0 rounded-xl border border-gold/50 bg-[#FBF6EA] px-3 py-2 text-[13px] text-ink">{t("callToConfirm")}</p>}
         <pre className="m-0 max-h-[190px] overflow-auto whitespace-pre-wrap rounded-xl border border-[#BFDCCB] bg-white/70 p-3 font-[inherit] text-[13px]" dir="auto">
           {placed.message}
         </pre>
@@ -104,6 +105,7 @@ export default function SendOrder() {
         message?: string;
         whatsappUrl?: string | null;
         linked?: boolean;
+        needsCall?: boolean;
       };
       if (data.error === "signin") {
         tab?.close();
@@ -116,7 +118,7 @@ export default function SendOrder() {
         setError(known.includes(data.error as ErrorKind) ? (data.error as ErrorKind) : "other");
         return;
       }
-      const result = { orderNo: data.orderNo, message: data.message, whatsappUrl: data.whatsappUrl ?? null, linked: Boolean(data.linked) };
+      const result = { orderNo: data.orderNo, message: data.message, whatsappUrl: data.whatsappUrl ?? null, linked: Boolean(data.linked), needsCall: Boolean(data.needsCall) };
       // A guest order: remember it on this device so creating an account adds it automatically.
       if (!result.linked) {
         try {

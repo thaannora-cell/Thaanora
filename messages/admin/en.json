@@ -48,7 +48,8 @@
       "language": "Language",
       "notifications": "Notifications",
       "returns": "Returns",
-      "reviews": "Reviews"
+      "reviews": "Reviews",
+      "customers": "Customers"
     },
     "roles": {
       "owner": "Owner",
@@ -387,7 +388,12 @@
       },
       "perkLoyalty": "Thaanora Circle · {level} ({pct}%)",
       "perkBirthday": "Birthday gift ({pct}%)",
-      "perkPersonal": "Personal offer ({pct}%)"
+      "perkPersonal": "Personal offer ({pct}%)",
+      "callFirst": "Call to confirm before sending",
+      "callFirstText": "{count, plural, one {This mobile refused # delivery at the door in the last 12 months.} other {This mobile refused # deliveries at the door in the last 12 months.}} Call her before packing.",
+      "refusals": "Refused at door (12 months)",
+      "account": "My Thaanora account",
+      "viewCustomer": "View customer"
     },
     "offers": {
       "title": "Offers & codes",
@@ -662,7 +668,8 @@
         "signinNotReady": "SMS sign-in isn't connected yet. Keep Email for now.",
         "birthdayPct": "Enter a whole number from 0 to 50.",
         "returnDays": "Enter whole days from 0 to 30.",
-        "refundAccount": "Use the digits of the Zoho account ID, or leave it empty."
+        "refundAccount": "Use the digits of the Zoho account ID, or leave it empty.",
+        "codCallAfter": "Enter a whole number from 0 to 10."
       },
       "tplTitle": "WhatsApp message templates",
       "tplSub": "The ready messages staff send from Orders and Requests. Customers who shop in Urdu or Hindi get the built-in text.",
@@ -697,7 +704,9 @@
       "returnDays": "Return window (days after delivery)",
       "returnDaysHint": "Customers can ask for a return within this many days of delivery.",
       "refundAccount": "Zoho bank account ID for refunds (optional)",
-      "refundAccountHint": "If Zoho asks which account refunds are paid from, paste its account ID (Zoho Books → Banking → the account → number in the address bar)."
+      "refundAccountHint": "If Zoho asks which account refunds are paid from, paste its account ID (Zoho Books → Banking → the account → number in the address bar).",
+      "codCallAfter": "Call to confirm after this many refusals (0 = off)",
+      "codCallAfterHint": "Counted by mobile number over the last 12 months (guests too). Her new orders show \"Call to confirm before sending\". Customers tagged Trusted are never flagged. Cash on delivery is never blocked."
     },
     "staff": {
       "title": "Staff & access",
@@ -915,6 +924,73 @@
       "saved": "Saved.",
       "failed": "Couldn't save.",
       "saving": "Saving…"
+    },
+    "customers": {
+      "title": "Customers",
+      "sub": "{count, plural, one {# customer with a My Thaanora account.} other {# customers with a My Thaanora account.}} Guests are found in Orders.",
+      "search": "Name, mobile or email",
+      "sortLabel": "Sort",
+      "sort": {
+        "recent": "Last order",
+        "spent": "Total spent",
+        "orders": "Number of orders"
+      },
+      "go": "Search",
+      "filters": "Filters",
+      "all": "All",
+      "tag": {
+        "vip": "VIP",
+        "wholesale": "Wholesale",
+        "trusted": "Trusted"
+      },
+      "level": {
+        "silver": "Silver",
+        "gold": "Gold",
+        "emerald": "Emerald",
+        "none": "No level"
+      },
+      "none": "No customers match.",
+      "deactivated": "Deactivated",
+      "lastOrder": "Last order {time}",
+      "noOrders": "No orders yet",
+      "ordersCount": "{count, plural, one {# order} other {# orders}}",
+      "refusals": "{count, plural, one {# refusal} other {# refusals}}",
+      "back": "← All customers",
+      "refusalWarning": "{count, plural, one {Refused # delivery at the door in the last 12 months.} other {Refused # deliveries at the door in the last 12 months.}}",
+      "contactTitle": "Contact",
+      "phone": "Mobile",
+      "email": "Email",
+      "language": "Language",
+      "birthday": "Birthday",
+      "joined": "Joined",
+      "addresses": "Saved addresses",
+      "whatsapp": "Message on WhatsApp",
+      "figuresTitle": "Figures",
+      "spent": "Total spent (delivered)",
+      "orders": "Orders",
+      "circle": "Thaanora Circle",
+      "suits12m": "{count, plural, one {# suit in 12 months} other {# suits in 12 months}}",
+      "refusalsLabel": "Refused at door (12 months)",
+      "lastOrderLabel": "Last order",
+      "staffTitle": "Staff only: tags and notes",
+      "tagsLabel": "Tags (she never sees these)",
+      "trustedHint": "Trusted: her orders are never flagged \"Call to confirm\", e.g. when a refusal wasn't her fault.",
+      "notesLabel": "Notes",
+      "notesPlaceholder": "e.g. prefers evening delivery; ask for the gate code",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved.",
+      "failed": "Couldn't save.",
+      "reactivate": "Reactivate her account",
+      "deactivate": "Deactivate account",
+      "reactivateConfirm": "Reactivate this customer's My Thaanora account?",
+      "deactivateConfirm": "Deactivate this account? She won't be able to sign in. (Use her Privacy page if she wants her data removed.)",
+      "ordersTitle": "Orders",
+      "moreTitle": "Favourites, requests and reviews",
+      "favourites": "Favourites",
+      "requests": "Requests",
+      "reviewsLabel": "Reviews",
+      "returnsTitle": "Returns"
     }
   }
 }

@@ -361,7 +361,8 @@
     "signInText": "Your bag and details are saved. After signing in you'll come straight back here.",
     "signInButton": "Sign in or create an account",
     "signInNote": "You'll be asked to sign in to place the order.",
-    "error_discount": "Your birthday gift or offer was just used on another order. Please reload the page to see your new total."
+    "error_discount": "Your birthday gift or offer was just used on another order. Please reload the page to see your new total.",
+    "callToConfirm": "We'll call you on this number to confirm before sending your order."
   },
   "OrderMessage": {
     "greeting": "Hello Thaanora, I would like to order ({orderNo}):",

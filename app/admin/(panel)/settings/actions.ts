@@ -21,6 +21,7 @@ const PUBLIC: Record<string, boolean> = {
   birthday_gift_pct: true,
   return_window_days: true,
   zoho_refund_account_id: false,
+  cod_call_after_refusals: false,
 };
 const HOSTS = { instagram: "instagram.com", tiktok: "tiktok.com", snapchat: "snapchat.com" } as const;
 
@@ -102,6 +103,10 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
   const refundAccount = text(form.get("refundAccount"), 30);
   if (refundAccount && !/^\d{5,30}$/.test(refundAccount)) return fail("refundAccount", "refundAccount");
 
+  // COD protection: ask for a call after this many refusals at the door (0 = off).
+  const codCallAfter = Number(text(form.get("codCallAfter"), 3));
+  if (!(Number.isInteger(codCallAfter) && codCallAfter >= 0 && codCallAfter <= 10)) return fail("codCallAfter", "codCallAfter");
+
   const values: Record<string, unknown> = {
     whatsapp_number: wa,
     social_links: links,
@@ -114,6 +119,7 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
     birthday_gift_pct: birthdayPct,
     return_window_days: returnDays,
     zoho_refund_account_id: refundAccount,
+    cod_call_after_refusals: codCallAfter,
   };
   for (const [key, value] of Object.entries(values)) {
     const { error, count } = await supabase.from("settings").update({ value }, { count: "exact" }).eq("key", key);

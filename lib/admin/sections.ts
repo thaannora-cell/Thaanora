@@ -5,6 +5,7 @@ export type StaffRole = "owner" | "orders" | "catalogue";
 export const SECTIONS = [
   { key: "dashboard", icon: "dash", roles: ["owner", "orders", "catalogue"] },
   { key: "orders", icon: "ord", roles: ["owner", "orders"] },
+  { key: "customers", icon: "cust", roles: ["owner", "orders"] },
   { key: "products", icon: "prod", roles: ["owner", "catalogue"] },
   { key: "stock", icon: "stock", roles: ["owner", "catalogue"] },
   { key: "offers", icon: "off", roles: ["owner"] },

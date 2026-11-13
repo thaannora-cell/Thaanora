@@ -14,6 +14,7 @@ import { getLiveCampaigns } from "@/lib/campaigns";
 import { campaignSalePct } from "@/lib/campaign-pricing";
 import { buildOrderMessage, type MessageLine } from "@/lib/order-message";
 import { getAccount } from "@/lib/customer/account";
+import { needsCall } from "@/lib/cod";
 import { addressLine } from "@/lib/customer/addresses";
 import { getSessionClient } from "@/lib/supabase/server";
 
@@ -114,6 +115,9 @@ export async function POST(req: NextRequest) {
   const d = totals.discount;
   const usedCode = d?.kind === "code" ? (live?.code ?? null) : null;
 
+  // COD protection: refused at the door before → staff call to confirm before sending.
+  const callFirst = await needsCall(supabase, phone);
+
   const gift = isGift
     ? { recipientName: text(checkout.recipientName, 80), recipientArea: text(checkout.recipientArea, 80), note: text(checkout.giftNote, 300) }
     : null;
@@ -141,6 +145,7 @@ export async function POST(req: NextRequest) {
         customer_offer_id: d?.kind === "personal" ? d.ref : null,
         birthday_year: d?.kind === "birthday" ? Number(d.ref) : null,
         customer_id: customerId,
+        needs_call: callFirst,
         packaging_fee_sar: totals.packagingFee,
         delivery_fee_sar: totals.deliveryFee,
         total_sar: totals.total,
@@ -207,6 +212,7 @@ export async function POST(req: NextRequest) {
       total: totals.total,
       linked,
       codeDropped: Boolean(codeRaw) && !usedCode,
+      needsCall: callFirst,
       message,
       whatsappUrl: waNumber ? `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}` : null,
     },

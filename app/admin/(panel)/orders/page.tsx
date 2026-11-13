@@ -101,6 +101,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                     <span className="flex shrink-0 flex-col items-end gap-1 tabular-nums">
                       {sar(o.total)}
                       <StatusChip status={o.status} label={t(`status.${o.status}`)} />
+                      {o.needsCall && ["waiting_confirmation", "confirmed", "packed"].includes(o.status) && <span className="rounded-full bg-gold/20 px-2 py-0.5 text-[11px] font-medium text-gold-ink">{t("orders.callFirst")}</span>}
                     </span>
                   </Link>
                 </li>
@@ -140,6 +141,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                       <td className={`${td} whitespace-nowrap tabular-nums`}>{sar(o.total)}</td>
                       <td className={td}>
                         <StatusChip status={o.status} label={t(`status.${o.status}`)} />
+                      {o.needsCall && ["waiting_confirmation", "confirmed", "packed"].includes(o.status) && <span className="rounded-full bg-gold/20 px-2 py-0.5 text-[11px] font-medium text-gold-ink">{t("orders.callFirst")}</span>}
                       </td>
                       <td className={`${td} text-[13px]`}>
                         {o.courier ?? "—"}

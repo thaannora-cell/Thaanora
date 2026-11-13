@@ -39,9 +39,11 @@ export type OrderListItem = {
   courier: string | null;
   trackingNo: string | null;
   suits: { name: string; qty: number }[];
+  needsCall: boolean; // COD protection: call to confirm before sending
 };
 
 export type OrderDetail = OrderListItem & {
+  customerId: string | null;
   phone: string;
   language: "en" | "ar" | "ur" | "hi";
   address: string | null;
@@ -67,7 +69,8 @@ export type OrderDetail = OrderListItem & {
   invoice: { status: "none" | "pending" | "issued" | "failed"; no: string | null; url: string | null; hasPdf: boolean; error: string | null; attempts: number; triedAt: string | null };
 };
 
-const LIST_COLUMNS = "id, order_no, created_at, customer_name, area, total_sar, status, courier, tracking_no, order_items (product_name, qty)";
+const LIST_BASE = "id, order_no, created_at, customer_name, area, total_sar, status, courier, tracking_no, order_items (product_name, qty)";
+const LIST_COLUMNS = `needs_call, ${LIST_BASE}`;
 
 type Row = Record<string, unknown> & { order_items?: { product_name: string; qty: number }[] };
 const toItem = (o: Row): OrderListItem => ({
@@ -81,6 +84,7 @@ const toItem = (o: Row): OrderListItem => ({
   courier: (o.courier as string | null) ?? null,
   trackingNo: (o.tracking_no as string | null) ?? null,
   suits: (o.order_items ?? []).map((i) => ({ name: i.product_name, qty: i.qty })),
+  needsCall: o.needs_call === true,
 });
 
 // Read as the signed-in person (RLS: owner and orders team). Search matches order no., name or phone.
@@ -95,7 +99,20 @@ export async function listOrders(status: OrderStatus | null, query: string) {
     if (digits.length >= 4) parts.push(`customer_phone.ilike.%${digits.slice(-9)}%`);
     q = q.or(parts.join(","));
   }
-  const [orders, counts] = await Promise.all([q, supabase.from("orders").select("status")]);
+  const [first, counts] = await Promise.all([q, supabase.from("orders").select("status")]);
+  let orders = first;
+  // Before the A9 migration (needs_call) runs, list without it.
+  if (orders.error?.code === "42703") {
+    let q2 = supabase.from("orders").select(LIST_BASE).order("created_at", { ascending: false }).limit(200);
+    if (status) q2 = q2.eq("status", status);
+    if (term) {
+      const digits = term.replace(/\D/g, "");
+      const parts = [`order_no.ilike.%${term}%`, `customer_name.ilike.%${term}%`];
+      if (digits.length >= 4) parts.push(`customer_phone.ilike.%${digits.slice(-9)}%`);
+      q2 = q2.or(parts.join(","));
+    }
+    orders = (await q2) as typeof orders;
+  }
   const byStatus = Object.fromEntries(STATUSES.map((s) => [s, 0])) as Record<OrderStatus, number>;
   for (const r of counts.data ?? []) byStatus[r.status as OrderStatus]++;
   return {
@@ -113,7 +130,7 @@ export async function getOrder(orderNo: string): Promise<OrderDetail | null> {
   const read = (cols: string) => supabase.from("orders").select(cols).eq("order_no", orderNo).maybeSingle();
   // The one discount used (Phase 3B · A7) and the invoice; before those migrations run the columns
   // don't exist yet, so the order is shown without them.
-  const PERK = "perk_discount_sar, discount_kind, discount_pct, loyalty_level, ";
+  const PERK = "needs_call, customer_id, perk_discount_sar, discount_kind, discount_pct, loyalty_level, ";
   let res = await read(PERK + INVOICE + BASE);
   if (res.error?.code === "42703") res = await read(INVOICE + BASE);
   if (res.error?.code === "42703") res = await read(BASE);
@@ -124,6 +141,7 @@ export async function getOrder(orderNo: string): Promise<OrderDetail | null> {
   const items = (o.order_items ?? []) as Item[];
   return {
     ...toItem({ ...o, order_items: items.map((i) => ({ product_name: i.product_name, qty: i.qty })) }),
+    customerId: o.customer_id ?? null,
     phone: o.customer_phone,
     language: o.language,
     address: o.address,

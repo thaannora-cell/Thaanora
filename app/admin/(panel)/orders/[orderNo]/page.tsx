@@ -14,6 +14,8 @@ import ShopNumberNote from "@/components/admin/ShopNumberNote";
 import InvoiceRetry from "@/components/admin/orders/InvoiceRetry";
 import OrderWhatsappLink from "@/components/admin/orders/OrderWhatsappLink";
 import { amount, areaKey, orderTime } from "@/lib/admin/format";
+import { orderCustomerFacts } from "@/lib/admin/customers";
+import { TAG_TONE } from "@/components/admin/customers/tone";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +33,8 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
   const o = await getOrder(orderNo);
   if (!o) notFound();
   const shop = await getWhatsappNumber();
-  const [t, lang, msg] = [await getAdminT(), await getAdminLang(), await customerMessage(o, shop)];
+  const [t, lang, msg, facts] = [await getAdminT(), await getAdminLang(), await customerMessage(o, shop), await orderCustomerFacts(o.phone, o.customerId)];
+  const beforeSending = ["waiting_confirmation", "confirmed", "packed"].includes(o.status);
   const sar = (n: number) => t("money", { amount: amount(lang, n) });
   const area = (a: string) => {
     const k = areaKey(a);
@@ -76,6 +79,11 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
           );
         })}
       </ol>
+      {o.needsCall && beforeSending && (
+        <p role="alert" className="m-0 mb-4 rounded-xl border border-gold/60 bg-[#FBF6EA] px-3 py-2.5 text-[14px] text-ink">
+          <b className="text-emerald">{t("orders.callFirst")}</b> {t("orders.callFirstText", { count: facts.refusals })}
+        </p>
+      )}
       {ended && (
         <p className="m-0 mb-4 rounded-xl bg-[#EEF0EE] px-3 py-2 text-[14px] text-[#3D4440]">{t(o.status === "cancelled" ? "orders.endedCancelled" : "orders.endedRefused")}</p>
       )}
@@ -178,6 +186,21 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
             <dl className="m-0">
               {row(t("orders.name"), <bdi>{o.customer}</bdi>)}
               {row(t("orders.phone"), <bdi dir="ltr">{o.phone}</bdi>)}
+              {facts.refusals > 0 && row(t("orders.refusals"), <span className="text-rani">{String(facts.refusals)}</span>)}
+              {o.customerId &&
+                row(
+                  t("orders.account"),
+                  <span className="inline-flex flex-wrap items-center justify-end gap-1.5">
+                    {facts.tags.map((x) => (
+                      <span key={x} className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${TAG_TONE[x]}`}>
+                        {t(`customers.tag.${x}`)}
+                      </span>
+                    ))}
+                    <Link href={`/admin/customers/${o.customerId}`} className="text-emerald underline">
+                      {t("orders.viewCustomer")}
+                    </Link>
+                  </span>,
+                )}
               {row(t("orders.area"), area(o.area))}
               {o.address && row(t("orders.address"), <bdi>{o.address}</bdi>)}
               {row(t("orders.packaging"), t(o.packaging === "gift_box" ? "orders.giftBox" : "orders.keeperBag"))}

@@ -19,6 +19,7 @@ export type SettingsForm = {
   birthdayPct: number;
   returnDays: number;
   refundAccount: string;
+  codCallAfter: number;
 };
 
 // Every setting, public and private, read as the owner (RLS: "owner writes settings").
@@ -54,6 +55,7 @@ export async function getSettingsForm(): Promise<{ form: SettingsForm; failed: b
       birthdayPct: Number.isFinite(Number(get("birthday_gift_pct"))) ? Number(get("birthday_gift_pct")) : 5,
       returnDays: Number.isInteger(Number(get("return_window_days"))) ? Number(get("return_window_days")) : 3,
       refundAccount: s(get("zoho_refund_account_id")),
+      codCallAfter: Number.isInteger(Number(get("cod_call_after_refusals"))) ? Number(get("cod_call_after_refusals")) : 2,
     },
     failed: Boolean(error),
   };

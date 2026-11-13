@@ -162,6 +162,11 @@ export default function SettingsView({ form: s }: { form: SettingsForm }) {
             <input name="refundAccount" inputMode="numeric" dir="ltr" defaultValue={s.refundAccount} aria-invalid={bad("refundAccount")} className={field} />
           </label>
           <p className="m-0 mt-2 text-[12px] text-muted">{t("refundAccountHint")}</p>
+          <label className={`${label} mt-3`}>
+            {t("codCallAfter")}
+            <input name="codCallAfter" type="number" inputMode="numeric" min="0" max="10" step="1" defaultValue={s.codCallAfter} required aria-invalid={bad("codCallAfter")} className={field} />
+          </label>
+          <p className="m-0 mt-2 text-[12px] text-muted">{t("codCallAfterHint")}</p>
         </section>
       </div>
 
