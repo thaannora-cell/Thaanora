@@ -765,7 +765,7 @@
       "byBrand": "Sales by brand",
       "beforeDiscounts": "suit prices before bundle and code discounts",
       "best": "Best sellers",
-      "noSales": "No sales in this period.",
+      "noSales": "No sales in these dates.",
       "suitsN": "{count, plural, one {# suit} other {# suits}}",
       "codTitle": "Cash on delivery",
       "codHint": "{placed, plural, one {# order} other {# orders}} placed in this period",
@@ -779,7 +779,28 @@
         "cancelled": "Cancelled"
       },
       "refusalNote": "Refusal rate: {rate} of finished orders (delivered + refused).",
-      "csvNote": "The CSV has one row per suit ordered, without customer names or phone numbers."
+      "csvNote": "The CSV has one row per suit ordered, without customer names or phone numbers.",
+      "customersTitle": "Customers",
+      "buyers": "Buyers",
+      "newReturning": "{n} new · {r} returning",
+      "repeatRate": "Repeat rate",
+      "repeatHint": "All time: delivered to 2+ times",
+      "accountSales": "Sales from accounts",
+      "guestSales": "{n} from guests",
+      "newAccounts": "New accounts",
+      "inRange": "My Thaanora sign-ups in these dates",
+      "topCustomers": "Top customers",
+      "customer": "Customer",
+      "discountsTitle": "Discounts given",
+      "discount": {
+        "loyalty": "Circle level",
+        "bundle": "Bundle",
+        "code": "Codes",
+        "birthday": "Birthday gift",
+        "personal": "Personal offers"
+      },
+      "ordersN": "{count, plural, one {# order} other {# orders}}",
+      "levelsTitle": "Customers per Circle level (now)"
     },
     "notifications": {
       "title": "Notifications",

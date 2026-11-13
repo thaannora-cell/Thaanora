@@ -765,7 +765,7 @@
       "byBrand": "المبيعات حسب العلامة",
       "beforeDiscounts": "أسعار الأطقم قبل خصم الباقة والكود",
       "best": "الأكثر مبيعًا",
-      "noSales": "لا توجد مبيعات في هذه الفترة.",
+      "noSales": "لا مبيعات في هذه الفترة.",
       "suitsN": "{count, plural, one {طقم واحد} two {طقمان} few {# أطقم} many {# طقمًا} other {# طقم}}",
       "codTitle": "الدفع عند الاستلام",
       "codHint": "{placed} طلب في هذه الفترة",
@@ -779,7 +779,28 @@
         "cancelled": "ملغى"
       },
       "refusalNote": "نسبة الرفض: {rate} من الطلبات المنتهية (المسلّمة + المرفوضة).",
-      "csvNote": "ملف CSV فيه صف لكل طقم مطلوب، دون أسماء العملاء أو أرقامهم."
+      "csvNote": "ملف CSV فيه صف لكل طقم مطلوب، دون أسماء العملاء أو أرقامهم.",
+      "customersTitle": "العملاء",
+      "buyers": "المشترون",
+      "newReturning": "{n} جدد · {r} عائدون",
+      "repeatRate": "نسبة التكرار",
+      "repeatHint": "كل الوقت: سُلِّم لهم مرتين أو أكثر",
+      "accountSales": "مبيعات من حسابات",
+      "guestSales": "{n} من زائرات",
+      "newAccounts": "حسابات جديدة",
+      "inRange": "تسجيلات ثانورا في هذه الفترة",
+      "topCustomers": "أفضل العملاء",
+      "customer": "العميلة",
+      "discountsTitle": "الخصومات الممنوحة",
+      "discount": {
+        "loyalty": "مستوى الدائرة",
+        "bundle": "الباقة",
+        "code": "الرموز",
+        "birthday": "هدية الميلاد",
+        "personal": "العروض الخاصة"
+      },
+      "ordersN": "{count, plural, zero {لا طلبات} one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}}",
+      "levelsTitle": "العملاء حسب مستوى الدائرة (الآن)"
     },
     "notifications": {
       "title": "الإشعارات",

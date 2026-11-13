@@ -4,7 +4,9 @@ import Kpi from "@/components/admin/Kpi";
 import { getSession } from "@/lib/admin/session";
 import { getAdminLang, getAdminT } from "@/lib/admin/i18n";
 import { canOpen } from "@/lib/admin/sections";
-import { getReport, readRange } from "@/lib/admin/reports";
+import { getCustomerReport, getReport, readRange } from "@/lib/admin/reports";
+import { getLevels } from "@/lib/customer/perks";
+import Link from "next/link";
 import { amount } from "@/lib/admin/format";
 import { todayInRiyadh } from "@/lib/admin/offers";
 
@@ -22,7 +24,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   if (!canOpen(session.staff.role, "reports")) return <SectionDenied role={session.staff.role} section="reports" />;
   const sp = await searchParams;
   const range = readRange(sp.from, sp.to);
-  const [r, t, lang] = [await getReport(range), await getAdminT(), await getAdminLang()];
+  const [r, t, lang, levels] = [await getReport(range), await getAdminT(), await getAdminLang(), await getLevels()];
+  const cr = await getCustomerReport(range, levels);
   const sar = (n: number) => t("money", { amount: amount(lang, n) });
   const short = (d: string) => new Intl.DateTimeFormat(lang === "ar" ? "ar-SA-u-nu-latn-ca-gregory" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${d}T12:00:00Z`));
   const maxDay = Math.max(1, ...r.byDay.map((d) => d.value));
@@ -196,6 +199,98 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           {t("reports.refusalNote", { rate: r.refusalRate === null ? "—" : `${r.refusalRate}%` })} {t("reports.csvNote")}
         </p>
       </section>
+
+      {/* Customers (Phase 3B) */}
+      <h2 className="mb-3 mt-6 font-[family-name:var(--font-cormorant)] text-[24px] font-semibold text-emerald">{t("reports.customersTitle")}</h2>
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {(
+          [
+            [t("reports.buyers"), String(cr.buyers), t("reports.newReturning", { n: cr.newBuyers, r: cr.returning })],
+            [t("reports.repeatRate"), cr.repeatRate === null ? "—" : `${cr.repeatRate}%`, t("reports.repeatHint")],
+            [t("reports.accountSales"), String(cr.fromAccounts), t("reports.guestSales", { n: cr.guestSales })],
+            [t("reports.newAccounts"), String(cr.newAccounts), t("reports.inRange")],
+          ] as const
+        ).map(([label, value, sub]) => (
+          <div key={label} className="min-w-0 rounded-[18px] border border-[#E1E6DF] bg-white p-[18px] shadow-[0_6px_18px_rgba(14,59,46,0.05)]">
+            <p className="m-0 text-[13px] text-muted">{label}</p>
+            <p className="m-0 font-[family-name:var(--font-cormorant)] text-[30px] font-semibold leading-tight text-emerald">{value}</p>
+            <p className="m-0 text-[12px] text-muted">{sub}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <section aria-labelledby="top" className={`${panel} lg:col-span-2`}>
+          <h2 id="top" className={h2}>
+            {t("reports.topCustomers")}
+          </h2>
+          {cr.top.length === 0 ? (
+            <p className="m-0 text-[14px] text-muted">{t("reports.noSales")}</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[420px] border-collapse text-[14px]">
+                <thead>
+                  <tr>
+                    <th className={th}>{t("reports.customer")}</th>
+                    <th className={`${th} text-end`}>{t("reports.orders")}</th>
+                    <th className={`${th} text-end`}>{t("reports.value")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cr.top.map((c) => (
+                    <tr key={c.phone}>
+                      <td className={td}>
+                        {c.customerId ? (
+                          <Link href={`/admin/customers/${c.customerId}`} className="text-emerald underline">
+                            <bdi>{c.name}</bdi>
+                          </Link>
+                        ) : (
+                          <bdi>{c.name}</bdi>
+                        )}{" "}
+                        <small className="text-muted" dir="ltr">
+                          {c.phone}
+                        </small>
+                      </td>
+                      <td className={`${td} text-end`}>{c.orders}</td>
+                      <td className={`${td} text-end`}>{sar(c.value)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+        <div className="flex min-w-0 flex-col gap-4">
+          <section aria-labelledby="disc" className={panel}>
+            <h2 id="disc" className={h2}>
+              {t("reports.discountsTitle")}
+            </h2>
+            <dl className="m-0">
+              {cr.discounts.map((d) => (
+                <div key={d.kind} className="flex justify-between gap-3 border-b border-[#F0EBE1] py-1.5 text-[14px] last:border-b-0">
+                  <dt className="text-muted">{t(`reports.discount.${d.kind as "code"}`)}</dt>
+                  <dd className="m-0 tabular-nums">
+                    {sar(d.value)} <small className="text-muted">· {t("reports.ordersN", { count: d.orders })}</small>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+          <section aria-labelledby="lvl" className={panel}>
+            <h2 id="lvl" className={h2}>
+              {t("reports.levelsTitle")}
+            </h2>
+            <dl className="m-0">
+              {cr.perLevel.map((l) => (
+                <div key={l.slug} className="flex justify-between gap-3 border-b border-[#F0EBE1] py-1.5 text-[14px] last:border-b-0">
+                  <dt className="text-muted">{t(`customers.level.${l.slug as "silver"}`)}</dt>
+                  <dd className="m-0 tabular-nums">{l.count}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        </div>
+      </div>
+      {cr.failed && <p className="m-0 mt-2 text-[13px] text-rani">{t("dashboard.loadFailed")}</p>}
     </>
   );
 }

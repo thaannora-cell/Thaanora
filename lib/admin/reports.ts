@@ -151,3 +151,90 @@ export async function getReport(range: Range): Promise<Report> {
     failed,
   };
 }
+
+// ── Customers (Phase 3B · A11) ─────────────────────────────────────────────────
+export type CustomerReport = {
+  buyers: number; // different mobiles with a sale in the range
+  newBuyers: number; // their first ever sale is in the range
+  returning: number;
+  repeatRate: number | null; // all time: of mobiles with a delivered order, how many have 2 or more
+  fromAccounts: number; // sales in the range placed while signed in
+  guestSales: number;
+  newAccounts: number; // My Thaanora profiles created in the range
+  perLevel: { slug: string; count: number }[];
+  top: { name: string; phone: string; customerId: string | null; orders: number; value: number }[];
+  discounts: { kind: string; orders: number; value: number }[];
+  failed: boolean;
+};
+
+const KINDS = ["loyalty", "bundle", "code", "birthday", "personal"];
+
+export async function getCustomerReport(range: Range, levels: { slug: string; minSuits: number }[]): Promise<CustomerReport> {
+  const supabase = await getSessionClient();
+  const from = dayStart(range.from)!;
+  const to = dayEnd(range.to)!;
+  const [inRange, everDelivered, accounts, stats] = await Promise.all([
+    supabase
+      .from("orders")
+      .select("customer_phone, customer_name, customer_id, created_at, total_sar, discount_kind, bundle_discount_sar, code_discount_sar, perk_discount_sar")
+      .in("status", SALE_STATUSES)
+      .gte("created_at", from)
+      .lt("created_at", to)
+      .limit(5000),
+    supabase.from("orders").select("customer_phone, created_at").in("status", SALE_STATUSES).lt("created_at", to).limit(20000),
+    supabase.from("customers").select("id", { count: "exact", head: true }).gte("created_at", from).lt("created_at", to),
+    supabase.from("customer_stats").select("suits_12m"),
+  ]);
+  const sales = inRange.data ?? [];
+  const firstEver = new Map<string, string>();
+  for (const o of everDelivered.data ?? []) {
+    const prev = firstEver.get(o.customer_phone);
+    if (!prev || o.created_at < prev) firstEver.set(o.customer_phone, o.created_at);
+  }
+  const phones = new Set(sales.map((o) => o.customer_phone));
+  const newBuyers = [...phones].filter((p) => (firstEver.get(p) ?? from) >= from).length;
+
+  // Repeat rate (all time, delivered only).
+  const { data: delivered } = await supabase.from("orders").select("customer_phone").eq("status", "delivered_cash_collected").limit(20000);
+  const counts = new Map<string, number>();
+  for (const o of delivered ?? []) counts.set(o.customer_phone, (counts.get(o.customer_phone) ?? 0) + 1);
+  const repeatRate = counts.size ? Math.round(([...counts.values()].filter((n) => n >= 2).length / counts.size) * 1000) / 10 : null;
+
+  const top = new Map<string, { name: string; phone: string; customerId: string | null; orders: number; value: number }>();
+  const discounts = new Map(KINDS.map((k) => [k, { kind: k, orders: 0, value: 0 }]));
+  for (const o of sales) {
+    const t = top.get(o.customer_phone) ?? { name: o.customer_name, phone: o.customer_phone, customerId: o.customer_id, orders: 0, value: 0 };
+    t.orders += 1;
+    t.value += Number(o.total_sar);
+    t.customerId ??= o.customer_id;
+    top.set(o.customer_phone, t);
+    const amount = Number(o.bundle_discount_sar) + Number(o.code_discount_sar) + Number(o.perk_discount_sar ?? 0);
+    const kind = o.discount_kind ?? (Number(o.code_discount_sar) > 0 ? "code" : Number(o.bundle_discount_sar) > 0 ? "bundle" : null);
+    const d = kind ? discounts.get(kind) : undefined;
+    if (d && amount > 0) {
+      d.orders += 1;
+      d.value += amount;
+    }
+  }
+
+  const sorted = [...levels].sort((a, b) => a.minSuits - b.minSuits);
+  const perLevel = new Map<string, number>([["none", 0], ...sorted.map((l) => [l.slug, 0] as [string, number])]);
+  for (const s of stats.data ?? []) {
+    const lvl = sorted.filter((l) => l.minSuits <= s.suits_12m).at(-1)?.slug ?? "none";
+    perLevel.set(lvl, (perLevel.get(lvl) ?? 0) + 1);
+  }
+
+  return {
+    buyers: phones.size,
+    newBuyers,
+    returning: phones.size - newBuyers,
+    repeatRate,
+    fromAccounts: sales.filter((o) => o.customer_id).length,
+    guestSales: sales.filter((o) => !o.customer_id).length,
+    newAccounts: accounts.count ?? 0,
+    perLevel: [...perLevel.entries()].map(([slug, count]) => ({ slug, count })),
+    top: [...top.values()].sort((a, b) => b.value - a.value).slice(0, 10),
+    discounts: [...discounts.values()],
+    failed: Boolean(inRange.error || everDelivered.error),
+  };
+}
