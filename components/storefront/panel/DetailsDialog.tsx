@@ -20,9 +20,10 @@ const FEEL_KEYS: Record<string, string> = {
   Linen: "linen",
 };
 
-type Props = { product: PublicProduct; open: boolean; onClose: () => void };
+// actions: the shop buttons (add, try on, stitch, share, heart) when opened from the collection grid.
+type Props = { product: PublicProduct; open: boolean; onClose: () => void; actions?: React.ReactNode };
 
-export default function DetailsDialog({ product: p, open, onClose }: Props) {
+export default function DetailsDialog({ product: p, open, onClose, actions }: Props) {
   const t = useTranslations("Panel");
   const tRack = useTranslations("Rack");
   const tHome = useTranslations("Home");
@@ -58,6 +59,7 @@ export default function DetailsDialog({ product: p, open, onClose }: Props) {
 
   return (
     <Modal open={open} onClose={onClose} wide eyebrow={`${p.brand} · ${p.code}`} title={p.name}>
+      {actions}
       {p.product_images.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
           {p.product_images.map((img, i) => (

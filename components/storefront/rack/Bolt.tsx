@@ -188,7 +188,7 @@ export default function Bolt({
                 </svg>
               </button>
             </div>
-            <h2 id={`bolt-title-${p.code}`} className={s.title}>
+            <h2 id={`bolt-title-${p.code}`} className={s.title} title={p.name}>
               <bdi>{p.name}</bdi>
             </h2>
             <div className={`${s.price} ${p.sale_pct > 0 ? s.priceSale : ""}`}>

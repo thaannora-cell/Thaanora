@@ -15,6 +15,7 @@ import { salePrice, type PublicProduct } from "@/lib/product";
 import { useSelection } from "./selection/SelectionProvider";
 import { openSourcing } from "./SourcingDialog";
 import CollectionGrid from "./CollectionGrid";
+import ProductActions from "./panel/ProductActions";
 import { setFavourite, syncFavourites } from "@/app/[locale]/account/actions";
 
 const SAVED_KEY = "th_saved";
@@ -45,7 +46,8 @@ const RACK_SIZE = 17;
 
 const toggle = (list: string[], code: string) => (list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
 
-type Dialog = { kind: Exclude<PanelAction, "share">; code: string } | null;
+// fromGrid: opened from a collection card, so the details pop-up also carries the shop actions.
+type Dialog = { kind: Exclude<PanelAction, "share">; code: string; fromGrid?: boolean } | null;
 
 type Props = {
   products: PublicProduct[];
@@ -122,13 +124,16 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
     return () => window.removeEventListener(OPEN_TRYON_EVENT, onOpen);
   }, [products]);
 
-  // A shared link (?p=CODE) opens that fabric.
+  // A shared link (?p=CODE) opens that fabric: on the rack if it hangs there, else in the pop-up.
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("p");
-    if (code && products.some((p) => p.code === code)) {
+    if (!code || !products.some((p) => p.code === code)) return;
+    const marked = products.some((p) => p.on_rack);
+    const onRack = (marked ? products.filter((p) => p.on_rack) : products).slice(0, RACK_SIZE).some((p) => p.code === code);
+    if (onRack) {
       setActiveCode(code);
       rackAnchor.current?.scrollIntoView({ block: "start" });
-    }
+    } else setDialog({ kind: "details", code, fromGrid: true });
   }, [products]);
 
   const chosen = useMemo(() => selection?.lines.map((l) => l.code) ?? [], [selection?.lines]);
@@ -150,17 +155,13 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
   const brands = useMemo(() => brandsOf(products), [products]);
   const shown = useMemo(() => filterProducts(products, filters, saved), [products, filters, saved]);
   // Rack: the suits marked "Rack" in the back office (or, if none are marked yet, the first 17 in product
-  // order). Collection: every other matching suit. A collection suit she opens hangs at the front of the
-  // rack, open, until she opens another strip.
+  // order). Collection: every other matching suit.
   const anyOnRack = useMemo(() => products.some((p) => p.on_rack), [products]);
   const rackBase = useMemo(() => (anyOnRack ? shown.filter((p) => p.on_rack) : shown).slice(0, RACK_SIZE), [shown, anyOnRack]);
   const collection = useMemo(() => shown.filter((p) => !rackBase.includes(p)), [shown, rackBase]);
-  const visiting = activeCode && !rackBase.some((p) => p.code === activeCode) ? products.find((p) => p.code === activeCode) : undefined;
-  const rack = visiting ? [visiting, ...rackBase] : rackBase;
-  const openFromCollection = (code: string) => {
-    setActiveCode(code);
-    rackAnchor.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-  };
+  const rack = rackBase;
+  // A collection card opens the suit in a pop-up on the same page (details plus the shop actions).
+  const openFromCollection = (code: string) => setDialog({ kind: "details", code, fromGrid: true });
   const dialogProduct = dialog ? products.find((p) => p.code === dialog.code) ?? null : null;
 
   const toggleSaved = (code: string) => {
@@ -246,7 +247,27 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
 
       {dialogProduct && (
         <>
-          <DetailsDialog product={dialogProduct} open={dialog?.kind === "details"} onClose={closeDialog} />
+          <DetailsDialog
+            product={dialogProduct}
+            open={dialog?.kind === "details"}
+            onClose={closeDialog}
+            actions={
+              dialog?.fromGrid ? (
+                <ProductActions
+                  product={dialogProduct}
+                  chosen={chosen.includes(dialogProduct.code)}
+                  stitched={stitching.includes(dialogProduct.code)}
+                  saved={saved.includes(dialogProduct.code)}
+                  onToggleChosen={() => toggleChosen(dialogProduct.code)}
+                  onToggleSaved={() => toggleSaved(dialogProduct.code)}
+                  onTry={() => setDialog({ kind: "try", code: dialogProduct.code })}
+                  onStitch={() => setDialog({ kind: "stitch", code: dialogProduct.code })}
+                  onNotify={() => setDialog({ kind: "notify", code: dialogProduct.code })}
+                  onShare={() => void share(dialogProduct)}
+                />
+              ) : undefined
+            }
+          />
           <StitchDialog
             product={dialogProduct}
             open={dialog?.kind === "stitch"}
