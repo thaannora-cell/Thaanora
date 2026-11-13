@@ -5,6 +5,7 @@ import AccountShell, { Card } from "@/components/account/AccountShell";
 import SignInForm from "@/components/account/SignInForm";
 import { getAccount } from "@/lib/customer/account";
 import { isLocale, safeNextPath } from "@/lib/site-gate";
+import { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +31,8 @@ export default async function AccountSignIn({ params, searchParams }: Props) {
         <span className="th-medal mx-auto mb-3 flex" aria-hidden="true">
           T
         </span>
-        <h1 id="signin" className="m-0 text-center font-[family-name:var(--font-cormorant)] text-[30px] font-semibold leading-tight text-emerald">
+        <h1 id="signin" className="m-0 text-center font-[family-name:var(--font-cormorant)] text-[30px] font-semibold leading-tight text-emerald flex items-center gap-3 justify-center">
+          <AccountMedal name="signin" />
           {t("signInTitle")}
         </h1>
         <p className="mb-4 mt-1 text-center text-[14px] text-muted">{t("signInIntro")}</p>

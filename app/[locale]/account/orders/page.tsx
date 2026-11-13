@@ -6,6 +6,7 @@ import AccountShell, { Card } from "@/components/account/AccountShell";
 import { OrderStatusChip } from "@/components/account/OrderBits";
 import { getAccount } from "@/lib/customer/account";
 import { myOrders } from "@/lib/customer/orders";
+import { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,8 @@ export default async function MyOrdersPage({ params }: Props) {
       <Link href="/account" className="mb-2 inline-flex min-h-[40px] items-center text-[14px] text-emerald underline underline-offset-2">
         {tAcc("backToAccount")}
       </Link>
-      <h1 className="m-0 mb-4 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px]">{t("title")}</h1>
+      <h1 className="m-0 mb-4 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px] flex items-center gap-3">
+          <AccountMedal name="orders" />{t("title")}</h1>
       <Card className="p-2 md:p-3">
         {orders.length === 0 ? (
           <div className="flex flex-col items-start gap-3 p-3">

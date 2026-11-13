@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import AccountShell, { Card } from "@/components/account/AccountShell";
 import ProfileForm from "@/components/account/ProfileForm";
 import { getAccount } from "@/lib/customer/account";
+import { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false } };
@@ -22,7 +23,8 @@ export default async function AccountProfile({ params }: { params: Promise<{ loc
         {t("backToAccount")}
       </Link>
       <Card labelledBy="profile">
-        <h1 id="profile" className="m-0 mb-4 font-[family-name:var(--font-cormorant)] text-[28px] font-semibold leading-tight text-emerald">
+        <h1 id="profile" className="m-0 mb-4 font-[family-name:var(--font-cormorant)] text-[28px] font-semibold leading-tight text-emerald flex items-center gap-3">
+          <AccountMedal name="profile" />
           {t("detailsTitle")}
         </h1>
         <ProfileForm customer={account.customer} />

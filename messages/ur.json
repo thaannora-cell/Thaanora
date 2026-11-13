@@ -15,7 +15,9 @@
     "account": "میرا تھانورا: سائن اِن",
     "accountSignedIn": "میرا تھانورا",
     "notifications": "اطلاعات: {count, plural, =0 {کوئی نئی نہیں} other {# نئی}}",
-    "signIn": "سائن اِن"
+    "signIn": "سائن اِن",
+    "accountShort": "اکاؤنٹ",
+    "accountLabel": "میرا اکاؤنٹ"
   },
   "Footer": {
     "brandDesc": "خواتین کے لیے اصل پاکستانی ان سلے سوٹ۔ ہر آرڈر بھیجنے سے پہلے واٹس ایپ پر تصدیق ہوتا ہے۔",

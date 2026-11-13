@@ -7,6 +7,7 @@ import { OrderStatusChip, OrderTimeline } from "@/components/account/OrderBits";
 import OrderActions from "@/components/account/OrderActions";
 import { getAccount } from "@/lib/customer/account";
 import { myOrder } from "@/lib/customer/orders";
+import AccountIcon from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -56,7 +57,8 @@ export default async function MyOrderPage({ params }: Props) {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card labelledBy="status">
-          <h2 id="status" className="m-0 mb-3 text-[16px] font-semibold text-emerald">
+          <h2 id="status" className="m-0 mb-3 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="orders" />
             {t("statusTitle")}
           </h2>
           <OrderTimeline status={o.status} placedAt={o.createdAt} changedAt={o.updatedAt} courier={o.courier} trackingNo={o.trackingNo} locale={locale} />
@@ -75,7 +77,8 @@ export default async function MyOrderPage({ params }: Props) {
         </Card>
 
         <Card labelledBy="suits">
-          <h2 id="suits" className="m-0 mb-2 text-[16px] font-semibold text-emerald">
+          <h2 id="suits" className="m-0 mb-2 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="picks" />
             {t("suitsTitle", { count: o.suits })}
           </h2>
           <ul className="m-0 mb-2 flex list-none flex-col p-0">

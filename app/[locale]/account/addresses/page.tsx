@@ -8,6 +8,7 @@ import { getAccount } from "@/lib/customer/account";
 import { MAX_ADDRESSES, mapLink, myAddresses } from "@/lib/customer/addresses";
 import { getCheckoutSettings } from "@/lib/shop-data";
 import { deleteAddress, makeDefaultAddress } from "../actions";
+import AccountIcon, { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -50,7 +51,8 @@ export default async function AddressesPage({ params, searchParams }: Props) {
       </Link>
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px]">{t("title")}</h1>
+          <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px] flex items-center gap-3">
+          <AccountMedal name="addresses" />{t("title")}</h1>
           <p className="m-0 text-[14px] text-muted">{t("intro")}</p>
         </div>
         {!showForm && list.length < MAX_ADDRESSES && (
@@ -62,7 +64,8 @@ export default async function AddressesPage({ params, searchParams }: Props) {
 
       {showForm && (
         <Card labelledBy="form" className="mb-4">
-          <h2 id="form" className="m-0 mb-3 text-[16px] font-semibold text-emerald">
+          <h2 id="form" className="m-0 mb-3 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="addresses" />
             {editing ? t("editTitle") : t("newTitle")}
           </h2>
           <AddressForm address={editing} areas={settings.areas.map((a) => a.area)} me={me} />

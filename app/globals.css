@@ -140,6 +140,19 @@ body {
 .mi-road    { stroke-dasharray: 3 3; animation: th-road 0.6s linear infinite; }
 .mi-bob     { animation: th-bob 2.4s ease-in-out infinite; }
 
+/* My Thaanora icons: heart beat, candle flicker, gift lid hop; a medal lifts on hover */
+@keyframes th-beat { 0%, 60%, 100% { transform: scale(1); } 70% { transform: scale(1.14); } 80% { transform: scale(0.98); } 90% { transform: scale(1.08); } }
+@keyframes th-flicker { 0%, 100% { transform: scale(1, 1) rotate(0deg); } 30% { transform: scale(0.9, 1.08) rotate(-4deg); } 60% { transform: scale(1.06, 0.94) rotate(3deg); } }
+@keyframes th-hop { 0%, 70%, 100% { transform: translateY(0) rotate(0deg); } 78% { transform: translateY(-2.2px) rotate(-5deg); } 86% { transform: translateY(0) rotate(0deg); } 92% { transform: translateY(-1px) rotate(3deg); } }
+.mi-beat    { transform-origin: center; transform-box: fill-box; animation: th-beat 2.4s ease-in-out infinite; }
+.mi-flicker { transform-origin: 50% 100%; transform-box: fill-box; animation: th-flicker 1.4s ease-in-out infinite; }
+.mi-hop     { transform-origin: 50% 100%; transform-box: fill-box; animation: th-hop 3s ease-in-out infinite; }
+.th-medal { transition: transform .25s, box-shadow .25s; }
+.th-medal:hover, a:hover .th-medal { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(14,59,46,.16); }
+@media (prefers-reduced-motion: reduce) {
+  .mi-beat, .mi-flicker, .mi-hop { animation: none !important; }
+  .th-medal { transition: none !important; }
+}
 /* Pill hover triggers faster animation */
 .th-pill:hover .mi-snipA, .th-pill:hover .mi-snipB { animation-duration: 0.5s; }
 .th-pill:hover .mi-peek  { animation-duration: 0.8s; }

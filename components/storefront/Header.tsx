@@ -197,10 +197,17 @@ export default function Header({ minimal = false, account = null }: { minimal?: 
           <Link
             href="/account"
             aria-label={t("accountSignedIn")}
-            className="relative flex items-center justify-center w-10 h-10 rounded-full border border-line bg-ivory-white text-emerald hover:border-gold transition-colors shrink-0 no-underline"
+            title={t("accountSignedIn")}
+            className="th-pill relative flex shrink-0 flex-col items-center justify-center gap-0.5 text-emerald no-underline sm:min-h-[40px] sm:flex-row sm:gap-2 sm:rounded-full sm:border sm:border-line sm:bg-ivory-white sm:ps-1 sm:pe-3.5 sm:hover:border-gold sm:transition-colors"
           >
-            <span aria-hidden="true" className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-emerald font-[family-name:var(--font-cinzel)] text-[14px] font-semibold text-gold-light">
+            <span aria-hidden="true" className="flex h-[27px] w-[27px] items-center justify-center rounded-full bg-emerald font-[family-name:var(--font-cinzel)] text-[13px] font-semibold text-gold-light ring-1 ring-gold sm:h-[30px] sm:w-[30px] sm:text-[14px]">
               {account.initial}
+            </span>
+            <span aria-hidden="true" className="text-[10px] font-medium leading-none sm:hidden">
+              {t("accountShort")}
+            </span>
+            <span aria-hidden="true" className="hidden text-[13px] sm:inline">
+              {t("accountLabel")}
             </span>
           </Link>
         ) : (

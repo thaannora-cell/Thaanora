@@ -6,6 +6,7 @@ import { getVisibleProducts } from "@/lib/products";
 import { getLiveCampaigns } from "@/lib/campaigns";
 import { forYouCodes, picks } from "@/lib/recommend";
 import { photoUrl, salePrice } from "@/lib/product";
+import AccountIcon from "@/components/account/AccountIcon";
 
 // My Thaanora overview: up to four suits for her ("For you"), or Our picks while there's nothing to go
 // on yet. Each opens the suit in the shop.
@@ -21,7 +22,8 @@ export default async function PickedForYou({ customerId, locale }: { customerId:
 
   return (
     <Card labelledBy="for-you" className="md:col-span-2">
-      <h2 id="for-you" className="m-0 text-[16px] font-semibold text-emerald">
+      <h2 id="for-you" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="picks" />
         {personal.length ? t("forYouTitle") : t("ourPicksTitle")}
       </h2>
       <ul className="m-0 mt-3 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-4">

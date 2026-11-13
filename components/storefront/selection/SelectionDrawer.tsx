@@ -8,6 +8,7 @@ import { useSelection } from "./SelectionProvider";
 import { useNativeClose } from "@/components/ui/Modal";
 import CheckoutOptions from "./CheckoutOptions";
 import SendOrder from "./SendOrder";
+import AccountIcon from "@/components/account/AccountIcon";
 import { useAreaLabel } from "../useAreaLabel";
 
 // The first-order cash-on-delivery limit from the prototype; bigger orders are confirmed by phone.
@@ -224,7 +225,14 @@ export default function SelectionDrawer() {
 
             <dl className="m-0 flex flex-col tabular-nums">
               <Row label={t("subtotal", { n: totals.count })} value={price(totals.subtotal)} />
-              {totals.discount && <Row label={discountLabel(totals.discount)} value={`−${price(totals.discount.amount)}`} accent />}
+              {totals.discount && (
+                <Row
+                  label={discountLabel(totals.discount)}
+                  value={`−${price(totals.discount.amount)}`}
+                  accent
+                  icon={totals.discount.kind === "birthday" ? "birthday" : totals.discount.kind === "loyalty" ? "circle" : totals.discount.kind === "personal" ? "gift" : undefined}
+                />
+              )}
               {totals.packagingFee > 0 && <Row label={tCheckout("giftBoxLine")} value={price(totals.packagingFee)} />}
               <Row
                 label={checkout.area ? tCheckout("deliveryLine", { area: areaLabel(checkout.area) }) : tCheckout("deliveryLineNoArea")}
@@ -255,10 +263,13 @@ export default function SelectionDrawer() {
   );
 }
 
-function Row({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
+function Row({ label, value, accent = false, icon }: { label: string; value: string; accent?: boolean; icon?: "birthday" | "circle" | "gift" }) {
   return (
     <div className={`flex justify-between py-1 text-[15px] ${accent ? "text-rani" : ""}`}>
-      <dt>{label}</dt>
+      <dt className="flex items-center gap-1.5">
+        {icon && <AccountIcon name={icon} size={20} />}
+        {label}
+      </dt>
       <dd className="m-0">{value}</dd>
     </div>
   );

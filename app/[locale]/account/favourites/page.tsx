@@ -10,6 +10,7 @@ import { favoriteCodes } from "@/lib/customer/favorites";
 import { getVisibleProducts } from "@/lib/products";
 import { getLiveCampaigns } from "@/lib/campaigns";
 import { LOW_STOCK, photoUrl, salePrice } from "@/lib/product";
+import { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +45,8 @@ export default async function FavouritesPage({ params }: Props) {
       <Link href="/account" className="mb-2 inline-flex min-h-[40px] items-center text-[14px] text-emerald underline underline-offset-2">
         {tAcc("backToAccount")}
       </Link>
-      <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px]">{t("title")}</h1>
+      <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px] flex items-center gap-3">
+          <AccountMedal name="favourites" />{t("title")}</h1>
       <p className="m-0 mb-4 text-[14px] text-muted">{t("intro")}</p>
 
       {list.length === 0 ? (

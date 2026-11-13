@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { saveProfile, type ProfileState } from "@/app/[locale]/account/actions";
 import type { Customer } from "@/lib/customer/account";
+import AccountIcon from "./AccountIcon";
 
 const LANGS = [
   ["en", "English"],
@@ -60,7 +61,10 @@ export default function ProfileForm({ customer = null, next = null }: { customer
         </select>
       </label>
       <label className={label}>
-        {t("birthday")}
+        <span className="flex items-center gap-1.5">
+          <AccountIcon name="birthday" size={18} />
+          {t("birthday")}
+        </span>
         {customer?.birthday ? (
           <>
             <input type="date" value={customer.birthday} readOnly aria-readonly="true" className="th-field bg-[#F1EEE8] text-[16px] text-muted" />

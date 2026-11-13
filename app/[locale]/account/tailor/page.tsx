@@ -10,6 +10,7 @@ import { myAddresses } from "@/lib/customer/addresses";
 import { myTailorData, tailorNetwork, type NetworkTailor } from "@/lib/customer/tailor";
 import { hasMeasurements, MEASURE_FIELDS } from "@/lib/measurements";
 import { getCheckoutSettings } from "@/lib/shop-data";
+import AccountIcon, { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -76,12 +77,14 @@ export default async function MyTailorPage({ params }: Props) {
       <Link href="/account" className="mb-2 inline-flex min-h-[40px] items-center text-[14px] text-emerald underline underline-offset-2">
         {tAcc("backToAccount")}
       </Link>
-      <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px]">{t("title")}</h1>
+      <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px] flex items-center gap-3">
+          <AccountMedal name="tailor" />{t("title")}</h1>
       <p className="m-0 mb-4 text-[14px] text-muted">{t("intro")}</p>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card labelledBy="mine">
-          <h2 id="mine" className="m-0 mb-2 text-[16px] font-semibold text-emerald">
+          <h2 id="mine" className="m-0 mb-2 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="tailor" />
             {t("mineTitle")}
           </h2>
           {chosen ? (
@@ -102,7 +105,8 @@ export default async function MyTailorPage({ params }: Props) {
         </Card>
 
         <Card labelledBy="measure">
-          <h2 id="measure" className="m-0 text-[16px] font-semibold text-emerald">
+          <h2 id="measure" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="claim" />
             {t("measurementsTitle")}
           </h2>
           <p className="mb-3 mt-1 text-[13px] text-muted">{t("measurementsIntro")}</p>
@@ -110,7 +114,8 @@ export default async function MyTailorPage({ params }: Props) {
         </Card>
 
         <Card labelledBy="network" className="md:col-span-2">
-          <h2 id="network" className="m-0 text-[16px] font-semibold text-emerald">
+          <h2 id="network" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="tailor" />
             {t("networkTitle")}
           </h2>
           <p className="mb-2 mt-1 text-[13px] text-muted">{myArea ? t("networkIntroArea", { area: areaLabel(myArea) }) : t("networkIntro")}</p>

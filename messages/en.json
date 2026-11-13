@@ -15,7 +15,9 @@
     "account": "My Thaanora: sign in",
     "accountSignedIn": "My Thaanora",
     "notifications": "Notifications: {count, plural, =0 {none new} one {# new} other {# new}}",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "accountShort": "Account",
+    "accountLabel": "My account"
   },
   "Footer": {
     "brandDesc": "Original Pakistani unstitched suits for women across Riyadh. Every order is confirmed on WhatsApp before dispatch.",

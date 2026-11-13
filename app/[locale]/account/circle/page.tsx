@@ -7,6 +7,7 @@ import CircleStatus from "@/components/account/CircleStatus";
 import { getAccount } from "@/lib/customer/account";
 import { getPerks, myDiscountHistory } from "@/lib/customer/perks";
 import { getLiveCampaigns } from "@/lib/campaigns";
+import AccountIcon, { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -59,13 +60,15 @@ export default async function CirclePage({ params }: Props) {
       </Link>
       <div className="mb-4">
         <p className="m-0 font-[family-name:var(--font-cinzel)] text-[12px] tracking-[0.16em] text-gold-ink">{t("eyebrow")}</p>
-        <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px]">{t("pageTitle")}</h1>
+        <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px] flex items-center gap-3">
+          <AccountMedal name="circle" />{t("pageTitle")}</h1>
         <p className="m-0 text-[14px] text-muted">{t("intro")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card labelledBy="my-level">
-          <h2 id="my-level" className="m-0 mb-3 text-[16px] font-semibold text-emerald">
+          <h2 id="my-level" className="m-0 mb-3 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="circle" />
             {t("myLevel")}
           </h2>
           <CircleStatus perks={perks} />
@@ -83,12 +86,14 @@ export default async function CirclePage({ params }: Props) {
 
         {b && (
           <Card labelledBy="birthday">
-            <h2 id="birthday" className="m-0 text-[16px] font-semibold text-emerald">
+            <h2 id="birthday" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="birthday" />
               {t("birthdayTitle")}
             </h2>
             {b.open && !b.used ? (
-              <p className="m-0 mt-2 rounded-xl border border-rani/30 bg-[#FBEFF3] px-3 py-2.5 text-[14px] text-[#7A1238]">
-                {t("birthdayReady", { pct: b.pct, end: day(b.end) })}
+              <p className="m-0 mt-2 flex items-center gap-3 rounded-xl border border-rani/30 bg-[#FBEFF3] px-3 py-2.5 text-[14px] text-[#7A1238]">
+                <AccountIcon name="gift" size={30} />
+                <span>{t("birthdayReady", { pct: b.pct, end: day(b.end) })}</span>
               </p>
             ) : (
               <p className="m-0 mt-2 text-[14px]">{b.used ? t("birthdayUsed", { date: day(b.date) }) : t("birthdayWindow", { pct: b.pct, start: day(b.start), end: day(b.end) })}</p>
@@ -98,7 +103,8 @@ export default async function CirclePage({ params }: Props) {
         )}
         {!c.birthday && (
           <Card labelledBy="birthday">
-            <h2 id="birthday" className="m-0 text-[16px] font-semibold text-emerald">
+            <h2 id="birthday" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="birthday" />
               {t("birthdayTitle")}
             </h2>
             <p className="m-0 mt-2 text-[14px]">{t("birthdayAdd")}</p>
@@ -109,7 +115,8 @@ export default async function CirclePage({ params }: Props) {
         )}
 
         <Card labelledBy="offers">
-          <h2 id="offers" className="m-0 text-[16px] font-semibold text-emerald">
+          <h2 id="offers" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="offers" />
             {t("offersTitle")}
           </h2>
           {perks.offers.length ? (
@@ -146,7 +153,8 @@ export default async function CirclePage({ params }: Props) {
         </Card>
 
         <Card labelledBy="how">
-          <h2 id="how" className="m-0 text-[16px] font-semibold text-emerald">
+          <h2 id="how" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="info" />
             {t("howTitle")}
           </h2>
           <ul className="m-0 mt-2 flex list-disc flex-col gap-1.5 ps-5 text-[14px]">
@@ -157,7 +165,8 @@ export default async function CirclePage({ params }: Props) {
         </Card>
 
         <Card labelledBy="levels" className="md:col-span-2">
-          <h2 id="levels" className="m-0 text-[16px] font-semibold text-emerald">
+          <h2 id="levels" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="circle" />
             {t("levelsTitle")}
           </h2>
           <ul className="m-0 mt-3 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-3">
@@ -183,7 +192,8 @@ export default async function CirclePage({ params }: Props) {
 
         {history.length > 0 && (
           <Card labelledBy="history" className="md:col-span-2">
-            <h2 id="history" className="m-0 text-[16px] font-semibold text-emerald">
+            <h2 id="history" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="gift" />
               {t("historyTitle")}
             </h2>
             <ul className="m-0 mt-2 flex list-none flex-col p-0">

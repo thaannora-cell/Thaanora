@@ -8,6 +8,7 @@ import { getAccount } from "@/lib/customer/account";
 import { listNotifications, notificationPrefs } from "@/lib/customer/notifications";
 import type { NotificationRow } from "@/lib/notifications";
 import { markAllRead, openNotification } from "../actions";
+import AccountIcon, { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -79,7 +80,8 @@ export default async function NotificationsPage({ params }: Props) {
       </Link>
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px]">{t("title")}</h1>
+          <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px] flex items-center gap-3">
+          <AccountMedal name="notifications" />{t("title")}</h1>
           <p className="m-0 text-[14px] text-muted">{t("unread", { count: unread })}</p>
         </div>
         {unread > 0 && (
@@ -125,7 +127,8 @@ export default async function NotificationsPage({ params }: Props) {
         </Card>
 
         <Card labelledBy="prefs">
-          <h2 id="prefs" className="m-0 text-[16px] font-semibold text-emerald">
+          <h2 id="prefs" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="notifications" />
             {t("prefsTitle")}
           </h2>
           <p className="mb-2 mt-1 text-[13px] text-muted">{t.rich("prefsIntro", { phone: `0${account.customer.phone.slice(4)}`, b: (c) => <bdi dir="ltr">{c}</bdi> })}</p>

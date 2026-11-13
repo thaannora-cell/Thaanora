@@ -12,6 +12,7 @@ import { myOrders } from "@/lib/customer/orders";
 import { unreadCount } from "@/lib/customer/notifications";
 import { customerSignOut } from "./actions";
 import { isLocale, safeNextPath } from "@/lib/site-gate";
+import AccountIcon, { AccountMedal } from "@/components/account/AccountIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -79,7 +80,8 @@ export default async function AccountHome({ params, searchParams }: Props) {
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
           <p className="m-0 font-[family-name:var(--font-cinzel)] text-[12px] tracking-[0.16em] text-gold-ink">{t("title")}</p>
-          <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px]">
+          <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[32px] font-semibold leading-tight text-emerald md:text-[38px] flex items-center gap-3">
+          <AccountMedal name="home" />
             {t("hello", { name: c.name.split(/\s+/)[0] })}
           </h1>
           <p className="m-0 text-[14px] text-muted">{sp.welcome ? t("welcomeDone") : t("overviewIntro")}</p>
@@ -94,14 +96,15 @@ export default async function AccountHome({ params, searchParams }: Props) {
 
       <nav aria-label={t("quickLinks")} className="mb-4 flex flex-wrap gap-2">
         {([
-          ["/account/orders", t("allOrders")],
-          ["/account/circle", t("circleLink")],
-          ["/account/favourites", t("favouritesLink")],
-          ["/account/addresses", t("addressesLink")],
-          ["/account/tailor", t("tailorLink")],
-          ["/account/notifications", t("notificationsLink", { count: unread })],
-        ] as const).map(([href, label]) => (
-          <Link key={href} href={href} className="th-pill inline-flex min-h-[40px] items-center rounded-full border border-line bg-ivory-white px-4 text-[14px] text-emerald no-underline hover:border-gold">
+          ["/account/orders", t("allOrders"), "orders"],
+          ["/account/circle", t("circleLink"), "circle"],
+          ["/account/favourites", t("favouritesLink"), "favourites"],
+          ["/account/addresses", t("addressesLink"), "addresses"],
+          ["/account/tailor", t("tailorLink"), "tailor"],
+          ["/account/notifications", t("notificationsLink", { count: unread }), "notifications"],
+        ] as const).map(([href, label, icon]) => (
+          <Link key={href} href={href} className="th-pill inline-flex min-h-[40px] items-center gap-2 rounded-full border border-line bg-ivory-white px-3.5 text-[14px] text-emerald no-underline hover:border-gold">
+            <AccountIcon name={icon} size={18} />
             {label}
           </Link>
         ))}
@@ -110,7 +113,8 @@ export default async function AccountHome({ params, searchParams }: Props) {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card labelledBy="latest">
           <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 id="latest" className="m-0 text-[16px] font-semibold text-emerald">
+            <h2 id="latest" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="orders" />
               {t("latestTitle")}
             </h2>
             {latest && (
@@ -140,7 +144,8 @@ export default async function AccountHome({ params, searchParams }: Props) {
 
         <Card labelledBy="details">
           <div className="mb-1 flex items-center justify-between gap-2">
-            <h2 id="details" className="m-0 text-[16px] font-semibold text-emerald">
+            <h2 id="details" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="profile" />
               {t("detailsTitle")}
             </h2>
             <Link href="/account/profile" className="min-h-[36px] text-[14px] text-emerald underline underline-offset-2">
@@ -157,7 +162,8 @@ export default async function AccountHome({ params, searchParams }: Props) {
 
         <Card labelledBy="circle" className="md:col-span-2">
           <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 id="circle" className="m-0 text-[16px] font-semibold text-emerald">
+            <h2 id="circle" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="circle" />
               {tCircle("pageTitle")}
             </h2>
             <Link href="/account/circle" className="min-h-[36px] text-[14px] text-emerald underline underline-offset-2">
@@ -166,8 +172,9 @@ export default async function AccountHome({ params, searchParams }: Props) {
           </div>
           <CircleStatus perks={perks} compact />
           {(giftReady || perks.offers.length > 0) && (
-            <p className="m-0 mt-3 rounded-xl border border-rani/30 bg-[#FBEFF3] px-3 py-2.5 text-[14px] text-[#7A1238]">
-              {giftReady ? tCircle("birthdayReadyShort", { pct: giftReady.pct }) : tCircle("offersWaiting", { count: perks.offers.length })}
+            <p className="m-0 mt-3 flex items-center gap-2.5 rounded-xl border border-rani/30 bg-[#FBEFF3] px-3 py-2.5 text-[14px] text-[#7A1238]">
+              <AccountIcon name={giftReady ? "birthday" : "gift"} size={26} />
+              <span>{giftReady ? tCircle("birthdayReadyShort", { pct: giftReady.pct }) : tCircle("offersWaiting", { count: perks.offers.length })}</span>
             </p>
           )}
         </Card>
@@ -175,7 +182,8 @@ export default async function AccountHome({ params, searchParams }: Props) {
         <PickedForYou customerId={c.id} locale={locale} />
 
         <Card labelledBy="claim" className="md:col-span-2">
-          <h2 id="claim" className="m-0 text-[16px] font-semibold text-emerald">
+          <h2 id="claim" className="m-0 text-[16px] font-semibold text-emerald flex items-center gap-2">
+            <AccountIcon name="claim" />
             {t("claimTitle")}
           </h2>
           <p className="mb-3 mt-1 text-[14px] text-muted">{t("claimIntro")}</p>
