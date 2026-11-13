@@ -18,16 +18,17 @@ export type ProductsResult =
 export async function getVisibleProducts(campaigns?: LiveCampaign[]): Promise<ProductsResult> {
   const supabase = getPublicClient();
   if (!supabase) return { status: "not_configured" };
-  const [{ data, error }, live] = await Promise.all([
+  const read = (cols: string) =>
     supabase
       .from("products")
-      .select(`${PUBLIC_PRODUCT_COLUMNS}, product_images (storage_path, alt, width, height, sort_order)`)
+      .select(`${cols}, product_images (storage_path, alt, width, height, sort_order)`)
       .eq("visible", true)
       .order("sort_order")
-      .order("sort_order", { referencedTable: "product_images" }),
-    campaigns ?? getLiveCampaigns(supabase),
-  ]);
+      .order("sort_order", { referencedTable: "product_images" });
+  const [first, live] = await Promise.all([read(`${PUBLIC_PRODUCT_COLUMNS}, on_rack`), campaigns ?? getLiveCampaigns(supabase)]);
+  // Before the rack migration has run, on_rack doesn't exist yet: read without it (nothing on the rack).
+  const { data, error } = first.error?.code === "42703" ? await read(PUBLIC_PRODUCT_COLUMNS) : first;
   if (error) return { status: "error", message: error.message };
   const products = (data ?? []) as unknown as PublicProduct[];
-  return { status: "ok", products: products.map((p) => ({ ...p, sale_pct: campaignSalePct(p, live) })) };
+  return { status: "ok", products: products.map((p) => ({ ...p, on_rack: p.on_rack === true, sale_pct: campaignSalePct(p, live) })) };
 }

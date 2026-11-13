@@ -4,10 +4,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import AccountShell, { Card } from "@/components/account/AccountShell";
 import SignInForm from "@/components/account/SignInForm";
 import { getAccount } from "@/lib/customer/account";
+import { isLocale, safeNextPath } from "@/lib/site-gate";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ error?: string }> };
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ error?: string; next?: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -18,9 +19,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AccountSignIn({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const account = await getAccount();
-  if (account.state !== "guest") redirect(`/${locale}/account`);
-  const [t, sp] = [await getTranslations("Account"), await searchParams];
+  const [account, sp] = await Promise.all([getAccount(), searchParams]);
+  const next = sp.next && isLocale(locale) ? safeNextPath(sp.next, locale) : null;
+  if (account.state !== "guest") redirect(`/${locale}/account${next ? `?next=${encodeURIComponent(next)}` : ""}`);
+  const t = await getTranslations("Account");
 
   return (
     <AccountShell narrow>
@@ -32,7 +34,8 @@ export default async function AccountSignIn({ params, searchParams }: Props) {
           {t("signInTitle")}
         </h1>
         <p className="mb-4 mt-1 text-center text-[14px] text-muted">{t("signInIntro")}</p>
-        <SignInForm linkFailed={sp.error === "link"} />
+        {next && <p className="mb-3 mt-0 rounded-xl bg-[#FBF3E6] px-3 py-2 text-center text-[13px] text-emerald">{t("toFinishOrder")}</p>}
+        <SignInForm linkFailed={sp.error === "link"} next={next} />
         <p className="mb-0 mt-4 border-t border-line pt-3 text-center text-[13px] text-muted">{t("guestNote")}</p>
       </Card>
     </AccountShell>

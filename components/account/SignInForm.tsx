@@ -8,7 +8,7 @@ const field = "th-field min-h-[50px] text-[16px]";
 const linkBtn = "min-h-[40px] text-emerald underline underline-offset-2 disabled:opacity-60";
 
 // Step 1: email → Step 2: the 6-digit code from the email. New emails become accounts.
-export default function SignInForm({ linkFailed = false }: { linkFailed?: boolean }) {
+export default function SignInForm({ linkFailed = false, next = null }: { linkFailed?: boolean; next?: string | null }) {
   const t = useTranslations("Account");
   const locale = useLocale();
   const [state, act, busy] = useActionState<CustomerSignInState, FormData>(
@@ -32,6 +32,7 @@ export default function SignInForm({ linkFailed = false }: { linkFailed?: boolea
       <form action={act} className="flex flex-col gap-3">
         <input type="hidden" name="intent" value="send" />
         <input type="hidden" name="locale" value={locale} />
+        {next && <input type="hidden" name="next" value={next} />}
         <label className="flex flex-col gap-1.5 text-[13px] text-muted">
           {t("email")}
           <input name="email" type="email" inputMode="email" autoComplete="email" required dir="ltr" defaultValue={state.email ?? ""} className={`${field} text-start`} />
@@ -48,6 +49,7 @@ export default function SignInForm({ linkFailed = false }: { linkFailed?: boolea
     <form action={act} className="flex flex-col gap-3">
       <input type="hidden" name="email" value={state.email} />
       <input type="hidden" name="locale" value={locale} />
+      {next && <input type="hidden" name="next" value={next} />}
       <p className="m-0 text-[14px] text-muted" aria-live="polite">
         {t.rich("codeIntro", { email: state.email, b: (c) => <bdi dir="ltr" className="font-medium text-emerald">{c}</bdi> })}
       </p>

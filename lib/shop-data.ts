@@ -24,7 +24,7 @@ export async function getWhatsappNumber(): Promise<string | null> {
 }
 
 // Prices include VAT at vat_rate_pct (15%). At 0 the site hides all VAT wording.
-const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 15, tailorDiscountPct: 10 };
+const DEFAULTS: CheckoutSettings = { areas: [], giftBoxFee: 15, vatPct: 15, tailorDiscountPct: 10, requireSignIn: false };
 
 // Public settings only (RLS hides the private ones such as the PKR rate).
 export async function getCheckoutSettings(): Promise<CheckoutSettings> {
@@ -33,7 +33,7 @@ export async function getCheckoutSettings(): Promise<CheckoutSettings> {
   const { data } = await supabase
     .from("settings")
     .select("key, value")
-    .in("key", ["delivery_fees", "gift_box_fee_sar", "vat_rate_pct", "tailor_member_discount_pct"]);
+    .in("key", ["delivery_fees", "gift_box_fee_sar", "vat_rate_pct", "tailor_member_discount_pct", "require_signin_to_order"]);
   const get = (k: string) => data?.find((r) => r.key === k)?.value as unknown;
 
   const fees = get("delivery_fees");
@@ -51,6 +51,8 @@ export async function getCheckoutSettings(): Promise<CheckoutSettings> {
     giftBoxFee: num(get("gift_box_fee_sar"), DEFAULTS.giftBoxFee),
     vatPct: num(get("vat_rate_pct"), DEFAULTS.vatPct),
     tailorDiscountPct: num(get("tailor_member_discount_pct"), DEFAULTS.tailorDiscountPct),
+    // "Ask customers to sign in before ordering" (back office Settings); off until SMS sign-in.
+    requireSignIn: get("require_signin_to_order") === true,
   };
 }
 

@@ -55,6 +55,7 @@ export default function ProductsView({ products, rate, lowLevel, brandOfMonth, l
     s <= 0 ? <span className={`${chip} bg-[#5C635F] text-white`}>0</span> : s <= lowLevel ? <span className={`${chip} bg-[#FBE7EE] text-rani`}>{s}</span> : <span className="tabular-nums">{s}</span>;
   const labels = (p: AdminProduct) => (
     <span className="flex flex-wrap gap-1">
+      {p.on_rack && <span className={`${chip} border border-gold bg-white text-gold-ink`}>{t("labelRack")}</span>}
       {p.is_new && <span className={`${chip} bg-gold text-emerald`}>{t("labelNew")}</span>}
       {p.trending_rank && <span className={`${chip} bg-emerald text-gold-light`}>#{p.trending_rank}</span>}
       {brandOfMonth && p.brand === brandOfMonth && <span className={`${chip} bg-[#EEF2EE] text-emerald`}>{t("labelBrandOfMonth")}</span>}
@@ -85,7 +86,9 @@ export default function ProductsView({ products, rate, lowLevel, brandOfMonth, l
       <div className="mb-[18px] flex flex-wrap items-center gap-3">
         <div className="min-w-0">
           <h1 className="m-0 font-[family-name:var(--font-cormorant)] text-[28px] font-semibold leading-tight text-emerald md:text-[34px]">{t("title")}</h1>
-          <p className="m-0 text-[14px] text-muted">{t("sub", { total: products.length, visible: shown })}</p>
+          <p className="m-0 text-[14px] text-muted">
+            {t("sub", { total: products.length, visible: shown })} · {t("rackCounter", { used: products.filter((p) => p.on_rack).length, max: 17 })}
+          </p>
         </div>
         <div className="flex w-full flex-wrap gap-2 sm:ms-auto sm:w-auto">
           <label className="min-w-0 flex-1 sm:w-[240px] sm:flex-none">

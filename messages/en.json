@@ -14,7 +14,8 @@
     "backToShop": "Back to the shop",
     "account": "My Thaanora: sign in",
     "accountSignedIn": "My Thaanora",
-    "notifications": "Notifications: {count, plural, =0 {none new} one {# new} other {# new}}"
+    "notifications": "Notifications: {count, plural, =0 {none new} one {# new} other {# new}}",
+    "signIn": "Sign in"
   },
   "Footer": {
     "brandDesc": "Original Pakistani unstitched suits for women across Riyadh. Every order is confirmed on WhatsApp before dispatch.",
@@ -99,7 +100,8 @@
     "noMatch": "No fabrics match. Try another colour or brand.",
     "noSaved": "No saved fabrics yet. Tap the heart on any fabric to save it.",
     "loadError": "The fabrics could not be loaded right now. Please refresh in a moment.",
-    "requestAnyDesign": "Request any design"
+    "requestAnyDesign": "Request any design",
+    "rackEmptySeeBelow": "None of these are on the rack right now. See them in the collection below."
   },
   "DevProducts": {
     "title": "Products from the database",
@@ -333,7 +335,11 @@
     "saveOrderTitle": "Save this order",
     "saveOrderText": "Create your account to follow this order and keep your details for next time.",
     "saveOrderCta": "Create your account",
-    "savedToAccount": "This order is saved in My Thaanora."
+    "savedToAccount": "This order is saved in My Thaanora.",
+    "signInTitle": "Sign in to place your order",
+    "signInText": "Your bag and details are saved. After signing in you'll come straight back here.",
+    "signInButton": "Sign in or create an account",
+    "signInNote": "You'll be asked to sign in to place the order."
   },
   "OrderMessage": {
     "greeting": "Hello Thaanora, I would like to order ({orderNo}):",
@@ -636,7 +642,8 @@
     "quickLinks": "My Thaanora sections",
     "favouritesLink": "Favourites",
     "addressesLink": "Addresses",
-    "tailorLink": "My tailor"
+    "tailorLink": "My tailor",
+    "toFinishOrder": "Sign in to finish your order. Your bag is saved."
   },
   "Notifications": {
     "title": "Notifications",
@@ -841,5 +848,22 @@
     "yours": "Your tailor",
     "waHello": "Hello {tailor}, I'm {name}, a Thaanora customer (member discount {pct}%). I'd like to have my suit stitched.",
     "waMeasurements": "My measurements (inches):"
+  },
+  "Collection": {
+    "eyebrow": "More to discover",
+    "title": "The collection",
+    "count": "{count, plural, one {# suit} other {# suits}}",
+    "sort": "Sort",
+    "sortFeatured": "Our order",
+    "sortNew": "New arrivals first",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "new": "New",
+    "soldOut": "Sold out",
+    "fewLeft": "Only {count} left",
+    "open": "Open {name}",
+    "save": "Save {name}",
+    "unsave": "Remove {name} from saved",
+    "showMore": "Show {count} more"
   }
 }

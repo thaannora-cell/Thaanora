@@ -3,17 +3,20 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import AccountShell, { Card } from "@/components/account/AccountShell";
 import ProfileForm from "@/components/account/ProfileForm";
 import { getAccount } from "@/lib/customer/account";
+import { isLocale, safeNextPath } from "@/lib/site-gate";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false } };
 
 // First visit after signing in with a new email: name, mobile, language, birthday.
-export default async function AccountWelcome({ params }: { params: Promise<{ locale: string }> }) {
+export default async function AccountWelcome({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ next?: string }> }) {
   const { locale } = await params;
+  const sp = await searchParams;
+  const next = sp.next && isLocale(locale) ? safeNextPath(sp.next, locale) : null;
   setRequestLocale(locale);
   const account = await getAccount();
   if (account.state === "guest") redirect(`/${locale}/account/sign-in`);
-  if (account.state !== "new") redirect(`/${locale}/account`);
+  if (account.state !== "new") redirect(next ?? `/${locale}/account`);
   const t = await getTranslations("Account");
 
   return (
@@ -26,7 +29,7 @@ export default async function AccountWelcome({ params }: { params: Promise<{ loc
         <p className="mb-4 mt-0 rounded-xl bg-[#F4F7F4] px-3 py-2 text-[13px] text-emerald">
           {t.rich("accountFor", { email: account.email || "—", b: (c) => <bdi dir="ltr" className="font-medium">{c}</bdi> })}
         </p>
-        <ProfileForm />
+        <ProfileForm next={next} />
       </Card>
     </AccountShell>
   );

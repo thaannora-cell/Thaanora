@@ -29,6 +29,7 @@ export type PublicProduct = {
   trending_rank: number | null;
   occasions: string[];
   sort_order: number;
+  on_rack: boolean; // on the rack at the top (else in the collection grid)
   product_images: ProductImage[];
 };
 

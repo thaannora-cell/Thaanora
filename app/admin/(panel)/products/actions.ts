@@ -20,6 +20,7 @@ export type ProductInput = {
   trending_rank: number | null;
   is_new: boolean;
   visible: boolean;
+  on_rack: boolean; // on the rack at the top (max 17) or in the collection grid
   colour_family: string;
   colour_hex: string;
   accent_hex: string;
@@ -53,6 +54,7 @@ function validate(p: ProductInput): ActionResult<{ row: Omit<ProductInput, "stoc
     trending_rank: p.trending_rank === null ? null : int(p.trending_rank),
     is_new: Boolean(p.is_new),
     visible: Boolean(p.visible),
+    on_rack: Boolean(p.on_rack),
     colour_family: p.colour_family,
     colour_hex: s(p.colour_hex, 7).toUpperCase(),
     accent_hex: s(p.accent_hex, 7).toUpperCase(),
@@ -96,7 +98,7 @@ export async function saveProduct(id: string | null, input: ProductInput): Promi
     const changes: Partial<typeof v.row> = { ...v.row };
     delete changes.code;
     const { error } = await supabase.from("products").update(changes).eq("id", id);
-    if (error) return { ok: false, error: "saveFailed" };
+    if (error) return /rack_full/.test(error.message) ? { ok: false, error: "rackFull", field: "on_rack" } : { ok: false, error: "saveFailed" };
   } else {
     const { data: last } = await supabase.from("products").select("sort_order").order("sort_order", { ascending: false }).limit(1).maybeSingle();
     const { data, error } = await supabase
@@ -104,7 +106,12 @@ export async function saveProduct(id: string | null, input: ProductInput): Promi
       .insert({ ...v.row, sort_order: (last?.sort_order ?? 0) + 1 })
       .select("id")
       .single();
-    if (error) return error.code === "23505" ? { ok: false, error: "codeTaken", field: "code" } : { ok: false, error: "saveFailed" };
+    if (error)
+      return error.code === "23505"
+        ? { ok: false, error: "codeTaken", field: "code" }
+        : /rack_full/.test(error.message)
+          ? { ok: false, error: "rackFull", field: "on_rack" }
+          : { ok: false, error: "saveFailed" };
     productId = data.id;
   }
 

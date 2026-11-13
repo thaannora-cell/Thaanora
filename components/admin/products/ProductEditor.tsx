@@ -17,6 +17,8 @@ type Photo =
   | { key: string; kind: "saved"; id: string; src: string }
   | { key: string; kind: "new"; blob: Blob; width: number; height: number; src: string };
 
+const RACK_MAX = 17;
+
 type Props = {
   product: AdminProduct | null; // null = add a new product
   products: AdminProduct[];
@@ -36,6 +38,9 @@ export default function ProductEditor({ product, products, rate, onClose, onSave
   const fileRef = useRef<HTMLInputElement>(null);
   const titleId = useId();
   const isNew = product === null;
+  // How full the rack is (17 places), counting the other suits only.
+  const rackOthers = products.filter((p) => p.on_rack && p.id !== product?.id).length;
+  const rackFull = rackOthers >= RACK_MAX;
 
   const [f, setF] = useState(() => ({
     code: product?.code ?? "",
@@ -50,6 +55,7 @@ export default function ProductEditor({ product, products, rate, onClose, onSave
     trending_rank: product?.trending_rank ? String(product.trending_rank) : "",
     is_new: product?.is_new ?? true,
     visible: product?.visible ?? true,
+    on_rack: product?.on_rack ?? false,
     colour_family: product?.colour_family ?? "green",
     colour_hex: product?.colour_hex ?? "#0E3B2E",
     accent_hex: product?.accent_hex ?? "#E6CB8E",
@@ -331,6 +337,22 @@ export default function ProductEditor({ product, products, rate, onClose, onSave
             {t("showOnSite")}
           </label>
         </div>
+
+        {/* Where it shows on the website: the rack at the top (max 17) or the collection grid below. */}
+        <fieldset className="m-0 flex flex-col gap-1.5 border-0 p-0">
+          <legend className="mb-1 p-0 text-[13px] text-muted">{t("placeLegend")}</legend>
+          <div className="flex flex-wrap gap-2">
+            {([true, false] as const).map((rack) => (
+              <label key={String(rack)} className="flex min-h-[38px] items-center gap-1.5 rounded-full border border-[#E1D8C6] bg-white px-3 text-[14px] text-emerald">
+                <input type="radio" name="on_rack" checked={f.on_rack === rack} onChange={() => set("on_rack", rack)} />
+                {rack ? t("placeRack") : t("placeGrid")}
+              </label>
+            ))}
+          </div>
+          <small className={`text-[12px] ${rackFull && !product?.on_rack && f.on_rack ? "text-rani" : "text-muted"}`}>
+            {rackFull && f.on_rack && !product?.on_rack ? t("errors.rackFull") : t("rackUsed", { used: rackOthers + (f.on_rack ? 1 : 0), max: RACK_MAX })}
+          </small>
+        </fieldset>
 
         {error && (
           <p role="alert" className="m-0 rounded-xl border border-rani/30 bg-[#FBE7EE] px-3 py-2.5 text-[14px] text-rani">

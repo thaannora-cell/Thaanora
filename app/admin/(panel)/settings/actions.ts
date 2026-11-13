@@ -17,6 +17,7 @@ const PUBLIC: Record<string, boolean> = {
   pkr_per_sar: false,
   low_stock_level: false,
   customer_signin_method: true,
+  require_signin_to_order: true,
 };
 const HOSTS = { instagram: "instagram.com", tiktok: "tiktok.com", snapchat: "snapchat.com" } as const;
 
@@ -96,6 +97,7 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
     pkr_per_sar: Math.round(rate * 100) / 100,
     low_stock_level: low,
     customer_signin_method: method,
+    require_signin_to_order: form.get("requireSignIn") === "on",
   };
   for (const [key, value] of Object.entries(values)) {
     const { error, count } = await supabase.from("settings").update({ value }, { count: "exact" }).eq("key", key);

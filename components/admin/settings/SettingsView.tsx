@@ -140,6 +140,13 @@ export default function SettingsView({ form: s }: { form: SettingsForm }) {
             </select>
           </label>
           <p className="m-0 mt-2 text-[12px] text-muted">{t("signinHint")}</p>
+          <label className="mt-3 flex items-start gap-2.5 text-[14px] text-ink">
+            <input type="checkbox" name="requireSignIn" defaultChecked={s.requireSignIn} className="mt-1" />
+            <span>
+              {t("requireSignIn")}
+              <small className="block text-[12px] text-muted">{t("requireSignInHint")}</small>
+            </span>
+          </label>
         </section>
       </div>
 

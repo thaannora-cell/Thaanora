@@ -15,7 +15,7 @@ const LANGS = [
 const label = "flex flex-col gap-1.5 text-[13px] text-muted";
 
 // Name, mobile, language and birthday. "create" right after the first sign-in; "edit" from the overview.
-export default function ProfileForm({ customer = null }: { customer?: Customer | null }) {
+export default function ProfileForm({ customer = null, next = null }: { customer?: Customer | null; next?: string | null }) {
   const t = useTranslations("Account");
   const locale = useLocale();
   const [state, act, busy] = useActionState<ProfileState, FormData>(saveProfile, {});
@@ -39,6 +39,7 @@ export default function ProfileForm({ customer = null }: { customer?: Customer |
   return (
     <form action={act} className="flex flex-col gap-3.5" key={`${start.name}|${start.phone}`}>
       <input type="hidden" name="locale" value={locale} />
+      {next && <input type="hidden" name="next" value={next} />}
       <label className={label}>
         {t("name")}
         <input name="name" required maxLength={80} autoComplete="name" defaultValue={start.name} aria-invalid={bad("name")} className="th-field text-[16px]" />

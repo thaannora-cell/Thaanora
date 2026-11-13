@@ -17,6 +17,8 @@ export default function SendOrder() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ErrorKind | null>(null);
   const [copied, setCopied] = useState(false);
+  // "Ask customers to sign in before ordering" (back office Settings) and she isn't signed in.
+  const [askSignIn, setAskSignIn] = useState(false);
 
   if (!sel) return null;
   const { checkout, updateCheckout } = sel;
@@ -69,9 +71,12 @@ export default function SendOrder() {
 
   if (sel.lines.length === 0) return null;
 
+  const mustSignIn = sel.settings.requireSignIn && !sel.customer;
+
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (busy) return;
+    if (mustSignIn) return setAskSignIn(true);
     if (!checkout.area) return setError("area");
     if (checkout.customerName.trim().length < 2) return setError("name");
     setBusy(true);
@@ -100,6 +105,11 @@ export default function SendOrder() {
         whatsappUrl?: string | null;
         linked?: boolean;
       };
+      if (data.error === "signin") {
+        tab?.close();
+        setAskSignIn(true);
+        return;
+      }
       if (!res.ok || !data.ok || !data.orderNo || !data.message) {
         tab?.close();
         const known: ErrorKind[] = ["name", "phone", "area", "stock", "too_many"];
@@ -168,6 +178,16 @@ export default function SendOrder() {
       <button type="submit" disabled={busy || sel.lines.length === 0} className="th-btn th-btn-pink w-full disabled:opacity-60">
         {busy ? t("sending") : tSel("orderButton")}
       </button>
+      {askSignIn && (
+        <div role="status" className="flex flex-col gap-2 rounded-[14px] border border-gold bg-[#FBF3E6] p-3">
+          <p className="m-0 text-[14px] font-medium text-emerald">{t("signInTitle")}</p>
+          <p className="m-0 text-[13px] text-muted">{t("signInText")}</p>
+          <Link href={`/account/sign-in?next=${encodeURIComponent(`/${locale}?bag=open`)}`} className="th-btn th-btn-pink self-start no-underline">
+            {t("signInButton")}
+          </Link>
+        </div>
+      )}
+      {mustSignIn && !askSignIn && <p className="m-0 text-[12px] text-muted">{t("signInNote")}</p>}
       <p className="m-0 text-[12px] text-muted">{t("privacy")}</p>
     </form>
   );

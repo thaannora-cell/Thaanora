@@ -14,6 +14,7 @@ import { DEFAULT_FILTERS, brandsOf, filterProducts, type Filters } from "@/lib/f
 import { salePrice, type PublicProduct } from "@/lib/product";
 import { useSelection } from "./selection/SelectionProvider";
 import { openSourcing } from "./SourcingDialog";
+import CollectionGrid from "./CollectionGrid";
 import { setFavourite, syncFavourites } from "@/app/[locale]/account/actions";
 
 const SAVED_KEY = "th_saved";
@@ -38,6 +39,9 @@ function writeSaved(codes: string[]) {
     // Private mode or storage blocked: saving still works for this visit.
   }
 }
+
+// The rack holds 17 suits; the rest are in the collection grid below.
+const RACK_SIZE = 17;
 
 const toggle = (list: string[], code: string) => (list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
 
@@ -145,6 +149,18 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
 
   const brands = useMemo(() => brandsOf(products), [products]);
   const shown = useMemo(() => filterProducts(products, filters, saved), [products, filters, saved]);
+  // Rack: the suits marked "Rack" in the back office (or, if none are marked yet, the first 17 in product
+  // order). Collection: every other matching suit. A collection suit she opens hangs at the front of the
+  // rack, open, until she opens another strip.
+  const anyOnRack = useMemo(() => products.some((p) => p.on_rack), [products]);
+  const rackBase = useMemo(() => (anyOnRack ? shown.filter((p) => p.on_rack) : shown).slice(0, RACK_SIZE), [shown, anyOnRack]);
+  const collection = useMemo(() => shown.filter((p) => !rackBase.includes(p)), [shown, rackBase]);
+  const visiting = activeCode && !rackBase.some((p) => p.code === activeCode) ? products.find((p) => p.code === activeCode) : undefined;
+  const rack = visiting ? [visiting, ...rackBase] : rackBase;
+  const openFromCollection = (code: string) => {
+    setActiveCode(code);
+    rackAnchor.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  };
   const dialogProduct = dialog ? products.find((p) => p.code === dialog.code) ?? null : null;
 
   const toggleSaved = (code: string) => {
@@ -205,7 +221,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
 
       {!loadFailed && (
         <FabricRack
-          products={shown}
+          products={rack}
           activeCode={activeCode}
           onActivate={setActiveCode}
           chosen={chosen}
@@ -215,9 +231,9 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
           onToggleSaved={toggleSaved}
           onToggleChosen={toggleChosen}
           onAction={onAction}
-          emptyMessage={filters.occasion === "saved" ? t("noSaved") : t("noMatch")}
+          emptyMessage={collection.length > 0 ? t("rackEmptySeeBelow") : filters.occasion === "saved" ? t("noSaved") : t("noMatch")}
           emptyAction={
-            filters.occasion === "saved" ? undefined : (
+            filters.occasion === "saved" || collection.length > 0 ? undefined : (
               <button type="button" className="th-btn mt-3" onClick={openSourcing}>
                 {t("requestAnyDesign")}
               </button>
@@ -225,6 +241,8 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
           }
         />
       )}
+
+      {!loadFailed && <CollectionGrid products={collection} saved={saved} onOpen={openFromCollection} onToggleSaved={toggleSaved} />}
 
       {dialogProduct && (
         <>

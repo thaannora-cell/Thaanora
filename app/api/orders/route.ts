@@ -19,7 +19,7 @@ import { getSessionClient } from "@/lib/supabase/server";
 const MAX_LINES = 20;
 const MAX_QTY = 10;
 
-type Fail = "invalid" | "name" | "phone" | "area" | "stock" | "unavailable";
+type Fail = "invalid" | "name" | "phone" | "area" | "stock" | "unavailable" | "signin";
 const fail = (error: Fail, status = 400, extra: Record<string, unknown> = {}) =>
   NextResponse.json({ ok: false, error, ...extra }, { status });
 
@@ -72,6 +72,8 @@ export async function POST(req: NextRequest) {
       .eq("visible", true),
     getLiveCampaigns(supabase),
   ]);
+  // "Ask customers to sign in before ordering" (back office Settings): guests are refused here too.
+  if (settings.requireSignIn && !(await currentCustomerId())) return fail("signin", 401);
 
   const area = settings.areas.find((a) => a.area === checkout.area);
   if (!area) return fail("area");

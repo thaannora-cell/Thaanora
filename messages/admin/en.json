@@ -201,8 +201,15 @@
         "photoUnreadable": "{name} couldn't be opened. Try a JPG or PNG.",
         "photoTooBig": "A photo is too large even after resizing.",
         "photoFailed": "A photo couldn't be uploaded.",
-        "somePhotos": "Saved, but {count, plural, one {# photo} other {# photos}} couldn't be uploaded. Try adding again."
-      }
+        "somePhotos": "Saved, but {count, plural, one {# photo} other {# photos}} couldn't be uploaded. Try adding again.",
+        "rackFull": "The rack is full (17). Move a suit to the collection first."
+      },
+      "placeLegend": "Where it shows on the website",
+      "placeRack": "Rack (top, max 17)",
+      "placeGrid": "Collection grid (below)",
+      "rackUsed": "Rack: {used} of {max} places used",
+      "labelRack": "Rack",
+      "rackCounter": "Rack {used}/{max}"
     },
     "stock": {
       "title": "Stock",
@@ -668,7 +675,9 @@
         "sms": "SMS code (at go-live)",
         "both": "Email or SMS (at go-live)"
       },
-      "signinHint": "SMS sign-in needs the Taqnyat connection, planned for go-live. Until then customers sign in with a 6-digit email code."
+      "signinHint": "SMS sign-in needs the Taqnyat connection, planned for go-live. Until then customers sign in with a 6-digit email code.",
+      "requireSignIn": "Ask customers to sign in before ordering",
+      "requireSignInHint": "Keep this off while sign-in is by email code. Turn it on at go-live, once SMS sign-in works."
     },
     "staff": {
       "title": "Staff & access",

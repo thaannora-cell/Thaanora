@@ -8,10 +8,11 @@ import { getAccount } from "@/lib/customer/account";
 import { myOrders } from "@/lib/customer/orders";
 import { unreadCount } from "@/lib/customer/notifications";
 import { customerSignOut } from "./actions";
+import { isLocale, safeNextPath } from "@/lib/site-gate";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ welcome?: string }> };
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ welcome?: string; next?: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -30,9 +31,13 @@ const STATUS_TONE: Record<string, string> = {
 export default async function AccountHome({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const account = await getAccount();
-  if (account.state === "guest") redirect(`/${locale}/account/sign-in`);
-  if (account.state === "new") redirect(`/${locale}/account/welcome`);
+  const [account, early] = await Promise.all([getAccount(), searchParams]);
+  // Came from "sign in to place your order": go back there (new customers fill in Welcome first).
+  const next = early.next && isLocale(locale) ? safeNextPath(early.next, locale) : null;
+  const nextQ = next ? `?next=${encodeURIComponent(next)}` : "";
+  if (account.state === "guest") redirect(`/${locale}/account/sign-in${nextQ}`);
+  if (account.state === "new") redirect(`/${locale}/account/welcome${nextQ}`);
+  if (account.state === "customer" && next) redirect(next);
   const [t, tRack, sp] = [await getTranslations("Account"), await getTranslations("Rack"), await searchParams];
   const signOut = customerSignOut.bind(null, locale);
   const signOutButton = (

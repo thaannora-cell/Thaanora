@@ -9,7 +9,7 @@ import { getAccount } from "@/lib/customer/account";
 import { allow } from "@/lib/rate-limit";
 import { siteOrigin } from "@/lib/site-origin";
 import { normaliseSaudiMobile } from "@/lib/phone";
-import { isLocale } from "@/lib/site-gate";
+import { isLocale, safeNextPath } from "@/lib/site-gate";
 import { isNotificationType, notificationHref } from "@/lib/notifications";
 import { favoriteCodes, visibleProductIds } from "@/lib/customer/favorites";
 import { getCheckoutSettings } from "@/lib/shop-data";
@@ -24,12 +24,16 @@ const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const lowerEmail = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim().toLowerCase().slice(0, 200) : "");
 const tooMany = (e: { status?: number; code?: string } | null) => e?.status === 429 || /rate_limit/.test(e?.code ?? "");
 const loc = (v: FormDataEntryValue | null) => (isLocale(v) ? v : "en");
+// Where to go after signing in (e.g. back to the bag): same-site paths only, else nowhere special.
+const nextOf = (v: FormDataEntryValue | null, locale: "en" | "ar" | "ur" | "hi") => (typeof v === "string" && v ? safeNextPath(v, locale) : null);
+const withNext = (path: string, next: string | null) => (next ? `${path}?next=${encodeURIComponent(next)}` : path);
 
 // One action for the whole sign-in: intent = send | resend | verify | back. New emails get an account
 // (that's the sign-up); the profile is filled in on the next page.
 export async function customerSignIn(_prev: CustomerSignInState, form: FormData): Promise<CustomerSignInState> {
   const intent = String(form.get("intent") ?? "send");
   const locale = loc(form.get("locale"));
+  const next = nextOf(form.get("next"), locale);
   const email = lowerEmail(form.get("email"));
   if (intent === "back") return { step: "email", email };
   if (!EMAIL.test(email)) return { step: "email", error: "badEmail", email };
@@ -45,13 +49,13 @@ export async function customerSignIn(_prev: CustomerSignInState, form: FormData)
     if (token.length < 6) return { step: "code", email, error: "badCode" };
     const { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
     if (error) return { step: "code", email, error: tooMany(error) ? "tooMany" : "badCode" };
-    redirect(`/${locale}/account`);
+    redirect(withNext(`/${locale}/account`, next));
   }
 
   // The email has the 6-digit code (and a link back to this site, which works in the same browser).
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { shouldCreateUser: true, emailRedirectTo: `${await siteOrigin()}/${locale}/account/auth/callback` },
+    options: { shouldCreateUser: true, emailRedirectTo: withNext(`${await siteOrigin()}/${locale}/account/auth/callback`, next) },
   });
   if (error) console.error("[account sign-in] code not sent:", error.status, error.code, error.message);
   if (tooMany(error)) return intent === "resend" ? { step: "code", email, error: "tooMany" } : { step: "email", email, error: "tooMany" };
@@ -103,7 +107,8 @@ export async function saveProfile(_prev: ProfileState, form: FormData): Promise<
       return { error: "failed", at: Date.now() };
     }
     revalidatePath(`/${locale}`, "layout");
-    redirect(`/${locale}/account?welcome=1`);
+    const next = nextOf(form.get("next"), locale);
+    redirect(next ?? `/${locale}/account?welcome=1`);
   }
   // A proven (SMS-verified) mobile can't be changed here.
   const verified = await db.from("customers").select("phone_verified_at").eq("id", account.customer.id).maybeSingle();

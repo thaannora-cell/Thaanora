@@ -14,7 +14,8 @@
     "backToShop": "العودة إلى المتجر",
     "account": "حسابي: تسجيل الدخول",
     "accountSignedIn": "حسابي في ثانورا",
-    "notifications": "الإشعارات: {count, plural, =0 {لا جديد} other {# جديد}}"
+    "notifications": "الإشعارات: {count, plural, =0 {لا جديد} other {# جديد}}",
+    "signIn": "تسجيل الدخول"
   },
   "Footer": {
     "brandDesc": "أطقم باكستانية أصلية غير مخيطة للسيدات في الرياض. كل طلب يُؤكَّد على واتساب قبل الإرسال.",
@@ -99,7 +100,8 @@
     "noMatch": "لا توجد أقمشة مطابقة. جرّبي لونًا أو ماركة أخرى.",
     "noSaved": "لا توجد أقمشة محفوظة بعد. اضغطي على القلب لحفظ أي قماش.",
     "loadError": "تعذّر تحميل الأقمشة الآن. حدّثي الصفحة بعد قليل.",
-    "requestAnyDesign": "اطلبي أي تصميم"
+    "requestAnyDesign": "اطلبي أي تصميم",
+    "rackEmptySeeBelow": "لا يوجد منها على الرف الآن. تجدينها في المجموعة أدناه."
   },
   "DevProducts": {
     "title": "المنتجات من قاعدة البيانات",
@@ -333,7 +335,11 @@
     "saveOrderTitle": "احفظي هذا الطلب",
     "saveOrderText": "أنشئي حسابكِ لمتابعة هذا الطلب وحفظ بياناتكِ للمرة القادمة.",
     "saveOrderCta": "إنشاء حسابكِ",
-    "savedToAccount": "هذا الطلب محفوظ في حسابكِ."
+    "savedToAccount": "هذا الطلب محفوظ في حسابكِ.",
+    "signInTitle": "سجّلي الدخول لإتمام طلبكِ",
+    "signInText": "حقيبتكِ وبياناتكِ محفوظة. بعد تسجيل الدخول ستعودين إلى هنا مباشرة.",
+    "signInButton": "تسجيل الدخول أو إنشاء حساب",
+    "signInNote": "سيُطلب منكِ تسجيل الدخول لإتمام الطلب."
   },
   "OrderMessage": {
     "greeting": "مرحبًا ثانورا، أودّ طلب ({orderNo}):",
@@ -636,7 +642,8 @@
     "quickLinks": "أقسام حسابي",
     "favouritesLink": "المفضلة",
     "addressesLink": "العناوين",
-    "tailorLink": "خيّاطتي"
+    "tailorLink": "خيّاطتي",
+    "toFinishOrder": "سجّلي الدخول لإتمام طلبكِ. حقيبتكِ محفوظة."
   },
   "Notifications": {
     "title": "الإشعارات",
@@ -841,5 +848,22 @@
     "yours": "خيّاطتكِ",
     "waHello": "مرحبًا {tailor}، أنا {name} من عميلات ثانورا (خصم {pct}%). أرغب في خياطة طقمي.",
     "waMeasurements": "مقاساتي (بالإنش):"
+  },
+  "Collection": {
+    "eyebrow": "المزيد لتكتشفيه",
+    "title": "المجموعة",
+    "count": "{count} طقم",
+    "sort": "ترتيب",
+    "sortFeatured": "ترتيبنا",
+    "sortNew": "الأحدث أولًا",
+    "sortPriceAsc": "السعر: من الأقل",
+    "sortPriceDesc": "السعر: من الأعلى",
+    "new": "جديد",
+    "soldOut": "نفد",
+    "fewLeft": "بقي {count} فقط",
+    "open": "عرض {name}",
+    "save": "حفظ {name}",
+    "unsave": "إزالة {name} من المحفوظات",
+    "showMore": "عرض {count} أخرى"
   }
 }

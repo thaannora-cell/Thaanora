@@ -381,3 +381,8 @@ html[lang="hi"] body { font-family: var(--font-hindi); }
   transform: rotate(-45deg); box-shadow: 0 4px 10px rgba(0,0,0,.25);
 }
 .leaflet-container { font-family: inherit; }
+
+/* ── Hover lift (collection cards) ────────────────────────────────── */
+.th-lift { transition: transform .2s ease, box-shadow .2s ease; }
+.th-lift:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(14,59,46,.12); }
+@media (prefers-reduced-motion: reduce) { .th-lift, .th-lift:hover { transition: none; transform: none; } }
