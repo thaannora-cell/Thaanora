@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { photoUrl, salePrice, stockState, type PublicProduct } from "@/lib/product";
 
 type Props = {
@@ -14,7 +15,7 @@ type Props = {
 };
 
 // One suit as a card (collection grid, Trending, Our picks, For you): photo, tags, brand, name, price,
-// stock and the heart. Tapping it opens the pop-up with the shop actions.
+// stock and the heart. Tapping it opens the pop-up with the shop actions; it is also a link to the suit page.
 export default function ProductCard({ product: p, saved, onOpen, onToggleSaved, note, sizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw" }: Props) {
   const t = useTranslations("Collection");
   const tRack = useTranslations("Rack");
@@ -24,7 +25,17 @@ export default function ProductCard({ product: p, saved, onOpen, onToggleSaved, 
 
   return (
     <div className="th-lift relative flex h-full flex-col overflow-hidden rounded-[18px] border border-line bg-ivory-white shadow-[0_6px_18px_rgba(14,59,46,0.06)]">
-      <button type="button" onClick={() => onOpen(p.code)} className="flex flex-1 flex-col text-start" aria-label={t("open", { name: `${p.brand} ${p.name}` })}>
+      {/* A real link to the suit's own page (search engines, open in a new tab); a plain tap opens the pop-up. */}
+      <Link
+        href={`/suits/${encodeURIComponent(p.code)}`}
+        onClick={(e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+          e.preventDefault();
+          onOpen(p.code);
+        }}
+        className="flex flex-1 flex-col text-start text-inherit no-underline"
+        aria-label={t("open", { name: `${p.brand} ${p.name}` })}
+      >
         <span className="relative block aspect-[3/4] w-full overflow-hidden" style={{ background: p.colour_hex }}>
           {photo && <Image src={photoUrl(photo.storage_path)} alt={photo.alt ?? `${p.brand} — ${p.name}`} fill sizes={sizes} className="object-cover object-[center_20%]" />}
           <span className="absolute start-2 top-2 flex flex-col items-start gap-1">
@@ -43,7 +54,7 @@ export default function ProductCard({ product: p, saved, onOpen, onToggleSaved, 
           </span>
           {stock === "low" && <small className="text-[11px] text-rani">{t("fewLeft", { count: p.stock })}</small>}
         </span>
-      </button>
+      </Link>
       <button
         type="button"
         onClick={() => onToggleSaved(p.code)}

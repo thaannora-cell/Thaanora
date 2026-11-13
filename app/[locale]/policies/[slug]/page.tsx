@@ -8,6 +8,8 @@ import WhatsAppHelp from "@/components/storefront/WhatsAppHelp";
 import { getCheckoutSettings, getSiteInfo } from "@/lib/shop-data";
 import { POLICIES, isPolicy, type PolicySlug } from "@/lib/policies";
 import { accountBadge } from "@/lib/customer/account";
+import { returnWindowDays } from "@/lib/customer/returns";
+import { languageLinks } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +21,8 @@ const SECTIONS: Record<PolicySlug, string[]> = {
   terms: ["who", "authentic", "prices", "orders", "colour"],
 };
 
-// Numbers the owner can change later (shown in the draft as plain values).
-const VALUES = { days: 7, refundDays: 5 };
+// Refund timing; the return window comes from back-office Settings (the same rule the shop enforces).
+const REFUND_DAYS = 5;
 
 type Params = { params: Promise<{ locale: string; slug: string }> };
 
@@ -28,7 +30,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isPolicy(slug)) return {};
   const t = await getTranslations({ locale, namespace: "Policies" });
-  return { title: `${t(`${slug}.title`)} · Thaanora` };
+  return { title: `${t(`${slug}.title`)} · Thaanora`, alternates: languageLinks(locale, `/policies/${slug}`) };
 }
 
 export default async function PolicyPage({ params }: Params) {
@@ -36,16 +38,17 @@ export default async function PolicyPage({ params }: Params) {
   if (!isPolicy(slug)) notFound();
   setRequestLocale(locale);
 
-  const [t, tFooter, tAreas, info, settings, account] = await Promise.all([
+  const [t, tFooter, tAreas, info, settings, account, days] = await Promise.all([
     getTranslations("Policies"),
     getTranslations("Footer"),
     getTranslations("Areas"),
     getSiteInfo(),
     getCheckoutSettings(),
     accountBadge(),
+    returnWindowDays(),
   ]);
   const { legalName, nationalNo } = info.business;
-  const vars = { ...VALUES, vat: settings.vatPct, company: legalName, nationalNo: nationalNo || "—" };
+  const vars = { days, refundDays: REFUND_DAYS, vat: settings.vatPct, company: legalName, nationalNo: nationalNo || "—" };
   // "Who we are" needs the company name from settings; prices wording depends on VAT registration.
   const sections = SECTIONS[slug].filter((id) => id !== "who" || legalName);
   const textKey = (id: string) =>

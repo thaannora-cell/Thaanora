@@ -80,5 +80,6 @@ async function admin(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|_vercel|.*\\..*).*)"],
+  // Skips Next's files, anything with a dot (robots.txt, sitemap.xml, icon.svg) and the generated app icon.
+  matcher: ["/((?!_next|_vercel|apple-icon|.*\\..*).*)"],
 };

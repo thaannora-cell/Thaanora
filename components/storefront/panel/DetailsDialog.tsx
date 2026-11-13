@@ -6,20 +6,9 @@ import Modal from "@/components/ui/Modal";
 import { photoUrl, salePrice, stockState, type PublicProduct } from "@/lib/product";
 import { useSelection } from "../selection/SelectionProvider";
 import ReviewsList from "./ReviewsList";
+import { feelKey as feelOf } from "@/lib/fabric-feel";
+import { Link } from "@/i18n/navigation";
 
-const FEEL_KEYS: Record<string, string> = {
-  Khaddar: "khaddar",
-  "Khaddar + shawl": "khaddarShawl",
-  "Light khaddar": "lightKhaddar",
-  "Raw silk": "rawSilk",
-  "Marina viscose": "marina",
-  "Yarn-dyed jacquard": "jacquard",
-  Karandi: "karandi",
-  "Cotton twill": "twill",
-  "Winter blend": "winterBlend",
-  Pashmina: "pashmina",
-  Linen: "linen",
-};
 
 // actions: the shop buttons (add, try on, stitch, share, heart) when opened from the collection grid.
 type Props = { product: PublicProduct; open: boolean; onClose: () => void; actions?: React.ReactNode };
@@ -30,7 +19,7 @@ export default function DetailsDialog({ product: p, open, onClose, actions }: Pr
   const tHome = useTranslations("Home");
   const stock = stockState(p.stock);
   const price = salePrice(p);
-  const feelKey = FEEL_KEYS[p.fabric] ?? "default";
+  const feelKey = feelOf(p.fabric);
   const vatPct = useSelection()?.settings.vatPct ?? 0;
 
   const rows: [string, React.ReactNode][] = [
@@ -93,6 +82,9 @@ export default function DetailsDialog({ product: p, open, onClose, actions }: Pr
 
       <span className="th-caps mt-2 text-[11px] font-medium uppercase tracking-[0.16em] text-gold-ink">{t("reviews")}</span>
       {open && <ReviewsList code={p.code} />}
+      <Link href={`/suits/${encodeURIComponent(p.code)}`} className="self-start text-[14px] font-medium text-emerald underline underline-offset-2">
+        {t("fullPage")}
+      </Link>
     </Modal>
   );
 }

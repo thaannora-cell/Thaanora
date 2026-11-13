@@ -253,7 +253,8 @@
     "starsLabel": "{rating} out of 5 stars",
     "reviewsSummary": "{rating} · {count, plural, one {# review} other {# reviews}}",
     "verifiedBuyer": "bought this suit",
-    "ourReply": "Thaanora:"
+    "ourReply": "Thaanora:",
+    "fullPage": "See the suit's own page"
   },
   "Selection": {
     "trayLabel": "Your selection",
@@ -1103,5 +1104,26 @@
     "rejected": "Hello {name}, this is Thaanora. We're sorry, we can't accept return {returnNo} (order {orderNo}) because:",
     "refunded": "Hello {name}, this is Thaanora. Your refund of {amount} for return {returnNo} has been sent by bank transfer. Thank you!",
     "exchanged": "Hello {name}, this is Thaanora. Your exchange for return {returnNo} is done. Enjoy your new suit!"
+  },
+  "Suit": {
+    "metaTitle": "{name} · {brand} unstitched suit | Thaanora Riyadh",
+    "metaDescription": "{brand} {name}, original Pakistani unstitched {fabric} suit, {price} in Riyadh. Order on WhatsApp, cash on delivery.",
+    "category": "Women's unstitched suits",
+    "breadcrumb": "You are here",
+    "home": "Shop",
+    "inclVat": "incl. {pct}% VAT",
+    "choose": "Choose this suit",
+    "notifyMe": "Notify me when it's back",
+    "ask": "Ask on WhatsApp",
+    "askText": "Hello Thaanora, I'd like to ask about {name} ({code}): {url}",
+    "codLine": "Order on WhatsApp and pay cash on delivery in Riyadh.",
+    "returnsLine": "Uncut, unwashed fabric can be returned within the return window.",
+    "returnsLink": "Returns policy",
+    "moreFrom": "More from {brand}"
+  },
+  "NotFound": {
+    "title": "This page isn't here",
+    "text": "The suit may be sold out or the link may be old. Have a look at what's on the rack now.",
+    "toShop": "Back to the shop"
   }
 }

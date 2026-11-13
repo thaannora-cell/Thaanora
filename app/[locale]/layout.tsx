@@ -7,13 +7,25 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { fontVars } from "@/lib/fonts";
+import { OG_LOCALE, languageLinks, siteUrl, isPrivatePreview } from "@/lib/seo";
 import "../globals.css";
 
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Meta" });
-  return { title: t("title"), description: t("description") };
+  // Shared by every page in this language; pages add their own title, description and links.
+  return {
+    metadataBase: new URL(siteUrl()),
+    title: t("title"),
+    description: t("description"),
+    applicationName: "Thaanora",
+    alternates: languageLinks(locale, ""),
+    openGraph: { type: "website", siteName: "Thaanora · ثانورا", title: t("title"), description: t("description"), locale: OG_LOCALE[locale], url: `/${locale}` },
+    twitter: { card: "summary_large_image", title: t("title"), description: t("description") },
+    robots: isPrivatePreview() ? { index: false, follow: false } : undefined,
+    formatDetection: { telephone: false },
+  };
 }
 
 export default async function LocaleLayout({
