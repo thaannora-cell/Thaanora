@@ -233,8 +233,10 @@
     "willBeStitched": "سلوایا جائے گا",
     "tickToStitch": "سلائی شامل کرنے کے لیے نشان لگائیں",
     "measurementsTitleAccount": "آپ کی ناپ (انچ) · اکاؤنٹ میں محفوظ",
-    "measurementsSavedAccount": "ناپ آپ کے اکاؤنٹ میں محفوظ ہو گئی۔",
-    "myTailor": "میرا درزی"
+    "measurementsSavedAccount": "ناپ محفوظ ہو گئی۔ میرا تھانورا › میرا درزی میں دیکھیں۔",
+    "myTailor": "میرا درزی",
+    "measurementsSaveFailed": "ناپ محفوظ نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+    "savingMeasurements": "محفوظ ہو رہا ہے…"
   },
   "Selection": {
     "trayLabel": "آپ کا انتخاب",

@@ -233,8 +233,10 @@
     "willBeStitched": "सिलवाया जाएगा",
     "tickToStitch": "सिलाई जोड़ने के लिए निशान लगाएँ",
     "measurementsTitleAccount": "आपका नाप (इंच) · अकाउंट में सहेजा",
-    "measurementsSavedAccount": "नाप आपके अकाउंट में सहेज लिया गया।",
-    "myTailor": "मेरा दर्ज़ी"
+    "measurementsSavedAccount": "नाप सहेज लिया गया। माय थानौरा › मेरा दर्ज़ी में देखें।",
+    "myTailor": "मेरा दर्ज़ी",
+    "measurementsSaveFailed": "नाप सहेजा नहीं जा सका। दोबारा कोशिश करें।",
+    "savingMeasurements": "सहेजा जा रहा है…"
   },
   "Selection": {
     "trayLabel": "आपकी पसंद",

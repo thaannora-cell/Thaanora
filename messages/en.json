@@ -233,8 +233,10 @@
     "willBeStitched": "will be stitched",
     "tickToStitch": "tick to add stitching",
     "measurementsTitleAccount": "Your measurements (inches) · saved to your account",
-    "measurementsSavedAccount": "Measurements saved to your account.",
-    "myTailor": "My tailor"
+    "measurementsSavedAccount": "Measurements saved. Find them in My Thaanora › My tailor.",
+    "myTailor": "My tailor",
+    "measurementsSaveFailed": "Couldn't save your measurements. Please try again.",
+    "savingMeasurements": "Saving…"
   },
   "Selection": {
     "trayLabel": "Your selection",

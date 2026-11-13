@@ -58,15 +58,29 @@ export default function StitchDialog({ product, open, onClose, tailors, onToast 
 
   const inArea = tailors.filter((x) => x.area === area);
 
-  const save = (e: React.FormEvent) => {
+  const [saving, setSaving] = useState(false);
+
+  // Saves on this device (and on her account when signed in), shows a short confirmation and, in the
+  // tailor network screen, closes the window. Opened from a suit ("Get it stitched") it stays open so
+  // she can still add the suit with stitching.
+  const save = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       window.localStorage.setItem(KEY, JSON.stringify(m));
     } catch {
       // storage blocked: keep them for this visit only
     }
-    if (sel?.customer) void saveMeasurements(m);
+    if (sel?.customer) {
+      setSaving(true);
+      const r = await saveMeasurements(m);
+      setSaving(false);
+      if (!r.ok) {
+        onToast(t("measurementsSaveFailed"));
+        return;
+      }
+    }
     onToast(t(sel?.customer ? "measurementsSavedAccount" : "measurementsSaved"));
+    if (product === null) onClose();
   };
 
   const steps = [
@@ -173,8 +187,8 @@ export default function StitchDialog({ product, open, onClose, tailors, onToast 
             </select>
           </label>
         </div>
-        <button type="submit" className="th-btn">
-          {t("saveMeasurements")}
+        <button type="submit" disabled={saving} className="th-btn disabled:opacity-60">
+          {saving ? t("savingMeasurements") : t("saveMeasurements")}
         </button>
       </form>
 

@@ -233,8 +233,10 @@
     "willBeStitched": "ستتم خياطته",
     "tickToStitch": "ضعي علامة لإضافة الخياطة",
     "measurementsTitleAccount": "مقاساتكِ (بالإنش) · محفوظة في حسابكِ",
-    "measurementsSavedAccount": "تم حفظ المقاسات في حسابكِ.",
-    "myTailor": "خيّاطتي"
+    "measurementsSavedAccount": "تم حفظ المقاسات. تجدينها في حسابي › خيّاطتي.",
+    "myTailor": "خيّاطتي",
+    "measurementsSaveFailed": "تعذّر حفظ المقاسات. حاولي مجددًا.",
+    "savingMeasurements": "جارٍ الحفظ…"
   },
   "Selection": {
     "trayLabel": "اختياراتكِ",
