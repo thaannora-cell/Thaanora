@@ -8,10 +8,12 @@ import OrderActions from "@/components/account/OrderActions";
 import { getAccount } from "@/lib/customer/account";
 import { myOrder } from "@/lib/customer/orders";
 import AccountIcon from "@/components/account/AccountIcon";
+import ReturnCard from "@/components/account/ReturnCard";
+import { returnableOrder } from "@/lib/customer/returns";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ locale: string; orderNo: string }> };
+type Props = { params: Promise<{ locale: string; orderNo: string }>; searchParams: Promise<{ return?: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { orderNo } = await params;
@@ -19,13 +21,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // One of her orders: status timeline, suits and totals, courier, invoice, order again / cancel.
-export default async function MyOrderPage({ params }: Props) {
-  const { locale, orderNo } = await params;
+export default async function MyOrderPage({ params, searchParams }: Props) {
+  const [{ locale, orderNo }, sp] = await Promise.all([params, searchParams]);
   setRequestLocale(locale);
   const account = await getAccount();
   if (account.state === "guest") redirect(`/${locale}/account/sign-in`);
   if (account.state !== "customer") redirect(`/${locale}/account`);
-  const o = await myOrder(account.customer.id, orderNo.toUpperCase());
+  const [o, ret] = await Promise.all([myOrder(account.customer.id, orderNo.toUpperCase()), returnableOrder(account.customer.id, orderNo.toUpperCase())]);
   if (!o) notFound();
 
   const [t, tRack, tAreas, tCircle] = await Promise.all([getTranslations("Orders"), getTranslations("Rack"), getTranslations("Areas"), getTranslations("Circle")]);
@@ -130,7 +132,15 @@ export default async function MyOrderPage({ params }: Props) {
             )}
           </div>
           {unavailable > 0 && <p className="mb-0 mt-2 text-[13px] text-muted">{t("someUnavailable", { count: unavailable })}</p>}
+          {o.status === "delivered_cash_collected" && (
+            <Link href="/account/reviews" className="mt-3 inline-flex min-h-[40px] items-center gap-2 text-[14px] font-medium text-emerald underline underline-offset-2">
+              <AccountIcon name="picks" size={18} />
+              {t("reviewLink")}
+            </Link>
+          )}
         </Card>
+
+        {ret && <ReturnCard order={ret} locale={locale} justSent={sp.return === "sent"} />}
       </div>
     </AccountShell>
   );

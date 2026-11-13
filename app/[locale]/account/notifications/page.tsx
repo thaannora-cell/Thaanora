@@ -28,11 +28,12 @@ export default async function NotificationsPage({ params }: Props) {
   if (account.state === "guest") redirect(`/${locale}/account/sign-in`);
   if (account.state !== "customer") redirect(`/${locale}/account`);
 
-  const [t, tAcc, tRack, tCircle, list, prefs] = await Promise.all([
+  const [t, tAcc, tRack, tCircle, tRet, list, prefs] = await Promise.all([
     getTranslations("Notifications"),
     getTranslations("Account"),
     getTranslations("Rack"),
     getTranslations("Circle"),
+    getTranslations("Returns"),
     listNotifications(),
     notificationPrefs(),
   ]);
@@ -63,6 +64,11 @@ export default async function NotificationsPage({ params }: Props) {
         return { title: t("types.price_drop.title", { name: d.name ?? "", price: d.price ? tRack("price", { amount: Number(d.price) }) : "" }), body: t("types.price_drop.body") };
       case "level_up":
         return { title: t("types.level_up.title", { level: tCircle.has(`levels.${d.level}`) ? tCircle(`levels.${d.level}`) : (d.level ?? "") }), body: t("types.level_up.body") };
+      case "return_update":
+        return {
+          title: t("types.return_update.title", { returnNo: d.returnNo ?? "", status: tRet.has(`status.${d.status}`) ? tRet(`status.${d.status}`) : (d.status ?? "") }),
+          body: tRet.has(`statusText.${d.status}`) ? tRet(`statusText.${d.status}`) : "",
+        };
       case "birthday_gift":
         return { title: t("types.birthday_gift.title", { pct: d.pct ?? "" }), body: t("types.birthday_gift.body") };
       case "announcement":

@@ -17,6 +17,8 @@ export type SettingsForm = {
   signinMethod: "email" | "sms" | "both";
   requireSignIn: boolean;
   birthdayPct: number;
+  returnDays: number;
+  refundAccount: string;
 };
 
 // Every setting, public and private, read as the owner (RLS: "owner writes settings").
@@ -50,6 +52,8 @@ export async function getSettingsForm(): Promise<{ form: SettingsForm; failed: b
       signinMethod: (["email", "sms", "both"] as const).find((m) => m === get("customer_signin_method")) ?? "email",
       requireSignIn: get("require_signin_to_order") === true,
       birthdayPct: Number.isFinite(Number(get("birthday_gift_pct"))) ? Number(get("birthday_gift_pct")) : 5,
+      returnDays: Number.isInteger(Number(get("return_window_days"))) ? Number(get("return_window_days")) : 3,
+      refundAccount: s(get("zoho_refund_account_id")),
     },
     failed: Boolean(error),
   };

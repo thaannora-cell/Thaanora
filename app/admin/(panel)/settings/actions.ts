@@ -19,6 +19,8 @@ const PUBLIC: Record<string, boolean> = {
   customer_signin_method: true,
   require_signin_to_order: true,
   birthday_gift_pct: true,
+  return_window_days: true,
+  zoho_refund_account_id: false,
 };
 const HOSTS = { instagram: "instagram.com", tiktok: "tiktok.com", snapchat: "snapchat.com" } as const;
 
@@ -94,6 +96,12 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
   const birthdayPct = Number(text(form.get("birthdayPct"), 4));
   if (!(Number.isInteger(birthdayPct) && birthdayPct >= 0 && birthdayPct <= 50)) return fail("birthdayPct", "birthdayPct");
 
+  // Returns: days after delivery; Zoho bank account for refunds (digits, optional).
+  const returnDays = Number(text(form.get("returnDays"), 3));
+  if (!(Number.isInteger(returnDays) && returnDays >= 0 && returnDays <= 30)) return fail("returnDays", "returnDays");
+  const refundAccount = text(form.get("refundAccount"), 30);
+  if (refundAccount && !/^\d{5,30}$/.test(refundAccount)) return fail("refundAccount", "refundAccount");
+
   const values: Record<string, unknown> = {
     whatsapp_number: wa,
     social_links: links,
@@ -104,6 +112,8 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
     customer_signin_method: method,
     require_signin_to_order: form.get("requireSignIn") === "on",
     birthday_gift_pct: birthdayPct,
+    return_window_days: returnDays,
+    zoho_refund_account_id: refundAccount,
   };
   for (const [key, value] of Object.entries(values)) {
     const { error, count } = await supabase.from("settings").update({ value }, { count: "exact" }).eq("key", key);

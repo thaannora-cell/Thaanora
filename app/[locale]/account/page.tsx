@@ -101,7 +101,9 @@ export default async function AccountHome({ params, searchParams }: Props) {
           ["/account/favourites", t("favouritesLink"), "favourites"],
           ["/account/addresses", t("addressesLink"), "addresses"],
           ["/account/tailor", t("tailorLink"), "tailor"],
+          ["/account/reviews", t("reviewsLink"), "picks"],
           ["/account/notifications", t("notificationsLink", { count: unread }), "notifications"],
+          ["/account/privacy", t("privacyLink"), "info"],
         ] as const).map(([href, label, icon]) => (
           <Link key={href} href={href} className="th-pill inline-flex min-h-[40px] items-center gap-2 rounded-full border border-line bg-ivory-white px-3.5 text-[14px] text-emerald no-underline hover:border-gold">
             <AccountIcon name={icon} size={18} />

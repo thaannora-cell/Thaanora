@@ -14,7 +14,9 @@ Zoho Books, marks it sent and records the cash payment. The invoice number and l
 ## 2. API keys (Self Client)
 1. Open the API Console (**api-console.zoho.com**, or .sa if your Zoho account was created on zoho.sa) → *Add client* → **Self Client** → copy the **Client ID** and **Client Secret**.
 2. *Generate Code* tab, scope:
-   `ZohoBooks.invoices.ALL,ZohoBooks.contacts.ALL,ZohoBooks.customerpayments.CREATE,ZohoBooks.settings.READ`
+   `ZohoBooks.invoices.ALL,ZohoBooks.contacts.ALL,ZohoBooks.customerpayments.CREATE,ZohoBooks.settings.READ,ZohoBooks.creditnotes.ALL`
+   (`creditnotes` is for returns: refunds and exchanges become credit notes. If your token was made before
+   Phase 3B · A8, make a new code with this scope and run `npm run zoho:token` again.)
    duration 10 minutes, description "Thaanora website" → **Create** → copy the code.
 3. Swap the code for a refresh token (within 10 minutes), in a terminal:
    ```

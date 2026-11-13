@@ -248,7 +248,12 @@
     "measurementsSavedAccount": "Measurements saved. Find them in My Thaanora › My tailor.",
     "myTailor": "My tailor",
     "measurementsSaveFailed": "Couldn't save your measurements. Please try again.",
-    "savingMeasurements": "Saving…"
+    "savingMeasurements": "Saving…",
+    "reviewsLoading": "Loading reviews…",
+    "starsLabel": "{rating} out of 5 stars",
+    "reviewsSummary": "{rating} · {count, plural, one {# review} other {# reviews}}",
+    "verifiedBuyer": "bought this suit",
+    "ourReply": "Thaanora:"
   },
   "Selection": {
     "trayLabel": "Your selection",
@@ -655,7 +660,7 @@
     },
     "signOut": "Sign out",
     "deactivated": "This account is deactivated. To use it again, message us on WhatsApp.",
-    "comingSoon": "Coming soon to My Thaanora: returns and reviews.",
+    "comingSoon": "Need help? Tap the WhatsApp button and we'll answer.",
     "accountFor": "Account email: <b>{email}</b>",
     "birthdayShort": "Birthday",
     "notificationsLink": "Notifications{count, plural, =0 {} other { (#)}}",
@@ -668,7 +673,9 @@
     "forYouTitle": "Picked for you",
     "ourPicksTitle": "Our picks for you",
     "circleLink": "Circle & offers",
-    "birthdayLocked": "Your birthday is saved. To correct it, please message us on WhatsApp."
+    "birthdayLocked": "Your birthday is saved. To correct it, please message us on WhatsApp.",
+    "reviewsLink": "My reviews",
+    "privacyLink": "Privacy"
   },
   "Notifications": {
     "title": "Notifications",
@@ -752,6 +759,16 @@
         "label": "News from Thaanora",
         "title": "News from Thaanora",
         "body": ""
+      },
+      "return_update": {
+        "label": "Returns",
+        "title": "Return {returnNo}: {status}",
+        "body": ""
+      },
+      "review_reply": {
+        "label": "Replies to your reviews",
+        "title": "We replied to your review of {name}",
+        "body": "Thank you for your review."
       }
     }
   },
@@ -790,7 +807,8 @@
     "invoice": "View invoice {no}",
     "perkLoyalty": "Thaanora Circle · {level} ({pct}%)",
     "perkBirthday": "Birthday gift ({pct}%)",
-    "perkPersonal": "Personal offer ({pct}%)"
+    "perkPersonal": "Personal offer ({pct}%)",
+    "reviewLink": "Review your suits"
   },
   "Favourites": {
     "title": "Favourites",
@@ -948,5 +966,140 @@
       "birthday": "Birthday gift ({pct}%)",
       "personal": "Personal offer ({pct}%)"
     }
+  },
+  "Returns": {
+    "title": "Return a suit",
+    "backToOrder": "Back to order {orderNo}",
+    "intro": "You can ask within {days} days of delivery (until {until}). Our driver collects the suit for free.",
+    "whichSuits": "Which suits?",
+    "qtyFor": "How many of {name}",
+    "reasonLabel": "Why are you returning it?",
+    "reasonPick": "Choose a reason",
+    "reason": {
+      "changed_mind": "I changed my mind",
+      "wrong_item": "I received the wrong suit",
+      "faulty": "The fabric has a fault",
+      "not_as_pictured": "It looks different from the photos",
+      "other": "Something else"
+    },
+    "wantLabel": "What would you like?",
+    "resolution": {
+      "refund": "Refund by bank transfer",
+      "exchange": "Exchange for another suit"
+    },
+    "resolutionHint": {
+      "refund": "We'll ask for your IBAN on WhatsApp and transfer the money after we receive the suit.",
+      "exchange": "Choose another suit; its price is paid with this return and you pay only any difference."
+    },
+    "detailsLabel": "Tell us more (optional)",
+    "detailsPlaceholder": "For example, where the fault is",
+    "estimateRefund": "Your refund",
+    "estimateCredit": "Your credit for the exchange",
+    "feeRefunded": "Includes the delivery fee, because the suit was wrong or faulty.",
+    "feeKept": "The suits' price you paid. The original delivery fee isn't refunded (unless the suit was wrong or faulty).",
+    "conditionsTitle": "Before you send it",
+    "condUncut": "The fabric is not cut or stitched.",
+    "condClean": "It's not washed, with no stains or perfume.",
+    "condPacked": "All pieces (shirt, dupatta, trouser) are together, in the original packaging if possible.",
+    "confirm": "I confirm the suit is in this condition. If it isn't, the return may be refused.",
+    "errors": {
+      "items": "Choose at least one suit to return.",
+      "reason": "Choose a reason.",
+      "resolution": "Choose a refund or an exchange.",
+      "confirm": "Please tick to confirm the suit's condition.",
+      "closed": "Returns for this order are closed, or a return was already requested.",
+      "tooMany": "Too many tries. Please wait a little and try again.",
+      "failed": "We couldn't send your request. Please try again.",
+      "signedOut": "Please sign in again."
+    },
+    "sending": "Sending…",
+    "send": "Send return request",
+    "nextSteps": "We'll message you on WhatsApp to arrange the pickup.",
+    "cardTitle": "Returns",
+    "sent": "Your return request is sent. We'll message you on WhatsApp soon.",
+    "status": {
+      "requested": "Requested",
+      "approved": "Approved",
+      "rejected": "Not accepted",
+      "received": "Suit received",
+      "refunded": "Refunded",
+      "exchanged": "Exchanged",
+      "cancelled": "Withdrawn"
+    },
+    "statusText": {
+      "requested": "We'll check your request and message you on WhatsApp.",
+      "approved": "Approved. Our driver will collect the suit; we'll message you the time.",
+      "rejected": "We couldn't accept this return. We've sent you the reason on WhatsApp.",
+      "received": "We've received the suit and are checking it.",
+      "refunded": "Your refund has been sent by bank transfer.",
+      "exchanged": "Your exchange is done.",
+      "cancelled": "You withdrew this request."
+    },
+    "refundAmount": "refund {amount}",
+    "creditAmount": "credit {amount}",
+    "openUntil": "Not right? You can ask to return it until {until}.",
+    "start": "Return a suit",
+    "closed": "Returns for this order closed on {until}.",
+    "withdraw": "Withdraw my request",
+    "withdrawConfirm": "Withdraw this return request?",
+    "withdrawFailed": "Couldn't withdraw it. It may already be approved; message us on WhatsApp."
+  },
+  "Reviews": {
+    "title": "My reviews",
+    "intro": "Tell other customers what you think of the suits you received. Reviews appear on the shop after we check them.",
+    "none": "When a suit is delivered to you, you can review it here.",
+    "status": {
+      "pending": "Waiting for approval",
+      "published": "Published",
+      "hidden": "Not shown"
+    },
+    "ourReply": "Thaanora:",
+    "rules": "Reviews show your first name and initial only. Please don't share phone numbers or addresses.",
+    "ratingLabel": "Your rating",
+    "starsN": "{n, plural, one {# star} other {# stars}}",
+    "bodyLabel": "Your review (optional)",
+    "bodyPlaceholder": "The fabric, the colour, how it stitched…",
+    "errors": {
+      "rating": "Choose 1 to 5 stars.",
+      "notBought": "You can review only suits delivered to you.",
+      "tooMany": "Too many reviews in a short time. Please try later.",
+      "failed": "Couldn't save. Please try again.",
+      "signedOut": "Please sign in again."
+    },
+    "saved": "Thank you! Your review will appear after we check it.",
+    "saving": "Saving…",
+    "update": "Update review",
+    "submit": "Send review"
+  },
+  "Privacy": {
+    "title": "Privacy",
+    "intro": "Your data belongs to you. See what we keep, download it, or deactivate your account (Saudi PDPL).",
+    "keepTitle": "What we keep",
+    "keepProfile": "Your profile: name, mobile, email, language and birthday (if you gave it).",
+    "keepOrders": "Your orders, invoices and returns. These are kept for 6 years for tax records, even if you deactivate.",
+    "keepExtras": "Saved addresses, favourites, measurements, your tailor, reviews and notifications.",
+    "keepNever": "We never keep card or bank details, and try-on photos are never stored on our servers.",
+    "downloadTitle": "Download my data",
+    "downloadText": "One file (JSON) with everything above.",
+    "downloadButton": "Download my data",
+    "deactivateTitle": "Deactivate my account",
+    "deactivateText": "You'll be signed out and can't use My Thaanora with this email.",
+    "deactivateRemoves": "Removed now: addresses, favourites, measurements, tailor, birthday, notifications and personal offers. Your reviews are hidden.",
+    "deactivateKeeps": "Kept for tax law: your orders, invoices and returns.",
+    "deactivateBack": "Changed your mind later? Message us on WhatsApp to reactivate it.",
+    "deactivateConfirm": "I understand. Deactivate my account.",
+    "deactivating": "Deactivating…",
+    "deactivateButton": "Deactivate my account",
+    "errors": {
+      "confirm": "Please tick to confirm.",
+      "failed": "Something went wrong. Please try again or message us."
+    }
+  },
+  "ReturnMessage": {
+    "approvedRefund": "Hello {name}, this is Thaanora. Your return {returnNo} (order {orderNo}) is approved. Our driver will collect the suit; what time suits you? For your refund of {amount}, please send your IBAN and the account holder's name.",
+    "approvedExchange": "Hello {name}, this is Thaanora. Your return {returnNo} (order {orderNo}) is approved for an exchange worth {amount}. Which suit would you like instead? Our driver will collect the returned suit when delivering the new one.",
+    "rejected": "Hello {name}, this is Thaanora. We're sorry, we can't accept return {returnNo} (order {orderNo}) because:",
+    "refunded": "Hello {name}, this is Thaanora. Your refund of {amount} for return {returnNo} has been sent by bank transfer. Thank you!",
+    "exchanged": "Hello {name}, this is Thaanora. Your exchange for return {returnNo} is done. Enjoy your new suit!"
   }
 }

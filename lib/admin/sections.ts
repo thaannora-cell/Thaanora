@@ -10,6 +10,8 @@ export const SECTIONS = [
   { key: "offers", icon: "off", roles: ["owner"] },
   { key: "seasons", icon: "sea", roles: ["owner"] },
   { key: "requests", icon: "req", roles: ["owner", "orders"] },
+  { key: "returns", icon: "ret", roles: ["owner", "orders"] },
+  { key: "reviews", icon: "rev", roles: ["owner", "catalogue"] },
   { key: "notifications", icon: "bell", roles: ["owner", "orders"] },
   { key: "tailors", icon: "tai", roles: ["owner"] },
   { key: "reports", icon: "rep", roles: ["owner"] },

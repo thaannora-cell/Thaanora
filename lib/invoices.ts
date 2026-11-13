@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { buildInvoice, expectedTotal, type InvoiceOrder } from "@/lib/invoice-build";
 import { zoho, zohoConfig, zohoVatTaxId, ZohoError } from "@/lib/zoho/books";
+import { applyExchangeCredit } from "@/lib/creditnotes";
 
 export type InvoiceOutcome = "issued" | "failed" | "busy" | "skipped";
 
@@ -120,15 +121,18 @@ export async function issueInvoice(orderId: string): Promise<InvoiceOutcome> {
       throw new ZohoError(`Invoice ${inv.invoice_number} totals ${inv.total} in Zoho but the order is ${total}. Fix it in Zoho Books, then retry.`, false);
     }
     if (inv.status === "draft") await zoho(c, "POST", `/invoices/${encodeURIComponent(invoiceId)}/status/sent`);
-    if (!claimed.invoice_paid && Number(inv.balance) > 0) {
+    // An exchange order: the returned suits' credit pays part of it; the driver collected the rest.
+    let balance = Number(inv.balance);
+    if (!claimed.invoice_paid && balance > 0) balance = Math.round((balance - (await applyExchangeCredit(orderId, invoiceId, balance))) * 100) / 100;
+    if (!claimed.invoice_paid && balance > 0) {
       await zoho(c, "POST", "/customerpayments", {
         customer_id: customerId,
         payment_mode: "cash",
-        amount: Number(inv.balance),
+        amount: balance,
         date,
         reference_number: claimed.order_no,
         description: "Cash on delivery",
-        invoices: [{ invoice_id: invoiceId, amount_applied: Number(inv.balance) }],
+        invoices: [{ invoice_id: invoiceId, amount_applied: balance }],
       });
     }
 

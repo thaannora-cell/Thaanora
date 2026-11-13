@@ -52,7 +52,7 @@ export async function whatsappQueue(shopNumber: string | null): Promise<{ items:
     }
     // Other kinds (offers, favourites, birthday…): the notification's own words in her language.
     const t = await getTranslations({ locale: ["en", "ar", "ur", "hi"].includes(c.language) ? c.language : "en", namespace: "Notifications" });
-    const title = d.title ?? (t.has(`types.${n.type}.title`) ? t(`types.${n.type}.title`, { name: d.name ?? "", brand: d.brand ?? "", level: d.level ?? "", pct: d.pct ?? "", price: d.price ?? "" }) : "");
+    const title = d.title ?? (t.has(`types.${n.type}.title`) ? t(`types.${n.type}.title`, { name: d.name ?? "", brand: d.brand ?? "", level: d.level ?? "", pct: d.pct ?? "", price: d.price ?? "", returnNo: d.returnNo ?? "", status: d.status ?? "" }) : "");
     const body = d.body ?? (t.has(`types.${n.type}.body`) ? t(`types.${n.type}.body`) : "");
     const text = [title, body].filter(Boolean).join("\n");
     const digits = c.phone.replace(/\D/g, "");

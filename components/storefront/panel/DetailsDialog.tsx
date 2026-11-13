@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import Modal from "@/components/ui/Modal";
 import { photoUrl, salePrice, stockState, type PublicProduct } from "@/lib/product";
 import { useSelection } from "../selection/SelectionProvider";
+import ReviewsList from "./ReviewsList";
 
 const FEEL_KEYS: Record<string, string> = {
   Khaddar: "khaddar",
@@ -91,7 +92,7 @@ export default function DetailsDialog({ product: p, open, onClose, actions }: Pr
       </table>
 
       <span className="th-caps mt-2 text-[11px] font-medium uppercase tracking-[0.16em] text-gold-ink">{t("reviews")}</span>
-      <p className="m-0 text-[14px] text-muted">{t("noReviews")}</p>
+      {open && <ReviewsList code={p.code} />}
     </Modal>
   );
 }

@@ -152,6 +152,16 @@ export default function SettingsView({ form: s }: { form: SettingsForm }) {
             <input name="birthdayPct" type="number" inputMode="numeric" min="0" max="50" step="1" defaultValue={s.birthdayPct} required aria-invalid={bad("birthdayPct")} className={field} />
           </label>
           <p className="m-0 mt-2 text-[12px] text-muted">{t("birthdayPctHint")}</p>
+          <label className={`${label} mt-3`}>
+            {t("returnDays")}
+            <input name="returnDays" type="number" inputMode="numeric" min="0" max="30" step="1" defaultValue={s.returnDays} required aria-invalid={bad("returnDays")} className={field} />
+          </label>
+          <p className="m-0 mt-2 text-[12px] text-muted">{t("returnDaysHint")}</p>
+          <label className={`${label} mt-3`}>
+            {t("refundAccount")}
+            <input name="refundAccount" inputMode="numeric" dir="ltr" defaultValue={s.refundAccount} aria-invalid={bad("refundAccount")} className={field} />
+          </label>
+          <p className="m-0 mt-2 text-[12px] text-muted">{t("refundAccountHint")}</p>
         </section>
       </div>
 

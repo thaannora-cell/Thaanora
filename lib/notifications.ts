@@ -10,6 +10,8 @@ export const NOTIFICATION_TYPES = [
   "level_up",
   "birthday_gift",
   "announcement",
+  "return_update",
+  "review_reply",
 ] as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 export type NotificationChannel = "site" | "site_whatsapp";
@@ -27,7 +29,8 @@ export type NotificationRow = {
 
 // Where tapping a notification takes her. Order updates open that order in My Thaanora.
 export function notificationHref(n: Pick<NotificationRow, "type" | "data">, locale: string): string {
-  if (n.type === "order_status" && /^TH-\d{3,7}$/.test(n.data.orderNo ?? "")) return `/${locale}/account/orders/${n.data.orderNo}`;
+  if ((n.type === "order_status" || n.type === "return_update") && /^TH-\d{3,7}$/.test(n.data.orderNo ?? "")) return `/${locale}/account/orders/${n.data.orderNo}`;
+  if (n.type === "review_reply") return `/${locale}/account/reviews`;
   // A favourite back in stock or cheaper: open that suit on the rack.
   if ((n.type === "back_in_stock" || n.type === "price_drop") && /^[\w.-]{1,64}$/.test(n.data.code ?? "")) return `/${locale}?p=${encodeURIComponent(n.data.code)}`;
   return `/${locale}/account`;

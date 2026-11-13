@@ -46,7 +46,9 @@
       "viewSite": "View website",
       "signOut": "Sign out",
       "language": "Language",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "returns": "Returns",
+      "reviews": "Reviews"
     },
     "roles": {
       "owner": "Owner",
@@ -658,7 +660,9 @@
         "tplLong": "A template can be at most 1,000 characters.",
         "signinMethod": "Choose how customers sign in.",
         "signinNotReady": "SMS sign-in isn't connected yet. Keep Email for now.",
-        "birthdayPct": "Enter a whole number from 0 to 50."
+        "birthdayPct": "Enter a whole number from 0 to 50.",
+        "returnDays": "Enter whole days from 0 to 30.",
+        "refundAccount": "Use the digits of the Zoho account ID, or leave it empty."
       },
       "tplTitle": "WhatsApp message templates",
       "tplSub": "The ready messages staff send from Orders and Requests. Customers who shop in Urdu or Hindi get the built-in text.",
@@ -689,7 +693,11 @@
       "requireSignIn": "Ask customers to sign in before ordering",
       "requireSignInHint": "Keep this off while sign-in is by email code. Turn it on at go-live, once SMS sign-in works.",
       "birthdayPct": "Birthday gift (% off, 0 = off)",
-      "birthdayPctHint": "Customers get this once a year, from 7 days before to 7 days after their birthday. It doesn't combine with other discounts and applies to full-price suits only."
+      "birthdayPctHint": "Customers get this once a year, from 7 days before to 7 days after their birthday. It doesn't combine with other discounts and applies to full-price suits only.",
+      "returnDays": "Return window (days after delivery)",
+      "returnDaysHint": "Customers can ask for a return within this many days of delivery.",
+      "refundAccount": "Zoho bank account ID for refunds (optional)",
+      "refundAccountHint": "If Zoho asks which account refunds are paid from, paste its account ID (Zoho Books → Banking → the account → number in the address bar)."
     },
     "staff": {
       "title": "Staff & access",
@@ -781,13 +789,132 @@
         "new_offer": "New offer",
         "level_up": "Circle level",
         "birthday_gift": "Birthday gift",
-        "announcement": "Announcement"
+        "announcement": "Announcement",
+        "return_update": "Return update",
+        "review_reply": "Review reply"
       }
     },
     "circle": {
       "silver": "Silver",
       "gold": "Gold",
       "emerald": "Emerald"
+    },
+    "returns": {
+      "title": "Returns",
+      "sub": "Customers' return requests. Approve, collect, then refund or exchange. Each refund makes a Zoho credit note.",
+      "byStatus": "Filter by status",
+      "all": "All",
+      "status": {
+        "requested": "Requested",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "received": "Received",
+        "refunded": "Refunded",
+        "exchanged": "Exchanged",
+        "cancelled": "Cancelled"
+      },
+      "none": "No returns here.",
+      "reason": {
+        "changed_mind": "Changed her mind",
+        "wrong_item": "Wrong suit sent",
+        "faulty": "Faulty fabric",
+        "not_as_pictured": "Not as pictured",
+        "other": "Other"
+      },
+      "resolution": {
+        "refund": "Bank transfer refund",
+        "exchange": "Exchange"
+      },
+      "zohoAttention": "Zoho needs attention",
+      "back": "← All returns",
+      "whatTitle": "The return",
+      "order": "Order",
+      "customer": "Customer",
+      "phone": "Mobile",
+      "asked": "Asked",
+      "reasonLabel": "Reason",
+      "wants": "She wants",
+      "refund": "Amount",
+      "deliveryFee": "Delivery fee",
+      "feeRefunded": "Refunded (our mistake)",
+      "feeKept": "Not refunded",
+      "staffNote": "Staff note: {note}",
+      "nextTitle": "Next step",
+      "howTo": {
+        "requested": "Check the reason and the order. Approve, then message her on WhatsApp to arrange pickup (and ask for her IBAN for a refund).",
+        "approved": "When the driver brings the suit back and it's uncut, unwashed and clean, mark it received. Its stock goes back automatically.",
+        "received": "Refund: transfer the money to her IBAN first, then press the button. Exchange: put her new order number, then press the button.",
+        "refunded": "Done. The credit note and refund are in Zoho Books.",
+        "exchanged": "Done. The credit is used when the new order's invoice is made.",
+        "rejected": "Closed. Tell her the reason on WhatsApp.",
+        "cancelled": "Closed."
+      },
+      "whatsapp": "Message her on WhatsApp",
+      "zohoTitle": "Zoho Books",
+      "invoice": "Invoice",
+      "noInvoice": "No invoice yet",
+      "creditNote": "Credit note",
+      "cn": {
+        "none": "Not made yet",
+        "pending": "Being made…",
+        "issued": "Made",
+        "failed": "Failed"
+      },
+      "refundInZoho": "Refund recorded",
+      "yes": "Yes",
+      "notYet": "Not yet",
+      "exchangeOrder": "Exchange order",
+      "creditApplied": "credit used on its invoice",
+      "creditWaiting": "credit waits for its invoice",
+      "noteLabel": "Note (optional; for rejecting, write the reason)",
+      "notePlaceholder": "Saved with the return",
+      "approve": "Approve",
+      "reject": "Reject",
+      "markReceived": "Suit received",
+      "cancel": "Cancel return",
+      "refundConfirm": "Did you already transfer the money to her bank account? This makes the Zoho credit note and records the refund.",
+      "refundSent": "Refund sent → credit note",
+      "exchangeOrderLabel": "New order number",
+      "exchangeDone": "Exchange done → credit note",
+      "retryRefund": "Record refund in Zoho again",
+      "needsInvoice": "The original order has no Zoho invoice yet. Issue it from the order page first.",
+      "working": "Working…",
+      "done": {
+        "approved": "Approved.",
+        "rejected": "Rejected.",
+        "received": "Received; stock is back.",
+        "cancelled": "Cancelled.",
+        "refunded": "Refunded; credit note made in Zoho.",
+        "exchanged": "Exchanged; credit note made in Zoho.",
+        "refundRecorded": "Refund recorded in Zoho."
+      },
+      "errors": {
+        "forbidden": "Not part of your role.",
+        "saveFailed": "Couldn't save.",
+        "badOrder": "That order number isn't right (use the new order, e.g. TH-1234).",
+        "zoho": "Zoho:"
+      }
+    },
+    "reviews": {
+      "title": "Reviews",
+      "sub": "Customers' reviews of suits they received. They show on the shop only after you publish them.",
+      "byStatus": "Filter by status",
+      "status": {
+        "pending": "Waiting",
+        "published": "Published",
+        "hidden": "Hidden"
+      },
+      "all": "All",
+      "none": "No reviews here.",
+      "stars": "{n} out of 5 stars",
+      "noText": "Stars only, no text.",
+      "replyLabel": "Reply (optional, shown under the review)",
+      "publish": "Publish",
+      "hide": "Hide",
+      "saveReply": "Save reply",
+      "saved": "Saved.",
+      "failed": "Couldn't save.",
+      "saving": "Saving…"
     }
   }
 }
