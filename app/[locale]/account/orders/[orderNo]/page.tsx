@@ -27,7 +27,7 @@ export default async function MyOrderPage({ params }: Props) {
   const o = await myOrder(account.customer.id, orderNo.toUpperCase());
   if (!o) notFound();
 
-  const [t, tRack, tAreas] = await Promise.all([getTranslations("Orders"), getTranslations("Rack"), getTranslations("Areas")]);
+  const [t, tRack, tAreas, tCircle] = await Promise.all([getTranslations("Orders"), getTranslations("Rack"), getTranslations("Areas"), getTranslations("Circle")]);
   const sar = (n: number) => tRack("price", { amount: n });
   const areaKey = o.area.split(/\s+/)[0]?.toLowerCase() ?? "";
   const area = areaKey && tAreas.has(areaKey) ? tAreas(areaKey) : o.area;
@@ -98,6 +98,14 @@ export default async function MyOrderPage({ params }: Props) {
             {row(t("subtotal"), sar(o.subtotal))}
             {o.bundleDiscount > 0 && row(t("bundle"), `− ${sar(o.bundleDiscount)}`)}
             {o.codeDiscount > 0 && row(t("code", { code: o.discountCode ?? "" }), `− ${sar(o.codeDiscount)}`)}
+            {o.perkDiscount > 0 &&
+              row(
+                t(o.discountKind === "loyalty" ? "perkLoyalty" : o.discountKind === "birthday" ? "perkBirthday" : "perkPersonal", {
+                  pct: o.discountPct ?? 0,
+                  level: o.loyaltyLevel && tCircle.has(`levels.${o.loyaltyLevel}`) ? tCircle(`levels.${o.loyaltyLevel}`) : "",
+                }),
+                `− ${sar(o.perkDiscount)}`,
+              )}
             {row(o.packaging === "gift_box" ? t("giftBox") : t("bag"), o.packagingFee > 0 ? sar(o.packagingFee) : t("free"))}
             {row(t("delivery"), sar(o.deliveryFee))}
             {row(t("total"), sar(o.total), true)}

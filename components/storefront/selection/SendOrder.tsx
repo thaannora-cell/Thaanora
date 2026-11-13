@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { useSelection } from "./SelectionProvider";
 import { LAST_ORDER_KEY } from "@/lib/customer/last-order";
 
-type ErrorKind = "name" | "phone" | "area" | "stock" | "too_many" | "other";
+type ErrorKind = "name" | "phone" | "area" | "stock" | "too_many" | "discount" | "other";
 
 // Saves the order through /api/orders, then opens WhatsApp with the message ready to send.
 export default function SendOrder() {
@@ -112,7 +112,7 @@ export default function SendOrder() {
       }
       if (!res.ok || !data.ok || !data.orderNo || !data.message) {
         tab?.close();
-        const known: ErrorKind[] = ["name", "phone", "area", "stock", "too_many"];
+        const known: ErrorKind[] = ["name", "phone", "area", "stock", "too_many", "discount"];
         setError(known.includes(data.error as ErrorKind) ? (data.error as ErrorKind) : "other");
         return;
       }

@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { salePrice, type PublicProduct } from "@/lib/product";
-import { computeTotals, type BundleRule, type CheckoutSettings, type Totals } from "@/lib/pricing";
+import { computeTotals, discountCandidates, type BundleRule, type CheckoutPerks, type CheckoutSettings, type Totals } from "@/lib/pricing";
 
 export type Line = { code: string; qty: number; stitch: boolean };
 export type AppliedCode = { code: string; percent: number };
@@ -23,7 +23,7 @@ export type Checkout = {
 
 // Signed in to My Thaanora: her name, mobile and saved addresses, to fill the checkout.
 export type SavedAddress = { id: string; label: string; recipientName: string; area: string; isDefault: boolean; isGift: boolean };
-export type SavedCustomer = { name: string; phone: string; addresses: SavedAddress[]; measurements: Record<string, string>; tailorId: string | null };
+export type SavedCustomer = { name: string; phone: string; addresses: SavedAddress[]; measurements: Record<string, string>; tailorId: string | null; perks: CheckoutPerks };
 
 const EMPTY_CHECKOUT: Checkout = { packaging: "suit_keeper_bag", isGift: false, recipientName: "", recipientArea: "", giftNote: "", area: "", customerName: "", customerPhone: "", addressId: "" };
 
@@ -175,20 +175,20 @@ export default function SelectionProvider({ products: list, bundle, settings, cu
 
   const updateCheckout = useCallback((patch: Partial<Checkout>) => setCheckout((c) => ({ ...c, ...patch })), []);
   const deliveryFee = settings.areas.find((a) => a.area === checkout.area)?.fee ?? 0;
-  const packagingFee = checkout.packaging === "gift_box" ? settings.giftBoxFee : 0;
+  // Silver and above: the gift box is free.
+  const packagingFee = checkout.packaging === "gift_box" && !customer?.perks.freeGiftBox ? settings.giftBoxFee : 0;
 
   const totals = useMemo(
     () =>
       computeTotals(
         lines.flatMap((l) => {
           const p = products.get(l.code);
-          return p ? [{ unitPrice: salePrice(p), qty: l.qty }] : [];
+          return p ? [{ unitPrice: salePrice(p), qty: l.qty, fullPrice: !(p.sale_pct > 0) }] : [];
         }),
-        bundle,
-        appliedCode?.percent ?? 0,
+        discountCandidates(bundle, appliedCode, customer?.perks ?? null),
         { packagingFee, deliveryFee, vatPct: settings.vatPct },
       ),
-    [lines, products, bundle, appliedCode, packagingFee, deliveryFee, settings.vatPct],
+    [lines, products, bundle, appliedCode, customer, packagingFee, deliveryFee, settings.vatPct],
   );
 
   const has = useCallback((code: string) => lines.some((l) => l.code === code), [lines]);

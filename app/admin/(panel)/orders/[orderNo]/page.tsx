@@ -216,6 +216,14 @@ export default async function OrderPage({ params }: { params: Promise<{ orderNo:
               {row(t("orders.subtotal"), sar(o.subtotal))}
               {o.bundleDiscount > 0 && row(t("orders.bundle"), `−${sar(o.bundleDiscount)}`)}
               {o.codeDiscount > 0 && row(t("orders.code", { code: o.discountCode ?? "" }), `−${sar(o.codeDiscount)}`)}
+              {o.perkDiscount > 0 &&
+                row(
+                  t(o.discountKind === "loyalty" ? "orders.perkLoyalty" : o.discountKind === "birthday" ? "orders.perkBirthday" : "orders.perkPersonal", {
+                    pct: o.discountPct ?? 0,
+                    level: o.loyaltyLevel === "silver" || o.loyaltyLevel === "gold" || o.loyaltyLevel === "emerald" ? t(`circle.${o.loyaltyLevel}`) : (o.loyaltyLevel ?? ""),
+                  }),
+                  `−${sar(o.perkDiscount)}`,
+                )}
               {o.packagingFee > 0 && row(t("orders.giftBox"), sar(o.packagingFee))}
               {row(t("orders.delivery"), o.deliveryFee > 0 ? sar(o.deliveryFee) : t("orders.free"))}
               {row(t("orders.total"), sar(o.total), true)}

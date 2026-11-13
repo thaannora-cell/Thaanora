@@ -382,7 +382,10 @@
         "failedNow": "The invoice couldn’t be created in Zoho Books yet. It’s listed under Needs attention.",
         "busy": "The invoice is being created right now. Refresh in a moment.",
         "retryHint": "It is also retried automatically every morning."
-      }
+      },
+      "perkLoyalty": "Thaanora Circle · {level} ({pct}%)",
+      "perkBirthday": "Birthday gift ({pct}%)",
+      "perkPersonal": "Personal offer ({pct}%)"
     },
     "offers": {
       "title": "Offers & codes",
@@ -654,7 +657,8 @@
         "tplUnknown": "A template uses a '{'word'}' it can’t fill in (marked in pink). Use only the words listed under it.",
         "tplLong": "A template can be at most 1,000 characters.",
         "signinMethod": "Choose how customers sign in.",
-        "signinNotReady": "SMS sign-in isn't connected yet. Keep Email for now."
+        "signinNotReady": "SMS sign-in isn't connected yet. Keep Email for now.",
+        "birthdayPct": "Enter a whole number from 0 to 50."
       },
       "tplTitle": "WhatsApp message templates",
       "tplSub": "The ready messages staff send from Orders and Requests. Customers who shop in Urdu or Hindi get the built-in text.",
@@ -683,7 +687,9 @@
       },
       "signinHint": "SMS sign-in needs the Taqnyat connection, planned for go-live. Until then customers sign in with a 6-digit email code.",
       "requireSignIn": "Ask customers to sign in before ordering",
-      "requireSignInHint": "Keep this off while sign-in is by email code. Turn it on at go-live, once SMS sign-in works."
+      "requireSignInHint": "Keep this off while sign-in is by email code. Turn it on at go-live, once SMS sign-in works.",
+      "birthdayPct": "Birthday gift (% off, 0 = off)",
+      "birthdayPctHint": "Customers get this once a year, from 7 days before to 7 days after their birthday. It doesn't combine with other discounts and applies to full-price suits only."
     },
     "staff": {
       "title": "Staff & access",
@@ -777,6 +783,11 @@
         "birthday_gift": "Birthday gift",
         "announcement": "Announcement"
       }
+    },
+    "circle": {
+      "silver": "Silver",
+      "gold": "Gold",
+      "emerald": "Emerald"
     }
   }
 }

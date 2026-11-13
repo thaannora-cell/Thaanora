@@ -7,19 +7,20 @@ import { normaliseSaudiMobile } from "@/lib/phone";
 import { findLiveCode } from "@/lib/discounts";
 import { getBundleRule } from "@/lib/offers";
 import { getCheckoutSettings, getWhatsappNumber } from "@/lib/shop-data";
-import { computeTotals } from "@/lib/pricing";
+import { computeTotals, discountCandidates, type CheckoutPerks } from "@/lib/pricing";
+import { getPerks, toCheckoutPerks } from "@/lib/customer/perks";
 import { salePrice } from "@/lib/product";
 import { getLiveCampaigns } from "@/lib/campaigns";
 import { campaignSalePct } from "@/lib/campaign-pricing";
 import { buildOrderMessage, type MessageLine } from "@/lib/order-message";
-import { currentCustomerId } from "@/lib/customer/account";
+import { getAccount } from "@/lib/customer/account";
 import { addressLine } from "@/lib/customer/addresses";
 import { getSessionClient } from "@/lib/supabase/server";
 
 const MAX_LINES = 20;
 const MAX_QTY = 10;
 
-type Fail = "invalid" | "name" | "phone" | "area" | "stock" | "unavailable" | "signin";
+type Fail = "invalid" | "name" | "phone" | "area" | "stock" | "unavailable" | "signin" | "discount";
 const fail = (error: Fail, status = 400, extra: Record<string, unknown> = {}) =>
   NextResponse.json({ ok: false, error, ...extra }, { status });
 
@@ -73,7 +74,12 @@ export async function POST(req: NextRequest) {
     getLiveCampaigns(supabase),
   ]);
   // "Ask customers to sign in before ordering" (back office Settings): guests are refused here too.
-  if (settings.requireSignIn && !(await currentCustomerId())) return fail("signin", 401);
+  // Signed in to My Thaanora: the order goes into her account, with her Circle level, birthday gift
+  // and personal offers worked out here from her account (never trusted from the browser).
+  const account = await getAccount();
+  const customerId = account.state === "customer" ? account.customer.id : null;
+  if (settings.requireSignIn && !customerId) return fail("signin", 401);
+  const perks: CheckoutPerks | null = account.state === "customer" ? toCheckoutPerks(await getPerks(account.customer.id, account.customer.birthday)) : null;
 
   const area = settings.areas.find((a) => a.area === checkout.area);
   if (!area) return fail("area");
@@ -90,7 +96,8 @@ export async function POST(req: NextRequest) {
   const priced = [...wanted.entries()].map(([code, w]) => {
     const p = products.find((x) => x.code === code)!;
     // Same price as the rack: the suit's own sale or a live campaign, whichever is larger.
-    return { p, qty: w.qty, stitch: w.stitch, unit: salePrice({ price_sar: Number(p.price_sar), sale_pct: campaignSalePct(p, campaigns) }) };
+    const pct = campaignSalePct(p, campaigns);
+    return { p, qty: w.qty, stitch: w.stitch, fullPrice: !(pct > 0), unit: salePrice({ price_sar: Number(p.price_sar), sale_pct: pct }) };
   });
 
   const codeRaw = text(body.discountCode, 32);
@@ -98,12 +105,14 @@ export async function POST(req: NextRequest) {
   const giftBox = checkout.packaging === "gift_box";
   const isGift = checkout.isGift === true;
 
+  // One discount per order: the best one, on full-price suits only. Silver and above: free gift box.
   const totals = computeTotals(
-    priced.map((l) => ({ unitPrice: l.unit, qty: l.qty })),
-    bundle,
-    live?.percent ?? 0,
-    { packagingFee: giftBox ? settings.giftBoxFee : 0, deliveryFee: area.fee, vatPct: settings.vatPct },
+    priced.map((l) => ({ unitPrice: l.unit, qty: l.qty, fullPrice: l.fullPrice })),
+    discountCandidates(bundle, live, perks),
+    { packagingFee: giftBox && !perks?.freeGiftBox ? settings.giftBoxFee : 0, deliveryFee: area.fee, vatPct: settings.vatPct },
   );
+  const d = totals.discount;
+  const usedCode = d?.kind === "code" ? (live?.code ?? null) : null;
 
   const gift = isGift
     ? { recipientName: text(checkout.recipientName, 80), recipientArea: text(checkout.recipientArea, 80), note: text(checkout.giftNote, 300) }
@@ -121,10 +130,17 @@ export async function POST(req: NextRequest) {
         gift_note: gift?.note || null,
         recipient_name: gift?.recipientName || null,
         recipient_area: gift?.recipientArea || null,
-        discount_code: live?.code ?? null,
+        discount_code: usedCode, // a code counts as used only when it was the discount applied
         subtotal_sar: totals.subtotal,
-        bundle_discount_sar: totals.bundleDiscount,
-        code_discount_sar: totals.codeDiscount,
+        bundle_discount_sar: d?.kind === "bundle" ? d.amount : 0,
+        code_discount_sar: d?.kind === "code" ? d.amount : 0,
+        perk_discount_sar: d && (d.kind === "loyalty" || d.kind === "birthday" || d.kind === "personal") ? d.amount : 0,
+        discount_kind: d?.kind ?? null,
+        discount_pct: d?.pct ?? null,
+        loyalty_level: perks?.level?.slug ?? null,
+        customer_offer_id: d?.kind === "personal" ? d.ref : null,
+        birthday_year: d?.kind === "birthday" ? Number(d.ref) : null,
+        customer_id: customerId,
         packaging_fee_sar: totals.packagingFee,
         delivery_fee_sar: totals.deliveryFee,
         total_sar: totals.total,
@@ -142,10 +158,10 @@ export async function POST(req: NextRequest) {
     })
     .single<{ new_order_id: string; new_order_no: string }>();
 
+  // The birthday gift or personal offer was used by another order a moment ago: ask her to look again.
+  if (error?.code === "23505") return fail("discount", 409);
   if (error || !created) return fail("unavailable", 503);
 
-  // Signed in to My Thaanora: the order goes into her account (guests stay guests).
-  const customerId = await currentCustomerId();
   // A saved address she chose: read again from her account (never trusted from the browser), and only
   // if it's for the delivery area she picked.
   let address: string | null = null;
@@ -159,9 +175,8 @@ export async function POST(req: NextRequest) {
       address = [`${a.label}: ${who}`, where].filter(Boolean).join(" · ").slice(0, 600);
     }
   }
-  const linked = customerId
-    ? !(await supabase.from("orders").update({ customer_id: customerId, ...(address ? { address } : {}) }).eq("id", created.new_order_id)).error
-    : false;
+  if (address) await supabase.from("orders").update({ address }).eq("id", created.new_order_id);
+  const linked = customerId !== null;
 
   const lines: MessageLine[] = priced.map((l) => ({
     name: l.p.name,
@@ -176,8 +191,6 @@ export async function POST(req: NextRequest) {
     orderNo: created.new_order_no,
     lines,
     totals,
-    bundlePct: bundle?.pct ?? null,
-    discountCode: live?.code ?? null,
     giftBox,
     gift,
     area: area.area,
@@ -193,7 +206,7 @@ export async function POST(req: NextRequest) {
       orderNo: created.new_order_no,
       total: totals.total,
       linked,
-      codeDropped: Boolean(codeRaw) && !live,
+      codeDropped: Boolean(codeRaw) && !usedCode,
       message,
       whatsappUrl: waNumber ? `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}` : null,
     },

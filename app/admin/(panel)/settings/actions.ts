@@ -18,6 +18,7 @@ const PUBLIC: Record<string, boolean> = {
   low_stock_level: false,
   customer_signin_method: true,
   require_signin_to_order: true,
+  birthday_gift_pct: true,
 };
 const HOSTS = { instagram: "instagram.com", tiktok: "tiktok.com", snapchat: "snapchat.com" } as const;
 
@@ -89,6 +90,10 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
   if (!["email", "sms", "both"].includes(method)) return fail("signinMethod", "signinMethod");
   if (!SIGNIN_READY.includes(method)) return fail("signinNotReady", "signinMethod");
 
+  // Birthday gift (Thaanora Circle): 0 switches it off.
+  const birthdayPct = Number(text(form.get("birthdayPct"), 4));
+  if (!(Number.isInteger(birthdayPct) && birthdayPct >= 0 && birthdayPct <= 50)) return fail("birthdayPct", "birthdayPct");
+
   const values: Record<string, unknown> = {
     whatsapp_number: wa,
     social_links: links,
@@ -98,6 +103,7 @@ export async function saveSettings(_p: FormResult, form: FormData): Promise<Form
     low_stock_level: low,
     customer_signin_method: method,
     require_signin_to_order: form.get("requireSignIn") === "on",
+    birthday_gift_pct: birthdayPct,
   };
   for (const [key, value] of Object.entries(values)) {
     const { error, count } = await supabase.from("settings").update({ value }, { count: "exact" }).eq("key", key);

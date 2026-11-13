@@ -16,6 +16,7 @@ export type SettingsForm = {
   lowStock: number;
   signinMethod: "email" | "sms" | "both";
   requireSignIn: boolean;
+  birthdayPct: number;
 };
 
 // Every setting, public and private, read as the owner (RLS: "owner writes settings").
@@ -48,6 +49,7 @@ export async function getSettingsForm(): Promise<{ form: SettingsForm; failed: b
       lowStock: Number.isFinite(low) && low >= 0 ? low : 3,
       signinMethod: (["email", "sms", "both"] as const).find((m) => m === get("customer_signin_method")) ?? "email",
       requireSignIn: get("require_signin_to_order") === true,
+      birthdayPct: Number.isFinite(Number(get("birthday_gift_pct"))) ? Number(get("birthday_gift_pct")) : 5,
     },
     failed: Boolean(error),
   };

@@ -33,7 +33,7 @@ export async function issueInvoice(orderId: string): Promise<InvoiceOutcome> {
     .eq("id", orderId)
     .eq("status", "delivered_cash_collected")
     .or(`invoice_status.in.(none,failed),and(invoice_status.eq.pending,invoice_tried_at.lt.${new Date(now.getTime() - STALE_MS).toISOString()})`)
-    .select("id, order_no, customer_name, customer_phone, area, discount_code, bundle_discount_sar, code_discount_sar, packaging_fee_sar, delivery_fee_sar, total_sar, invoice_zoho_id, invoice_paid, invoice_attempts")
+    .select("id, order_no, customer_name, customer_phone, area, discount_code, bundle_discount_sar, code_discount_sar, perk_discount_sar, packaging_fee_sar, delivery_fee_sar, total_sar, invoice_zoho_id, invoice_paid, invoice_attempts")
     .maybeSingle();
   if (!claimed) {
     const { data: o } = await db.from("orders").select("status, invoice_status").eq("id", orderId).maybeSingle();
@@ -95,6 +95,7 @@ export async function issueInvoice(orderId: string): Promise<InvoiceOutcome> {
         items: (items ?? []).map((i) => ({ code: i.product_code, name: i.product_name, unitPrice: Number(i.unit_price_sar), qty: i.qty })),
         bundleDiscount: Number(claimed.bundle_discount_sar),
         codeDiscount: Number(claimed.code_discount_sar),
+        perkDiscount: Number(claimed.perk_discount_sar ?? 0),
         discountCode: claimed.discount_code,
         packagingFee: Number(claimed.packaging_fee_sar),
         deliveryFee: Number(claimed.delivery_fee_sar),

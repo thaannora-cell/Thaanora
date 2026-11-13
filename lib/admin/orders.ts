@@ -54,6 +54,10 @@ export type OrderDetail = OrderListItem & {
   subtotal: number;
   bundleDiscount: number;
   codeDiscount: number;
+  perkDiscount: number;
+  discountKind: string | null;
+  discountPct: number | null;
+  loyaltyLevel: string | null;
   packagingFee: number;
   deliveryFee: number;
   vat: number;
@@ -107,8 +111,11 @@ export async function getOrder(orderNo: string): Promise<OrderDetail | null> {
   const INVOICE = "invoice_status, invoice_no, invoice_url, invoice_zoho_id, invoice_error, invoice_attempts, invoice_tried_at, ";
   const BASE = "id, order_no, created_at, status_changed_at, customer_name, customer_phone, language, area, address, packaging, is_gift, gift_note, recipient_name, recipient_area, discount_code, subtotal_sar, bundle_discount_sar, code_discount_sar, packaging_fee_sar, delivery_fee_sar, total_sar, vat_sar, status, courier, tracking_no, notes, order_items (id, product_code, product_name, unit_price_sar, qty, wants_stitching)";
   const read = (cols: string) => supabase.from("orders").select(cols).eq("order_no", orderNo).maybeSingle();
-  let res = await read(INVOICE + BASE);
-  // Before the invoices migration runs, the invoice columns don't exist yet: show the order without them.
+  // The one discount used (Phase 3B · A7) and the invoice; before those migrations run the columns
+  // don't exist yet, so the order is shown without them.
+  const PERK = "perk_discount_sar, discount_kind, discount_pct, loyalty_level, ";
+  let res = await read(PERK + INVOICE + BASE);
+  if (res.error?.code === "42703") res = await read(INVOICE + BASE);
   if (res.error?.code === "42703") res = await read(BASE);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const o = res.data as any;
@@ -129,6 +136,10 @@ export async function getOrder(orderNo: string): Promise<OrderDetail | null> {
     subtotal: Number(o.subtotal_sar),
     bundleDiscount: Number(o.bundle_discount_sar),
     codeDiscount: Number(o.code_discount_sar),
+    perkDiscount: Number(o.perk_discount_sar ?? 0),
+    discountKind: o.discount_kind ?? null,
+    discountPct: o.discount_pct === null || o.discount_pct === undefined ? null : Number(o.discount_pct),
+    loyaltyLevel: o.loyalty_level ?? null,
     packagingFee: Number(o.packaging_fee_sar),
     deliveryFee: Number(o.delivery_fee_sar),
     invoice: {

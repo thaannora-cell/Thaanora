@@ -61,8 +61,17 @@ export default function ProfileForm({ customer = null, next = null }: { customer
       </label>
       <label className={label}>
         {t("birthday")}
-        <input name="birthday" type="date" min="1920-01-01" defaultValue={customer?.birthday ?? ""} aria-invalid={bad("birthday")} className="th-field text-[16px]" />
-        <small className="text-[12px]">{t("birthdayHint")}</small>
+        {customer?.birthday ? (
+          <>
+            <input type="date" value={customer.birthday} readOnly aria-readonly="true" className="th-field bg-[#F1EEE8] text-[16px] text-muted" />
+            <small className="text-[12px]">{t("birthdayLocked")}</small>
+          </>
+        ) : (
+          <>
+            <input name="birthday" type="date" min="1920-01-01" defaultValue="" aria-invalid={bad("birthday")} className="th-field text-[16px]" />
+            <small className="text-[12px]">{t("birthdayHint")}</small>
+          </>
+        )}
       </label>
       {state.error && (
         <p role="alert" className="m-0 text-[14px] text-rani">

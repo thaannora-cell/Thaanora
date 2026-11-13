@@ -8,6 +8,7 @@ export type InvoiceOrder = {
   items: { code: string; name: string; unitPrice: number; qty: number }[];
   bundleDiscount: number;
   codeDiscount: number;
+  perkDiscount?: number; // Circle level, birthday gift or personal offer
   discountCode: string | null;
   packagingFee: number;
   deliveryFee: number;
@@ -21,7 +22,7 @@ export type ZohoLine = { name: string; description?: string; rate: number; quant
 const cents = (n: number) => Math.round(n * 100);
 const sar = (c: number) => c / 100;
 
-// The order's discounts (bundle + code) apply to the suits only. Zoho has no "discount on these lines"
+// The order's discount (bundle, code, Circle level, birthday gift or personal offer) apply to the suits only. Zoho has no "discount on these lines"
 // for tax-inclusive invoices that keeps VAT right, so the discount is shared out across the suit lines
 // in proportion to their value (to the halala), and the last line takes the rounding.
 export function shareDiscount(lineTotals: number[], discount: number): number[] {
@@ -47,7 +48,7 @@ export function buildInvoice(
   const tax = opts.taxId ? { tax_id: opts.taxId } : {};
   const discounts = shareDiscount(
     o.items.map((i) => i.unitPrice * i.qty),
-    o.bundleDiscount + o.codeDiscount,
+    o.bundleDiscount + o.codeDiscount + (o.perkDiscount ?? 0),
   );
   const lines: ZohoLine[] = o.items.map((i, n) => ({
     name: i.name.slice(0, 100),

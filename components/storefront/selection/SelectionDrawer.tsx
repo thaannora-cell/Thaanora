@@ -18,6 +18,7 @@ export default function SelectionDrawer() {
   const t = useTranslations("Selection");
   const tRack = useTranslations("Rack");
   const tCheckout = useTranslations("Checkout");
+  const tCircle = useTranslations("Circle");
   const areaLabel = useAreaLabel();
   const ref = useRef<HTMLDialogElement>(null);
   const [codeInput, setCodeInput] = useState("");
@@ -36,6 +37,24 @@ export default function SelectionDrawer() {
   if (!sel) return null;
   const { lines, products, bundle, totals, appliedCode, checkout, settings } = sel;
   const price = (n: number) => tRack("price", { amount: n });
+  // One discount per order (the best one), on full-price suits only.
+  const discountLabel = (d: NonNullable<typeof totals.discount>) =>
+    d.kind === "bundle"
+      ? t("bundleLine", { qty: d.minQty ?? bundle?.qty ?? 0, pct: d.pct })
+      : d.kind === "code"
+        ? t("codeLine", { code: d.ref ?? "" })
+        : d.kind === "loyalty"
+          ? t("loyaltyLine", { level: tCircle.has(`levels.${d.ref}`) ? tCircle(`levels.${d.ref}`) : (d.ref ?? ""), pct: d.pct })
+          : d.kind === "birthday"
+            ? t("birthdayLine", { pct: d.pct })
+            : t("personalLine", { pct: d.pct });
+  const discountNote =
+    [
+      appliedCode && totals.discount && totals.discount.kind !== "code" ? t("codeNotUsed", { code: appliedCode.code, best: discountLabel(totals.discount) }) : null,
+      (appliedCode || totals.discount) && totals.fullPriceSubtotal < totals.subtotal ? t("saleOnlyNote") : null,
+    ]
+      .filter(Boolean)
+      .join(" ") || null;
 
   const apply = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -201,14 +220,11 @@ export default function SelectionDrawer() {
               </form>
             )}
 
+            {discountNote && <p className="m-0 text-[13px] text-muted">{discountNote}</p>}
+
             <dl className="m-0 flex flex-col tabular-nums">
               <Row label={t("subtotal", { n: totals.count })} value={price(totals.subtotal)} />
-              {totals.bundleDiscount > 0 && bundle && (
-                <Row label={t("bundleLine", { qty: bundle.qty, pct: bundle.pct })} value={`−${price(totals.bundleDiscount)}`} accent />
-              )}
-              {totals.codeDiscount > 0 && appliedCode && (
-                <Row label={t("codeLine", { code: appliedCode.code })} value={`−${price(totals.codeDiscount)}`} accent />
-              )}
+              {totals.discount && <Row label={discountLabel(totals.discount)} value={`−${price(totals.discount.amount)}`} accent />}
               {totals.packagingFee > 0 && <Row label={tCheckout("giftBoxLine")} value={price(totals.packagingFee)} />}
               <Row
                 label={checkout.area ? tCheckout("deliveryLine", { area: areaLabel(checkout.area) }) : tCheckout("deliveryLineNoArea")}

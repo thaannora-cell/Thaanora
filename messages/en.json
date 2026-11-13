@@ -282,7 +282,12 @@
     "addedUnlockedToast": "Added. {pct}% off is on.",
     "addedLeftToast": "Added. {left} more for {pct}% off.",
     "orderButton": "Order on WhatsApp",
-    "codeTooMany": "Too many tries. Please wait a few minutes and try the code again."
+    "codeTooMany": "Too many tries. Please wait a few minutes and try the code again.",
+    "loyaltyLine": "Thaanora Circle · {level} · {pct}% off",
+    "birthdayLine": "Birthday gift · {pct}% off",
+    "personalLine": "Your offer · {pct}% off",
+    "codeNotUsed": "Code {code} isn't used: {best} applies instead. One discount per order.",
+    "saleOnlyNote": "Extra discounts apply only to suits at full price, not to suits already on sale."
   },
   "Checkout": {
     "packaging": "Packaging",
@@ -311,7 +316,8 @@
     "noVatNote": "No VAT is added: Thaanora is not VAT-registered. Stitching is quoted separately by your tailor.",
     "deliverTo": "Deliver to",
     "otherAddress": "Another address (tell us on WhatsApp)",
-    "manageAddresses": "Manage my addresses"
+    "manageAddresses": "Manage my addresses",
+    "giftBoxFree": "Keepsake gift box · free for Circle members"
   },
   "Areas": {
     "central": "Central Riyadh (Olaya, Malaz, Sulaimaniyah)",
@@ -347,7 +353,8 @@
     "signInTitle": "Sign in to place your order",
     "signInText": "Your bag and details are saved. After signing in you'll come straight back here.",
     "signInButton": "Sign in or create an account",
-    "signInNote": "You'll be asked to sign in to place the order."
+    "signInNote": "You'll be asked to sign in to place the order.",
+    "error_discount": "Your birthday gift or offer was just used on another order. Please reload the page to see your new total."
   },
   "OrderMessage": {
     "greeting": "Hello Thaanora, I would like to order ({orderNo}):",
@@ -368,7 +375,11 @@
     "customer": "Name: {name} · WhatsApp: {phone}",
     "closing": "Cash on delivery. Thank you!",
     "totalNoVat": "Total to pay on delivery: {amount}",
-    "address": "Address: {address}"
+    "address": "Address: {address}",
+    "loyalty": "Thaanora Circle {level} {pct}% off: −{amount}",
+    "birthday": "Birthday gift {pct}% off: −{amount}",
+    "personal": "Personal offer {pct}% off: −{amount}",
+    "giftBoxFree": "Packaging: keepsake gift box (free, Circle member)"
   },
   "Track": {
     "eyebrow": "Order tracking",
@@ -642,7 +653,7 @@
     },
     "signOut": "Sign out",
     "deactivated": "This account is deactivated. To use it again, message us on WhatsApp.",
-    "comingSoon": "Coming soon to My Thaanora: offers, Thaanora Circle and recommendations.",
+    "comingSoon": "Coming soon to My Thaanora: returns and reviews.",
     "accountFor": "Account email: <b>{email}</b>",
     "birthdayShort": "Birthday",
     "notificationsLink": "Notifications{count, plural, =0 {} other { (#)}}",
@@ -653,7 +664,9 @@
     "tailorLink": "My tailor",
     "toFinishOrder": "Sign in to finish your order. Your bag is saved.",
     "forYouTitle": "Picked for you",
-    "ourPicksTitle": "Our picks for you"
+    "ourPicksTitle": "Our picks for you",
+    "circleLink": "Circle & offers",
+    "birthdayLocked": "Your birthday is saved. To correct it, please message us on WhatsApp."
   },
   "Notifications": {
     "title": "Notifications",
@@ -772,7 +785,10 @@
     "cancelled": "Your order is cancelled.",
     "cannotCancel": "This order can't be cancelled any more. Message us on WhatsApp and we'll help.",
     "cancelFailed": "Something went wrong. Please try again.",
-    "invoice": "View invoice {no}"
+    "invoice": "View invoice {no}",
+    "perkLoyalty": "Thaanora Circle · {level} ({pct}%)",
+    "perkBirthday": "Birthday gift ({pct}%)",
+    "perkPersonal": "Personal offer ({pct}%)"
   },
   "Favourites": {
     "title": "Favourites",
@@ -875,5 +891,60 @@
     "save": "Save {name}",
     "unsave": "Remove {name} from saved",
     "showMore": "Show {count} more"
+  },
+  "Circle": {
+    "levels": {
+      "silver": "Silver",
+      "gold": "Gold",
+      "emerald": "Emerald"
+    },
+    "eyebrow": "My Thaanora",
+    "pageTitle": "Thaanora Circle",
+    "intro": "Your benefits grow with the suits you buy. Here are your level, your gifts and your offers.",
+    "myLevel": "Your level",
+    "seeBenefits": "Benefits and offers",
+    "noLevel": "Welcome",
+    "suitsCount": "{count, plural, =0 {No suits delivered in the last 12 months} one {# suit delivered in the last 12 months} other {# suits delivered in the last 12 months}}",
+    "toNext": "{count, plural, one {# more suit to {level}} other {# more suits to {level}}}",
+    "topLevel": "You're at our highest level. Thank you!",
+    "yourLevel": "Your level",
+    "fromSuits": "{count, plural, one {From # suit} other {From # suits}}",
+    "levelsTitle": "All levels",
+    "benefit": {
+      "pct": "{pct}% off your orders",
+      "giftBox": "Free keepsake gift box",
+      "early_sale": "Early access to sales",
+      "eid_gift": "An Eid surprise gift",
+      "priority_sourcing": "Priority on sourcing requests"
+    },
+    "birthdayTitle": "Birthday gift",
+    "birthdayReady": "Happy birthday! {pct}% off is ready for you until {end}. It's added in your bag automatically.",
+    "birthdayReadyShort": "Happy birthday! {pct}% off is waiting in your bag.",
+    "birthdayWindow": "{pct}% off, from {start} to {end}.",
+    "birthdayUsed": "You've used this year's gift. See you on your next birthday, {date}.",
+    "birthdayRule": "Once a year, from 7 days before to 7 days after your birthday.",
+    "birthdayAdd": "Add your birthday to get a gift every year.",
+    "birthdayAddLink": "Add my birthday",
+    "offersTitle": "My offers",
+    "offerDefault": "Special offer",
+    "offersWaiting": "{count, plural, one {You have # offer waiting in your bag.} other {You have # offers waiting in your bag.}}",
+    "noOffers": "No personal offers right now. We'll let you know when there's one.",
+    "everyoneTitle": "Offers for everyone",
+    "pctOff": "{pct}% off",
+    "until": "until {date}",
+    "noEnd": "no end date",
+    "howTitle": "How discounts work",
+    "howOne": "One discount per order: we use the best one for you automatically (Circle level, bundle, code, birthday gift or personal offer).",
+    "howSale": "Suits already on sale keep their sale price; the extra discount is for suits at full price.",
+    "howCount": "Your level counts suits delivered in the last 12 months. Refused or cancelled orders don't count.",
+    "historyTitle": "Discounts you've had",
+    "saved": "Saved {amount}",
+    "used": {
+      "loyalty": "Circle {level} ({pct}%)",
+      "bundle": "Bundle ({pct}%)",
+      "code": "Code {code}",
+      "birthday": "Birthday gift ({pct}%)",
+      "personal": "Personal offer ({pct}%)"
+    }
   }
 }

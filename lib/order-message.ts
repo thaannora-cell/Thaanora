@@ -10,8 +10,6 @@ type Input = {
   orderNo: string;
   lines: MessageLine[];
   totals: Totals;
-  bundlePct: number | null;
-  discountCode: string | null;
   giftBox: boolean;
   gift: { recipientName: string; recipientArea: string; note: string } | null;
   area: string;
@@ -26,6 +24,7 @@ export async function buildOrderMessage(o: Input): Promise<string> {
   const t = await getTranslations({ locale: o.locale, namespace: "OrderMessage" });
   const tRack = await getTranslations({ locale: o.locale, namespace: "Rack" });
   const tAreas = await getTranslations({ locale: o.locale, namespace: "Areas" });
+  const tCircle = await getTranslations({ locale: o.locale, namespace: "Circle" });
   const price = (n: number) => tRack("price", { amount: n });
   const areaKey = o.area.split(/\s+/)[0]?.toLowerCase() ?? "";
   const area = areaKey && tAreas.has(areaKey) ? tAreas(areaKey) : o.area;
@@ -37,9 +36,17 @@ export async function buildOrderMessage(o: Input): Promise<string> {
   }
   out.push("");
   out.push(t("subtotal", { amount: price(o.totals.subtotal) }));
-  if (o.totals.bundleDiscount > 0 && o.bundlePct) out.push(t("bundle", { pct: o.bundlePct, amount: price(o.totals.bundleDiscount) }));
-  if (o.totals.codeDiscount > 0 && o.discountCode) out.push(t("code", { code: o.discountCode, amount: price(o.totals.codeDiscount) }));
-  out.push(o.giftBox ? t("giftBox", { amount: price(o.totals.packagingFee) }) : t("keeperBag"));
+  // The one discount used (the best of Circle level, bundle, code, birthday gift, personal offer).
+  const d = o.totals.discount;
+  if (d) {
+    const amount = price(d.amount);
+    if (d.kind === "bundle") out.push(t("bundle", { pct: d.pct, amount }));
+    else if (d.kind === "code") out.push(t("code", { code: d.ref ?? "", amount }));
+    else if (d.kind === "loyalty") out.push(t("loyalty", { level: tCircle.has(`levels.${d.ref}`) ? tCircle(`levels.${d.ref}`) : (d.ref ?? ""), pct: d.pct, amount }));
+    else if (d.kind === "birthday") out.push(t("birthday", { pct: d.pct, amount }));
+    else out.push(t("personal", { pct: d.pct, amount }));
+  }
+  out.push(o.giftBox ? (o.totals.packagingFee > 0 ? t("giftBox", { amount: price(o.totals.packagingFee) }) : t("giftBoxFree")) : t("keeperBag"));
   out.push(t("delivery", { area, amount: o.totals.deliveryFee > 0 ? price(o.totals.deliveryFee) : t("free") }));
   if (o.address) out.push(t("address", { address: o.address }));
   out.push(o.vatPct > 0 ? t("total", { amount: price(o.totals.total), pct: o.vatPct }) : t("totalNoVat", { amount: price(o.totals.total) }));

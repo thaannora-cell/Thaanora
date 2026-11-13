@@ -5,6 +5,8 @@ import { Link } from "@/i18n/navigation";
 import AccountShell, { Card } from "@/components/account/AccountShell";
 import ClaimOrder from "@/components/account/ClaimOrder";
 import PickedForYou from "@/components/account/PickedForYou";
+import CircleStatus from "@/components/account/CircleStatus";
+import { getPerks } from "@/lib/customer/perks";
 import { getAccount } from "@/lib/customer/account";
 import { myOrders } from "@/lib/customer/orders";
 import { unreadCount } from "@/lib/customer/notifications";
@@ -61,7 +63,8 @@ export default async function AccountHome({ params, searchParams }: Props) {
   }
 
   const c = account.customer;
-  const [[latest], unread] = await Promise.all([myOrders(c.id, 1), unreadCount()]);
+  const [[latest], unread, perks, tCircle] = await Promise.all([myOrders(c.id, 1), unreadCount(), getPerks(c.id, c.birthday), getTranslations("Circle")]);
+  const giftReady = perks.birthday?.open && !perks.birthday.used ? perks.birthday : null;
   const date = (iso: string) => new Intl.DateTimeFormat(`${locale}-u-ca-gregory`, { day: "numeric", month: "long", year: "numeric" }).format(new Date(iso));
   const birthday = c.birthday ? new Intl.DateTimeFormat(`${locale}-u-ca-gregory`, { day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${c.birthday}T00:00:00Z`)) : null;
   const row = (label: string, value: React.ReactNode) => (
@@ -92,6 +95,7 @@ export default async function AccountHome({ params, searchParams }: Props) {
       <nav aria-label={t("quickLinks")} className="mb-4 flex flex-wrap gap-2">
         {([
           ["/account/orders", t("allOrders")],
+          ["/account/circle", t("circleLink")],
           ["/account/favourites", t("favouritesLink")],
           ["/account/addresses", t("addressesLink")],
           ["/account/tailor", t("tailorLink")],
@@ -149,6 +153,23 @@ export default async function AccountHome({ params, searchParams }: Props) {
             {row(t("language"), <span lang={c.language}>{LANG_NAMES[c.language]}</span>)}
             {row(t("birthdayShort"), birthday ?? <span className="text-muted">{t("noBirthday")}</span>)}
           </dl>
+        </Card>
+
+        <Card labelledBy="circle" className="md:col-span-2">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <h2 id="circle" className="m-0 text-[16px] font-semibold text-emerald">
+              {tCircle("pageTitle")}
+            </h2>
+            <Link href="/account/circle" className="min-h-[36px] text-[14px] text-emerald underline underline-offset-2">
+              {tCircle("seeBenefits")}
+            </Link>
+          </div>
+          <CircleStatus perks={perks} compact />
+          {(giftReady || perks.offers.length > 0) && (
+            <p className="m-0 mt-3 rounded-xl border border-rani/30 bg-[#FBEFF3] px-3 py-2.5 text-[14px] text-[#7A1238]">
+              {giftReady ? tCircle("birthdayReadyShort", { pct: giftReady.pct }) : tCircle("offersWaiting", { count: perks.offers.length })}
+            </p>
+          )}
         </Card>
 
         <PickedForYou customerId={c.id} locale={locale} />

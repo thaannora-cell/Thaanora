@@ -13,6 +13,10 @@ export type MyOrderDetail = MyOrder & {
   subtotal: number;
   bundleDiscount: number;
   codeDiscount: number;
+  perkDiscount: number; // Circle level, birthday gift or personal offer
+  discountKind: string | null;
+  discountPct: number | null;
+  loyaltyLevel: string | null;
   packagingFee: number;
   deliveryFee: number;
   vat: number;
@@ -52,7 +56,7 @@ export async function myOrder(customerId: string, orderNo: string): Promise<MyOr
   const { data: o } = await db
     .from("orders")
     .select(
-      "order_no, status, created_at, status_changed_at, area, packaging, is_gift, recipient_name, discount_code, subtotal_sar, bundle_discount_sar, code_discount_sar, packaging_fee_sar, delivery_fee_sar, total_sar, vat_sar, courier, tracking_no, invoice_status, invoice_no, invoice_url, order_items (product_id, product_code, product_name, unit_price_sar, qty, wants_stitching, created_at)",
+      "order_no, status, created_at, status_changed_at, area, packaging, is_gift, recipient_name, discount_code, subtotal_sar, bundle_discount_sar, code_discount_sar, perk_discount_sar, discount_kind, discount_pct, loyalty_level, packaging_fee_sar, delivery_fee_sar, total_sar, vat_sar, courier, tracking_no, invoice_status, invoice_no, invoice_url, order_items (product_id, product_code, product_name, unit_price_sar, qty, wants_stitching, created_at)",
     )
     .eq("order_no", orderNo)
     .eq("customer_id", customerId)
@@ -83,6 +87,10 @@ export async function myOrder(customerId: string, orderNo: string): Promise<MyOr
     subtotal: Number(o.subtotal_sar),
     bundleDiscount: Number(o.bundle_discount_sar),
     codeDiscount: Number(o.code_discount_sar),
+    perkDiscount: Number(o.perk_discount_sar ?? 0),
+    discountKind: o.discount_kind ?? null,
+    discountPct: o.discount_pct === null || o.discount_pct === undefined ? null : Number(o.discount_pct),
+    loyaltyLevel: o.loyalty_level ?? null,
     packagingFee: Number(o.packaging_fee_sar),
     deliveryFee: Number(o.delivery_fee_sar),
     vat: Number(o.vat_sar),

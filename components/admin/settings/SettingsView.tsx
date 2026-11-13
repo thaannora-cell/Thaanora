@@ -147,6 +147,11 @@ export default function SettingsView({ form: s }: { form: SettingsForm }) {
               <small className="block text-[12px] text-muted">{t("requireSignInHint")}</small>
             </span>
           </label>
+          <label className={`${label} mt-3`}>
+            {t("birthdayPct")}
+            <input name="birthdayPct" type="number" inputMode="numeric" min="0" max="50" step="1" defaultValue={s.birthdayPct} required aria-invalid={bad("birthdayPct")} className={field} />
+          </label>
+          <p className="m-0 mt-2 text-[12px] text-muted">{t("birthdayPctHint")}</p>
         </section>
       </div>
 

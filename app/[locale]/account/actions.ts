@@ -112,7 +112,8 @@ export async function saveProfile(_prev: ProfileState, form: FormData): Promise<
   }
   // A proven (SMS-verified) mobile can't be changed here.
   const verified = await db.from("customers").select("phone_verified_at").eq("id", account.customer.id).maybeSingle();
-  const update: Record<string, unknown> = { name, language, birthday };
+  // The birthday is set once (it unlocks the yearly birthday gift); after that only staff change it.
+  const update: Record<string, unknown> = { name, language, ...(account.customer.birthday ? {} : { birthday }) };
   if (!verified.data?.phone_verified_at) update.phone = phone;
   const { error } = await db.from("customers").update(update).eq("id", account.customer.id).eq("user_id", account.userId);
   if (error) return { error: "failed", at: Date.now() };

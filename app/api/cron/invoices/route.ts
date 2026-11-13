@@ -21,5 +21,7 @@ export async function GET(req: Request) {
   // Also daily: anonymous trending counts are kept for 30 days only.
   const db = getAdminClient();
   if (db) await db.from("product_events").delete().lt("created_at", new Date(Date.now() - 30 * 86400000).toISOString());
-  return NextResponse.json({ tried: ids.length, results }, { headers: { "Cache-Control": "no-store" } });
+  // And: birthday gift notices for customers whose gift window opens today (7 days before).
+  const birthdays = db ? await db.rpc("birthday_gift_notices") : null;
+  return NextResponse.json({ tried: ids.length, results, birthdayNotices: birthdays?.data ?? null }, { headers: { "Cache-Control": "no-store" } });
 }

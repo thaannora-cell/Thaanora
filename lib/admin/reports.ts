@@ -38,6 +38,7 @@ type OrderRow = {
   delivery_fee_sar: number;
   bundle_discount_sar: number;
   code_discount_sar: number;
+  perk_discount_sar: number | null;
   order_items: Item[];
 };
 
@@ -47,7 +48,7 @@ export async function loadOrders(range: Range) {
   const [orders, products] = await Promise.all([
     supabase
       .from("orders")
-      .select("order_no, created_at, status, area, total_sar, delivery_fee_sar, bundle_discount_sar, code_discount_sar, order_items (product_id, product_code, product_name, qty, unit_price_sar)")
+      .select("order_no, created_at, status, area, total_sar, delivery_fee_sar, bundle_discount_sar, code_discount_sar, perk_discount_sar, order_items (product_id, product_code, product_name, qty, unit_price_sar)")
       .gte("created_at", dayStart(range.from)!)
       .lt("created_at", dayEnd(range.to)!)
       .order("created_at")
@@ -71,7 +72,7 @@ export function toLines(orders: OrderRow[], brandOf: Map<string, string>): Order
       area: o.area,
       total: Number(o.total_sar),
       delivery: Number(o.delivery_fee_sar),
-      discount: Number(o.bundle_discount_sar) + Number(o.code_discount_sar),
+      discount: Number(o.bundle_discount_sar) + Number(o.code_discount_sar) + Number(o.perk_discount_sar ?? 0),
       code: i.product_code,
       name: i.product_name,
       brand: (i.product_id && brandOf.get(i.product_id)) || brandOf.get(`code:${i.product_code}`) || "—",

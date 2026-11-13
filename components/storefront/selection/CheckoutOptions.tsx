@@ -38,7 +38,7 @@ export default function CheckoutOptions() {
             onChange={() => updateCheckout({ packaging: "gift_box" })}
           />
           <span>
-            {t("giftBox", { fee: price(settings.giftBoxFee) })}
+            {sel.customer?.perks.freeGiftBox ? t("giftBoxFree") : t("giftBox", { fee: price(settings.giftBoxFee) })}
             <small className="block text-[12px] text-muted">{t("giftBoxNote")}</small>
           </span>
         </label>
