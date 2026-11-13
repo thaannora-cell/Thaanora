@@ -23,7 +23,7 @@ export type Checkout = {
 
 // Signed in to My Thaanora: her name, mobile and saved addresses, to fill the checkout.
 export type SavedAddress = { id: string; label: string; recipientName: string; area: string; isDefault: boolean; isGift: boolean };
-export type SavedCustomer = { name: string; phone: string; addresses: SavedAddress[] };
+export type SavedCustomer = { name: string; phone: string; addresses: SavedAddress[]; measurements: Record<string, string>; tailorId: string | null };
 
 const EMPTY_CHECKOUT: Checkout = { packaging: "suit_keeper_bag", isGift: false, recipientName: "", recipientArea: "", giftNote: "", area: "", customerName: "", customerPhone: "", addressId: "" };
 

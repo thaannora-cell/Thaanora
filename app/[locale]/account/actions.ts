@@ -13,6 +13,7 @@ import { isLocale } from "@/lib/site-gate";
 import { isNotificationType, notificationHref } from "@/lib/notifications";
 import { favoriteCodes, visibleProductIds } from "@/lib/customer/favorites";
 import { getCheckoutSettings } from "@/lib/shop-data";
+import { cleanMeasurements } from "@/lib/measurements";
 
 // ── Sign in with an email code ──────────────────────────────────────────────
 export type CustomerSignInState =
@@ -324,4 +325,28 @@ export async function makeDefaultAddress(id: string, locale: string) {
   await supabase.from("addresses").update({ is_default: false }).neq("id", id);
   await supabase.from("addresses").update({ is_default: true }).eq("id", id);
   revalidatePath(`/${isLocale(locale) ? locale : "en"}/account/addresses`);
+}
+
+// ── My tailor and measurements (written by the server, only for her own profile) ─────────
+export async function saveMeasurements(input: unknown): Promise<{ ok: boolean }> {
+  const account = await getAccount();
+  if (account.state !== "customer") return { ok: false };
+  const db = getAdminClient();
+  if (!db) return { ok: false };
+  const { error } = await db.from("customers").update({ measurements: cleanMeasurements(input) }).eq("id", account.customer.id).eq("user_id", account.userId);
+  return { ok: !error };
+}
+
+export async function chooseTailor(tailorId: string | null, locale: string): Promise<{ ok: boolean }> {
+  const account = await getAccount();
+  if (account.state !== "customer") return { ok: false };
+  const db = getAdminClient();
+  if (!db) return { ok: false };
+  if (tailorId) {
+    const { data: t } = await db.from("tailors").select("id").eq("id", tailorId).eq("visible", true).maybeSingle();
+    if (!t) return { ok: false };
+  }
+  const { error } = await db.from("customers").update({ tailor_id: tailorId }).eq("id", account.customer.id).eq("user_id", account.userId);
+  revalidatePath(`/${isLocale(locale) ? locale : "en"}/account`, "layout");
+  return { ok: !error };
 }

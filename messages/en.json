@@ -231,7 +231,10 @@
     "bagTitle": "Your selection · tick the suits to stitch",
     "bagEmpty": "Your bag is empty. Open a fabric on the rack and tap “Get it stitched” to add it with stitching.",
     "willBeStitched": "will be stitched",
-    "tickToStitch": "tick to add stitching"
+    "tickToStitch": "tick to add stitching",
+    "measurementsTitleAccount": "Your measurements (inches) · saved to your account",
+    "measurementsSavedAccount": "Measurements saved to your account.",
+    "myTailor": "My tailor"
   },
   "Selection": {
     "trayLabel": "Your selection",
@@ -623,14 +626,15 @@
     },
     "signOut": "Sign out",
     "deactivated": "This account is deactivated. To use it again, message us on WhatsApp.",
-    "comingSoon": "Coming soon to My Thaanora: your tailor, offers and Thaanora Circle.",
+    "comingSoon": "Coming soon to My Thaanora: offers, Thaanora Circle and recommendations.",
     "accountFor": "Account email: <b>{email}</b>",
     "birthdayShort": "Birthday",
     "notificationsLink": "Notifications{count, plural, =0 {} other { (#)}}",
     "allOrders": "All orders",
     "quickLinks": "My Thaanora sections",
     "favouritesLink": "Favourites",
-    "addressesLink": "Addresses"
+    "addressesLink": "Addresses",
+    "tailorLink": "My tailor"
   },
   "Notifications": {
     "title": "Notifications",
@@ -809,5 +813,31 @@
       "failed": "We couldn't save that. Please try again.",
       "signedOut": "You've been signed out. Please sign in again."
     }
+  },
+  "Tailor": {
+    "title": "My tailor",
+    "intro": "Our partner tailors in Riyadh. Choose yours, keep your measurements here, and contact the tailor directly: you agree the stitching with them.",
+    "mineTitle": "Your tailor",
+    "noneYet": "You haven't chosen a tailor yet. Pick one from the list below.",
+    "discount": "{pct}% member discount for Thaanora customers",
+    "contact": "Contact on WhatsApp",
+    "noContact": "Contact details coming soon. Ask us on WhatsApp.",
+    "contactHint": "The message includes your measurements, so the tailor has them straight away.",
+    "remove": "Remove",
+    "choose": "Choose as my tailor",
+    "measurementsTitle": "Your measurements (inches)",
+    "measurementsIntro": "Saved on your account, so you have them on any device and can send them to your tailor.",
+    "fromDevice": "We found measurements saved on this device. Save them to keep them on your account.",
+    "measurementsSaved": "Measurements saved to your account.",
+    "saveFailed": "Couldn't save. Please try again.",
+    "saving": "Saving…",
+    "networkTitle": "Partner tailors",
+    "networkIntro": "Women's tailoring across Riyadh, with a member discount for Thaanora customers.",
+    "networkIntroArea": "Tailors near you ({area}) first.",
+    "networkEmpty": "The tailor list will appear here soon.",
+    "nearYou": "Near you",
+    "yours": "Your tailor",
+    "waHello": "Hello {tailor}, I'm {name}, a Thaanora customer (member discount {pct}%). I'd like to have my suit stitched.",
+    "waMeasurements": "My measurements (inches):"
   }
 }

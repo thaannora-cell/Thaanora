@@ -6,17 +6,16 @@ import Modal from "@/components/ui/Modal";
 import { stockState, type PublicProduct } from "@/lib/product";
 import { useAreaLabel } from "../useAreaLabel";
 import { useSelection } from "../selection/SelectionProvider";
+import { saveMeasurements } from "@/app/[locale]/account/actions";
+import { cleanMeasurements, hasMeasurements, MEASURE_FIELDS, NECKLINES, type Measurements } from "@/lib/measurements";
 
 export type Tailor = { id: string; name: string; area: string; member_price_note: string | null; member_pct: number | null };
 
 export const OPEN_TAILORS_EVENT = "th:open-tailors";
 export const openTailors = () => window.dispatchEvent(new Event(OPEN_TAILORS_EVENT));
 
-const FIELDS = ["bust", "waist", "hips", "shoulder", "shirt", "sleeve", "trouser", "hem"] as const;
-const NECKLINES = ["round", "vNeck", "boat", "collar", "askTailor"] as const;
+const FIELDS = MEASURE_FIELDS;
 const KEY = "th_measurements";
-
-type Measurements = Partial<Record<(typeof FIELDS)[number] | "neck", string>>;
 
 function load(): Measurements {
   try {
@@ -48,9 +47,12 @@ export default function StitchDialog({ product, open, onClose, tailors, onToast 
 
   useEffect(() => {
     if (!open) return;
-    setM(load());
-    // Start on her delivery area if she chose one at checkout.
-    setArea((a) => a || sel?.checkout.area || areas[0] || "");
+    // Signed in: her account's measurements (if any), otherwise the ones on this device.
+    const fromAccount = cleanMeasurements(sel?.customer?.measurements);
+    setM(hasMeasurements(fromAccount) ? fromAccount : load());
+    // Start on her own tailor's area (My Thaanora), else her delivery area if she chose one at checkout.
+    const myTailorArea = tailors.find((x) => x.id === sel?.customer?.tailorId)?.area;
+    setArea((a) => a || myTailorArea || sel?.checkout.area || areas[0] || "");
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only when the dialog opens
   }, [open]);
 
@@ -63,7 +65,8 @@ export default function StitchDialog({ product, open, onClose, tailors, onToast 
     } catch {
       // storage blocked: keep them for this visit only
     }
-    onToast(t("measurementsSaved"));
+    if (sel?.customer) void saveMeasurements(m);
+    onToast(t(sel?.customer ? "measurementsSavedAccount" : "measurementsSaved"));
   };
 
   const steps = [
@@ -107,7 +110,9 @@ export default function StitchDialog({ product, open, onClose, tailors, onToast 
               <bdi>{x.name}</bdi>
               <small className="block text-muted">{t("tailorLine", { pct: x.member_pct ?? pct })}</small>
             </span>
-            <span className="shrink-0 rounded-full bg-emerald px-2.5 py-0.5 text-[11px] text-gold-light">{t("verified")}</span>
+            <span className="shrink-0 rounded-full bg-emerald px-2.5 py-0.5 text-[11px] text-gold-light">
+              {x.id === sel?.customer?.tailorId ? t("myTailor") : t("verified")}
+            </span>
           </li>
         ))}
       </ul>
@@ -139,7 +144,7 @@ export default function StitchDialog({ product, open, onClose, tailors, onToast 
         </section>
       )}
 
-      <span className="th-caps mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-gold-ink">{t("measurementsTitle")}</span>
+      <span className="th-caps mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-gold-ink">{t(sel?.customer ? "measurementsTitleAccount" : "measurementsTitle")}</span>
       <form onSubmit={save} className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
           {FIELDS.map((f) => (
