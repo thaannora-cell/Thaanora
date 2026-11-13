@@ -55,11 +55,11 @@ export async function issueCreditNote(returnId: string): Promise<CreditOutcome> 
     if (!c) throw new ZohoError("Zoho Books isn't connected yet (ZOHO_* keys missing on the server).", false);
     const { data: o } = await db
       .from("orders")
-      .select("order_no, customer_phone, invoice_status, bundle_discount_sar, code_discount_sar, perk_discount_sar, delivery_fee_sar, packaging_fee_sar, order_items (id, product_code, product_name, unit_price_sar, qty, created_at)")
+      .select("order_no, customer_phone, invoice_status, invoice_zoho_id, bundle_discount_sar, code_discount_sar, perk_discount_sar, delivery_fee_sar, packaging_fee_sar, order_items (id, product_code, product_name, unit_price_sar, qty, created_at)")
       .eq("id", rt.order_id)
       .maybeSingle();
     if (!o) throw new ZohoError("The order is missing.", false);
-    if (o.invoice_status !== "issued") throw new ZohoError(`Order ${o.order_no} has no Zoho invoice yet. Issue the invoice first (Orders → the order).`, false);
+    if (o.invoice_status !== "issued" || !o.invoice_zoho_id) throw new ZohoError(`Order ${o.order_no} has no Zoho invoice yet. Issue the invoice first (Orders → the order).`, false);
     const { data: contact } = await db.from("zoho_contacts").select("contact_id").eq("phone", o.customer_phone).maybeSingle();
     if (!contact) throw new ZohoError("The customer isn't in Zoho Books yet.", false);
     const { data: ri } = await db.from("return_items").select("order_item_id, qty").eq("return_id", returnId);
@@ -89,14 +89,22 @@ export async function issueCreditNote(returnId: string): Promise<CreditOutcome> 
         ...(refund.extras.delivery > 0 ? [{ name: "Delivery · التوصيل", rate: refund.extras.delivery, quantity: 1, ...tax }] : []),
         ...(refund.extras.packaging > 0 ? [{ name: "Gift box · علبة الهدايا", rate: refund.extras.packaging, quantity: 1, ...tax }] : []),
       ];
+      // Saudi e-invoicing: the credit note names the original invoice and must match its place of supply
+      // and VAT treatment, so copy them from the invoice.
+      const original = await zoho<{ invoice?: { place_of_supply?: string; tax_treatment?: string; gcc_vat_treatment?: string } }>(c, "GET", `/invoices/${encodeURIComponent(o.invoice_zoho_id)}`);
+      const match = {
+        ...(original.invoice?.place_of_supply ? { place_of_supply: original.invoice.place_of_supply } : {}),
+        ...(original.invoice?.tax_treatment ? { tax_treatment: original.invoice.tax_treatment } : {}),
+      };
       const made = await zoho<{ creditnote?: { creditnote_id: string; creditnote_number: string; total: number } }>(c, "POST", "/creditnotes", {
         customer_id: contact.contact_id,
+        ...match,
         date: riyadhDate(),
         reference_number: rt.return_no,
         is_inclusive_tax: vatPct > 0,
         line_items,
         notes: `Return ${rt.return_no} of order ${o.order_no} · إرجاع ${rt.return_no} للطلب ${o.order_no}`,
-      });
+      }, { invoice_id: o.invoice_zoho_id }); // Saudi e-invoicing: a credit note must name the original invoice
       if (!made.creditnote?.creditnote_id) throw new ZohoError("Zoho didn't return a credit note id.", true);
       creditId = made.creditnote.creditnote_id;
       if (Math.abs(Number(made.creditnote.total) - refund.total) > 0.01) {
