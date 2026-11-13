@@ -966,7 +966,8 @@
       "code": "الرمز {code}",
       "birthday": "هدية الميلاد ({pct}%)",
       "personal": "عرض خاص ({pct}%)"
-    }
+    },
+    "offerNotice": "خصم {pct}% لكِ، يُضاف إلى سلتكِ تلقائيًا. حتى {date}."
   },
   "Returns": {
     "title": "إرجاع طقم",

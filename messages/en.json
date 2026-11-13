@@ -966,7 +966,8 @@
       "code": "Code {code}",
       "birthday": "Birthday gift ({pct}%)",
       "personal": "Personal offer ({pct}%)"
-    }
+    },
+    "offerNotice": "{pct}% off for you, added in your bag automatically. Until {date}."
   },
   "Returns": {
     "title": "Return a suit",

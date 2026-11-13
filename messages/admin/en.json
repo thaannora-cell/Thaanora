@@ -49,7 +49,10 @@
       "notifications": "Notifications",
       "returns": "Returns",
       "reviews": "Reviews",
-      "customers": "Customers"
+      "customers": "Customers",
+      "outreach": "Announcements & offers",
+      "loyalty": "Circle levels",
+      "picks": "Picks & trending"
     },
     "roles": {
       "owner": "Owner",
@@ -990,7 +993,120 @@
       "favourites": "Favourites",
       "requests": "Requests",
       "reviewsLabel": "Reviews",
-      "returnsTitle": "Returns"
+      "returnsTitle": "Returns",
+      "giveOffer": "Give a personal offer"
+    },
+    "outreach": {
+      "title": "Announcements & offers",
+      "sub": "Send news or a personal offer to a group of customers. They see it in their notifications (and on WhatsApp if they chose that); offers also go in their bag automatically.",
+      "composeTitle": "New message",
+      "logTitle": "Sent",
+      "none": "Nothing sent yet.",
+      "kindLabel": "What to send",
+      "kind": {
+        "announcement": "Announcement",
+        "offer": "Personal offer"
+      },
+      "segmentLabel": "Who gets it",
+      "segment": {
+        "all": "All customers",
+        "level": "A Circle level",
+        "brand": "Fans of a brand (saved its suits)",
+        "inactive": "No order in 60 days",
+        "birthday_month": "Birthday this month",
+        "customer": "One customer"
+      },
+      "levelLabel": "Level",
+      "level": {
+        "silver": "Silver",
+        "gold": "Gold",
+        "emerald": "Emerald",
+        "none": "No level yet"
+      },
+      "brandLabel": "Brand",
+      "customerLabel": "Customer",
+      "counting": "Counting…",
+      "pickSegment": "Choose who gets it.",
+      "reaches": "{count, plural, =0 {Nobody matches right now.} one {Reaches # customer.} other {Reaches # customers.}}",
+      "percent": "% off",
+      "days": "Valid for (days)",
+      "lang": {
+        "en": "English (required)",
+        "ar": "Arabic",
+        "ur": "Urdu",
+        "hi": "Hindi"
+      },
+      "titleLabel": "Title",
+      "titlePlaceholder": "Title",
+      "bodyLabel": "Message",
+      "bodyPlaceholder": "Message (optional)",
+      "offerBodyPlaceholder": "Message (optional; if empty we say the % and the end date)",
+      "offerHint": "One offer per customer, used once. Like every discount it doesn't combine with others: the best one applies, on full-price suits only.",
+      "announcementHint": "Customers see their own language; English is used where a translation is empty.",
+      "sent": "{count, plural, one {Sent to # customer.} other {Sent to # customers.}}",
+      "errors": {
+        "forbidden": "Only the owner can send.",
+        "segment": "Choose who gets it.",
+        "title": "Write at least the English title.",
+        "percent": "% off must be 1 to 50.",
+        "days": "Valid for 1 to 365 days.",
+        "nobody": "Nobody matches; nothing was sent.",
+        "failed": "Couldn't send. Please try again."
+      },
+      "sending": "Sending…",
+      "sendOffer": "Give the offer",
+      "sendAnnouncement": "Send announcement",
+      "confirmSend": "{count, plural, one {Send to # customer now?} other {Send to # customers now?}}",
+      "offerChip": "{pct}% offer",
+      "recipients": "{count, plural, one {# customer} other {# customers}}",
+      "used": "Used {used} of {count}",
+      "until": "until {date}"
+    },
+    "loyalty": {
+      "title": "Circle levels",
+      "sub": "Levels count suits delivered in the last 12 months. {none} customers have no level yet.",
+      "name": {
+        "silver": "Silver",
+        "gold": "Gold",
+        "emerald": "Emerald"
+      },
+      "customers": "{count, plural, one {# customer} other {# customers}}",
+      "minSuits": "From suits",
+      "pct": "% off",
+      "giftBox": "Free keepsake gift box",
+      "perk": {
+        "early_sale": "Early sale access",
+        "eid_gift": "Eid surprise gift",
+        "priority_sourcing": "Priority sourcing"
+      },
+      "active": "Level is on",
+      "save": "Save levels",
+      "saving": "Saving…",
+      "saved": "Saved. New orders use these levels.",
+      "errors": {
+        "forbidden": "Only the owner can change levels.",
+        "suits": "Suits must be 1 to 1000.",
+        "pct": "% off must be 0 to 50.",
+        "order": "Each level needs a different number of suits.",
+        "failed": "Couldn't save."
+      },
+      "birthdayNote": "The birthday gift % is in",
+      "settingsLink": "Settings"
+    },
+    "picks": {
+      "title": "Picks & trending",
+      "sub": "What the home page shows right now. Change them per suit in",
+      "productsLink": "Products (Our pick tick, Trending #).",
+      "trendingTitle": "Trending in Riyadh",
+      "trendingHint": "Suits with a Trending # come first; the rest are from the last 7 days (ordered ×3, added ×2, opened ×1). In stock only, up to 10.",
+      "noTrending": "Nothing trending yet.",
+      "pinned": "Trending #{rank}",
+      "byActivity": "By activity",
+      "picksTitle": "Our picks ({count})",
+      "picksHint": "Shown with your note in each customer's language.",
+      "noPicks": "No suits ticked as Our pick.",
+      "noNote": "No note yet",
+      "soldOut": "Sold out: hidden from the row until it's back."
     }
   }
 }

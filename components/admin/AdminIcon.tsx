@@ -53,6 +53,18 @@ const PATHS: Record<string, React.ReactNode> = {
       <path d="M15.5 5.5 A3 3 0 0 1 15.5 11.5 M17.5 14.8 C19.6 15.4 21 17.2 21.5 20" />
     </>
   ),
+  send: (
+    <>
+      <path d="M21 3 L10.5 13.5" />
+      <path d="M21 3 L14.5 21 L10.5 13.5 L3 9.5 Z" />
+    </>
+  ),
+  circle: (
+    <>
+      <path d="M8.5 3 L12 8 L15.5 3" />
+      <circle cx="12" cy="14.5" r="6.5" />
+    </>
+  ),
   ret: (
     <>
       <path d="M4 9 H16 A4 4 0 0 1 16 17 H9" />

@@ -76,6 +76,11 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
           <a href={`https://wa.me/${c.phone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex min-h-[44px] items-center rounded-full border border-[#BFDCCB] bg-[#E7F3EC] px-4 text-[14px] font-medium text-emerald no-underline">
             {t("customers.whatsapp")}
           </a>
+          {session.staff.role === "owner" && c.status === "active" && (
+            <Link href={`/admin/outreach?kind=offer&segment=customer&value=${c.id}`} className="ms-2 mt-3 inline-flex min-h-[44px] items-center rounded-full border border-rani/40 bg-[#FBEFF3] px-4 text-[14px] font-medium text-[#7A1238] no-underline">
+              {t("customers.giveOffer")}
+            </Link>
+          )}
         </section>
 
         <section className={panel} aria-labelledby="figures">
