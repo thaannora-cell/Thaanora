@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import Modal from "@/components/ui/Modal";
 import RequestSent, { type SentRequest } from "./RequestSent";
 import { savedContact } from "./savedContact";
+import { track } from "@/lib/analytics";
 
 export const OPEN_SOURCING_EVENT = "th:open-sourcing";
 export const openSourcing = () => window.dispatchEvent(new Event(OPEN_SOURCING_EVENT));
@@ -119,6 +120,7 @@ export default function SourcingDialog() {
         return;
       }
       setSent({ reference: data.reference, message: data.message, whatsappUrl: data.whatsappUrl ?? null });
+      track({ name: "sourcing_request" });
     } catch {
       setError("other");
     } finally {

@@ -8,6 +8,7 @@ import { photoUrl, salePrice, stockState, type PublicProduct } from "@/lib/produ
 import { fabricBackground } from "../rack/fabricPattern";
 import ModelFigure, { SAMPLE_FACE, type Face } from "../tryon/ModelFigure";
 import { useSelection } from "../selection/SelectionProvider";
+import { track } from "@/lib/analytics";
 
 export const OPEN_TRYON_EVENT = "th:open-tryon";
 export const openTryOn = () => window.dispatchEvent(new Event(OPEN_TRYON_EVENT));
@@ -37,6 +38,9 @@ export default function TryOnDialog({ products, startCode, open, onClose, face, 
 
   useEffect(() => {
     if (open) setCode(startCode);
+  }, [open, startCode]);
+  useEffect(() => {
+    if (open && startCode) track({ name: "try_on", code: startCode });
   }, [open, startCode]);
 
   const p = products.find((x) => x.code === code) ?? products[0];

@@ -540,7 +540,9 @@
       "storage_h": "Where it is kept",
       "storage_p": "Orders and requests are stored securely with our website and database providers, and only Thaanora staff can see them. We keep order records for as long as tax and accounting law requires.",
       "rights_h": "Your rights",
-      "rights_p": "Under Saudi Arabia’s Personal Data Protection Law (PDPL) you can ask to see, correct or delete your data. Message us on WhatsApp."
+      "rights_p": "Under Saudi Arabia’s Personal Data Protection Law (PDPL) you can ask to see, correct or delete your data. Message us on WhatsApp.",
+      "cookies_h": "Cookies and analytics",
+      "cookies_p": "Only if you accept on the cookie banner, we use Google Analytics (Google) and the advertising pixels of Meta (Facebook, Instagram), TikTok and Snapchat. They tell us which pages and suits are viewed, what is added to the bag and when an order is sent on WhatsApp (with its value), and help us show our ads to people like you. They don't receive your name, phone number or address. If you reject, none of them load. You can change your choice any time with \"Cookie settings\" at the bottom of every page. The shop itself only stores your bag, language and choices on your device."
     },
     "terms": {
       "title": "Terms of sale",
@@ -1125,5 +1127,13 @@
     "title": "This page isn't here",
     "text": "The suit may be sold out or the link may be old. Have a look at what's on the rack now.",
     "toShop": "Back to the shop"
+  },
+  "Consent": {
+    "title": "Cookies and analytics",
+    "text": "With your permission we use Google Analytics and the Meta, TikTok and Snapchat pixels to see how the shop is used and to show you our ads. Nothing is sent until you accept.",
+    "more": "Privacy policy",
+    "accept": "Accept",
+    "reject": "Reject",
+    "settings": "Cookie settings"
   }
 }

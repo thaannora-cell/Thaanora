@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { salePrice, type PublicProduct } from "@/lib/product";
+import { track } from "@/lib/analytics";
 import { computeTotals, discountCandidates, type BundleRule, type CheckoutPerks, type CheckoutSettings, type Totals } from "@/lib/pricing";
 
 export type Line = { code: string; qty: number; stitch: boolean };
@@ -277,7 +278,10 @@ export default function SelectionProvider({ products: list, bundle, settings, cu
     orderPlaced,
     drawerOpen,
     customer,
-    openDrawer: () => setDrawerOpen(true),
+    openDrawer: () => {
+      setDrawerOpen(true);
+      if (lines.length) track({ name: "begin_checkout", value: totals.total, count: totals.count });
+    },
     closeDrawer: () => {
       setDrawerOpen(false);
       setPlacedOrder(null);

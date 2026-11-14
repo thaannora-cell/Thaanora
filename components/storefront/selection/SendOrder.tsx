@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useSelection } from "./SelectionProvider";
 import { LAST_ORDER_KEY } from "@/lib/customer/last-order";
+import { track } from "@/lib/analytics";
 
 type ErrorKind = "name" | "phone" | "area" | "stock" | "too_many" | "discount" | "other";
 
@@ -129,6 +130,8 @@ export default function SendOrder() {
       }
       if (result.whatsappUrl && tab) tab.location.href = result.whatsappUrl;
       else tab?.close();
+      // Analytics: a WhatsApp order is a lead (cash on delivery, not paid yet), with its value.
+      track({ name: "lead", orderNo: result.orderNo, value: sel.totals.total, codes: sel.lines.map((l) => l.code) });
       sel.orderPlaced(result);
     } catch {
       tab?.close();

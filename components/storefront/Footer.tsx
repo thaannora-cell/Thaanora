@@ -7,6 +7,7 @@ import { POLICIES, type PolicySlug } from "@/lib/policies";
 import { openTrackOrder } from "./TrackOrderDialog";
 import { openSourcing } from "./SourcingDialog";
 import { openTailors } from "./panel/StitchDialog";
+import { CookieSettingsButton } from "./ConsentBanner";
 
 const SOCIAL_LABEL = { instagram: "Instagram", tiktok: "TikTok", snapchat: "Snapchat" } as const;
 const linkClass =
@@ -89,6 +90,9 @@ export default function Footer({ info, onShop = false }: Props) {
                 </Link>
               </li>
             ))}
+            <li>
+              <CookieSettingsButton className={`${linkClass} text-start`} />
+            </li>
           </ul>
         </nav>
 

@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
 const SECTIONS: Record<PolicySlug, string[]> = {
   returns: ["exchange", "notReturnable", "faulty", "refunds"],
   delivery: ["where", "fees", "timing", "payment"],
-  privacy: ["who", "collect", "tryon", "use", "storage", "rights"],
+  privacy: ["who", "collect", "tryon", "use", "cookies", "storage", "rights"],
   terms: ["who", "authentic", "prices", "orders", "colour"],
 };
 

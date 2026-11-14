@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import TrackOrderDialog from "@/components/storefront/TrackOrderDialog";
 import SourcingDialog from "@/components/storefront/SourcingDialog";
+import ConsentBanner from "@/components/storefront/ConsentBanner";
 import { getWhatsappNumber } from "@/lib/shop-data";
 import { getMessages, getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
@@ -55,6 +56,7 @@ export default async function LocaleLayout({
           {children}
           <TrackOrderDialog whatsapp={whatsapp} />
           <SourcingDialog />
+          <ConsentBanner />
         </NextIntlClientProvider>
       </body>
     </html>
