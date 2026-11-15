@@ -45,15 +45,9 @@
     "nationalNo": "Unified National No."
   },
   "Home": {
-    "h1": "Your fabric. Your fit. <em>قماشكِ… على مقاسكِ</em>",
-    "sub": "Browse hanging bolts of original unstitched 3-piece suits. Tap any fabric to see it on a model, try it on yourself with AI, or order with cash on delivery in Riyadh.",
-    "badge": "Riyadh exclusive · original Pakistani brands",
     "nav_try": "Virtual try-on",
     "nav_src": "Sourcing request",
     "nav_trk": "Track order",
-    "hs1": "designs on the rack",
-    "hs2": "original brands",
-    "hs3": "pay at your door",
     "colour": "Colour",
     "tip": "Tap a fabric to open it · use the arrows to browse",
     "order": "Order on WhatsApp",
@@ -82,8 +76,6 @@
     "q_stitch": "Get it stitched",
     "q_source": "Can't find your suit?",
     "q_track": "Track my order",
-    "codValue": "COD",
-    "hstatsLabel": "At a glance",
     "filtersLabel": "Find your fabric",
     "occasionLabel": "Occasion",
     "famAll": "All colours",
@@ -111,7 +103,10 @@
     "picksIntro": "Chosen by us, with a note on why we love them.",
     "forYouEyebrow": "Thaanora recommends",
     "forYouTitle": "For you",
-    "forYouIntro": "Based on the suits you saved and ordered."
+    "forYouIntro": "Based on the suits you saved and ordered.",
+    "titleMain": "Your fabric. Your fit.",
+    "titleSub": "قماشكِ… على مقاسكِ",
+    "titleStats": "{designs} designs · {brands} brands · Cash on delivery"
   },
   "DevProducts": {
     "title": "Products from the database",
@@ -495,7 +490,7 @@
   },
   "Meta": {
     "title": "Thaanora — Your fabric. Your fit.",
-    "description": "Original Pakistani unstitched suits for women in Riyadh. Order on WhatsApp and pay cash on delivery."
+    "description": "Browse hanging bolts of original unstitched 3-piece suits. Tap any fabric to see it on a model, try it on yourself with AI, or order with cash on delivery in Riyadh."
   },
   "Help": {
     "label": "Chat with us on WhatsApp",

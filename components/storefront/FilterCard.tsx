@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { COLOUR_FAMILIES, OCCASIONS, type Filters } from "@/lib/filters";
 
 type Props = {
@@ -9,21 +9,41 @@ type Props = {
   brands: string[];
   brandOfMonth: string | null;
   savedCount: number;
+  designs: number | null; // visible suits, for the title row ("18 designs · 5 brands · Cash on delivery")
 };
 
-export default function FilterCard({ filters, onChange, brands, brandOfMonth, savedCount }: Props) {
+// The top of the shop (no hero banner): the title row, the occasion chips, then colours + search + brand.
+// Compact, so the fabric rack shows on the first screen.
+export default function FilterCard({ filters, onChange, brands, brandOfMonth, savedCount, designs }: Props) {
   const t = useTranslations("Home");
+  const locale = useLocale();
+  // Arabic leads with the Arabic line; the other languages lead with their own and add the Arabic tagline.
+  const mainFont = locale === "ar" ? "font-[family-name:var(--font-amiri)] font-bold" : locale === "ur" ? "font-[family-name:var(--font-urdu)]" : locale === "hi" ? "font-[family-name:var(--font-hindi)] font-medium" : "font-[family-name:var(--font-cormorant)] font-semibold";
+  const subFont = locale === "ar" ? "font-[family-name:var(--font-cormorant)] font-semibold" : "font-[family-name:var(--font-amiri)] font-bold";
 
   return (
     <section
       aria-label={t("filtersLabel")}
-      className="mt-[22px] flex flex-col gap-3 rounded-[18px] md:rounded-3xl border border-line bg-[#FFFDF8] p-3.5 md:px-[22px] md:py-[18px] shadow-[0_10px_30px_rgba(14,59,46,0.06)]"
+      className="mt-2 flex flex-col gap-2.5 rounded-[18px] md:rounded-3xl border border-line bg-[#FFFDF8] px-3 py-2.5 md:px-5 md:py-3 shadow-[0_10px_30px_rgba(14,59,46,0.06)]"
     >
-      {/* Occasions */}
+      {/* Row 1: title */}
+      <div className="flex min-w-0 items-baseline justify-between gap-4">
+        <h1 className="m-0 flex min-w-0 items-baseline gap-2.5 overflow-hidden whitespace-nowrap leading-tight">
+          <span className={`${mainFont} shrink-0 text-[22px] text-emerald md:text-[30px]`}>{t("titleMain")}</span>
+          <span lang={locale === "ar" ? "en" : "ar"} dir={locale === "ar" ? "ltr" : "rtl"} className={`${subFont} min-w-0 truncate text-[17px] text-gold-ink md:text-[22px]`}>
+            {t("titleSub")}
+          </span>
+        </h1>
+        <p className="m-0 hidden shrink-0 text-[13px] text-muted md:block">
+          {t("titleStats", { designs: designs ?? 0, brands: brands.length })}
+        </p>
+      </div>
+
+      {/* Row 2: occasions, always one row (scrolls sideways when it doesn't fit) */}
       <div
         role="group"
         aria-label={t("occasionLabel")}
-        className="th-scroll-row flex items-center gap-2 overflow-x-auto md:overflow-visible md:flex-wrap pb-0.5 md:pb-0 -mx-1 px-1"
+        className="th-scroll-row -mx-1 flex flex-nowrap items-center gap-2 overflow-x-auto px-1 pb-0.5"
       >
         {OCCASIONS.map((o) => {
           const pressed = filters.occasion === o;
@@ -35,7 +55,7 @@ export default function FilterCard({ filters, onChange, brands, brandOfMonth, sa
               aria-pressed={pressed}
               onClick={() => onChange({ occasion: o })}
               className={[
-                "th-chip inline-flex shrink-0 items-center gap-[7px] rounded-full border px-[18px] py-[9px] min-h-[44px] text-[15px] whitespace-nowrap",
+                "th-chip inline-flex shrink-0 items-center gap-[7px] rounded-full border px-4 py-1.5 min-h-[40px] text-[14px] md:text-[15px] whitespace-nowrap",
                 sale
                   ? "border-rani/45 text-rani aria-pressed:bg-rani aria-pressed:border-rani aria-pressed:text-white"
                   : "border-line bg-ivory-white text-emerald aria-pressed:bg-emerald aria-pressed:border-emerald aria-pressed:text-ivory-white",
@@ -54,12 +74,12 @@ export default function FilterCard({ filters, onChange, brands, brandOfMonth, sa
         })}
       </div>
 
-      <div className="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-between gap-3 border-t border-[#EFE6D6] pt-3">
-        {/* Colour */}
+      {/* Row 3: colours, then search + brand (one row on desktop) */}
+      <div className="flex flex-col gap-2.5 border-t border-[#EFE6D6] pt-2.5 md:flex-row md:items-center md:justify-between md:gap-4">
         <div
           role="group"
           aria-label={t("colour")}
-          className="th-scroll-row flex items-center gap-2 overflow-x-auto md:overflow-visible -mx-1 px-1 py-1 min-w-0"
+          className="th-scroll-row -mx-1 flex min-w-0 flex-nowrap items-center gap-2 overflow-x-auto px-1 py-1"
         >
           <span className="th-caps shrink-0 me-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-emerald">
             {t("colour")}
@@ -81,8 +101,7 @@ export default function FilterCard({ filters, onChange, brands, brandOfMonth, sa
           ))}
         </div>
 
-        {/* Search + brand */}
-        <div className="flex items-center gap-2.5 min-w-0">
+        <div className="flex min-w-0 shrink-0 items-center gap-2.5">
           <label className="relative flex flex-1 md:flex-none items-center min-w-0">
             <span className="sr-only">{t("searchLabel")}</span>
             <svg
@@ -106,7 +125,7 @@ export default function FilterCard({ filters, onChange, brands, brandOfMonth, sa
               value={filters.query}
               onChange={(e) => onChange({ query: e.target.value })}
               placeholder={t("searchPlaceholder")}
-              className="w-full md:w-[300px] min-h-[46px] rounded-full border border-line bg-white ps-10 pe-4 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-gold"
+              className="w-full md:w-[260px] lg:w-[300px] min-h-[42px] rounded-full border border-line bg-white ps-10 pe-4 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-gold"
             />
           </label>
           <label className="shrink-0 w-[44%] md:w-auto">
@@ -114,7 +133,7 @@ export default function FilterCard({ filters, onChange, brands, brandOfMonth, sa
             <select
               value={filters.brand}
               onChange={(e) => onChange({ brand: e.target.value })}
-              className="w-full md:min-w-[170px] min-h-[46px] rounded-full border border-line bg-white px-4 text-[15px] text-emerald focus:outline-none focus:border-gold"
+              className="w-full md:min-w-[160px] min-h-[42px] rounded-full border border-line bg-white px-4 text-[15px] text-emerald focus:outline-none focus:border-gold"
             >
               <option value="all">{t("allBrands")}</option>
               {brands.map((b) => (
@@ -149,7 +168,7 @@ function DotButton({
       title={label}
       onClick={onClick}
       style={style}
-      className="th-dot shrink-0 w-9 h-9 rounded-full"
+      className="th-dot shrink-0 w-8 h-8 rounded-full"
     />
   );
 }

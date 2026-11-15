@@ -227,9 +227,10 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
         brands={brands}
         brandOfMonth={brandOfMonth}
         savedCount={saved.length}
+        designs={loadFailed ? null : products.length}
       />
 
-      <div ref={rackAnchor} className="mt-4 pb-1.5 flex flex-wrap justify-between gap-3 text-[13px] text-muted scroll-mt-40">
+      <div ref={rackAnchor} className="mt-2 pb-1 flex flex-wrap justify-between gap-3 text-[13px] text-muted scroll-mt-40">
         <span aria-live="polite" className="tabular-nums">
           {loadFailed ? t("loadError") : t("count", { shown: shown.length, total: products.length })}
           <button type="button" onClick={openSourcing} className="ms-3 text-emerald underline underline-offset-2">

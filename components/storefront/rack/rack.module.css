@@ -3,7 +3,8 @@
 .rack {
   display: flex;
   gap: 6px;
-  height: clamp(440px, calc(100vh - 306px), 640px);
+  /* Fills the first screen under the header and the compact filter card (about 340px above it). */
+  height: clamp(440px, calc(100vh - 340px), 640px);
   padding-block: 4px 10px;
 }
 
