@@ -249,7 +249,8 @@
     "reviewsSummary": "{rating} · {count, plural, one {# review} other {# reviews}}",
     "verifiedBuyer": "bought this suit",
     "ourReply": "Thaanora:",
-    "fullPage": "See the suit's own page"
+    "fullPage": "See the suit's own page",
+    "fullPageBtn": "Suit page"
   },
   "Selection": {
     "trayLabel": "Your selection",
@@ -1130,5 +1131,13 @@
     "accept": "Accept",
     "reject": "Reject",
     "settings": "Cookie settings"
+  },
+  "Share": {
+    "eyebrow": "Share this suit",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "copy": "Copy link",
+    "instagramCopied": "Link copied. Paste it in your Instagram story or message."
   }
 }

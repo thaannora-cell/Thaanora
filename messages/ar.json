@@ -249,7 +249,8 @@
     "reviewsSummary": "{rating} · {count, plural, one {تقييم واحد} two {تقييمان} few {# تقييمات} many {# تقييمًا} other {# تقييم}}",
     "verifiedBuyer": "اشترت هذا الطقم",
     "ourReply": "ثانورا:",
-    "fullPage": "صفحة الطقم الكاملة"
+    "fullPage": "صفحة الطقم الكاملة",
+    "fullPageBtn": "صفحة الطقم"
   },
   "Selection": {
     "trayLabel": "اختياراتكِ",
@@ -1130,5 +1131,13 @@
     "accept": "موافقة",
     "reject": "رفض",
     "settings": "إعدادات ملفات الارتباط"
+  },
+  "Share": {
+    "eyebrow": "شاركي هذا الطقم",
+    "whatsapp": "واتساب",
+    "facebook": "فيسبوك",
+    "instagram": "إنستغرام",
+    "copy": "نسخ الرابط",
+    "instagramCopied": "تم نسخ الرابط. الصقيه في قصة أو رسالة على إنستغرام."
   }
 }

@@ -249,7 +249,8 @@
     "reviewsSummary": "{rating} · {count, plural, one {# ریویو} other {# ریویوز}}",
     "verifiedBuyer": "یہ سوٹ خریدا",
     "ourReply": "تھانورا:",
-    "fullPage": "سوٹ کا مکمل صفحہ"
+    "fullPage": "سوٹ کا مکمل صفحہ",
+    "fullPageBtn": "سوٹ کا صفحہ"
   },
   "Selection": {
     "trayLabel": "آپ کا انتخاب",
@@ -1125,5 +1126,13 @@
     "accept": "قبول کریں",
     "reject": "مسترد کریں",
     "settings": "کوکی سیٹنگز"
+  },
+  "Share": {
+    "eyebrow": "یہ سوٹ شیئر کریں",
+    "whatsapp": "واٹس ایپ",
+    "facebook": "فیس بک",
+    "instagram": "انسٹاگرام",
+    "copy": "لنک کاپی کریں",
+    "instagramCopied": "لنک کاپی ہو گیا۔ انسٹاگرام اسٹوری یا میسج میں پیسٹ کریں۔"
   }
 }

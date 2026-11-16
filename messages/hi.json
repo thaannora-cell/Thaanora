@@ -249,7 +249,8 @@
     "reviewsSummary": "{rating} · {count, plural, one {# रिव्यू} other {# रिव्यू}}",
     "verifiedBuyer": "यह सूट ख़रीदा",
     "ourReply": "थानौरा:",
-    "fullPage": "सूट का पूरा पेज"
+    "fullPage": "सूट का पूरा पेज",
+    "fullPageBtn": "सूट का पेज"
   },
   "Selection": {
     "trayLabel": "आपकी पसंद",
@@ -1125,5 +1126,13 @@
     "accept": "स्वीकार करें",
     "reject": "अस्वीकार करें",
     "settings": "कुकी सेटिंग्स"
+  },
+  "Share": {
+    "eyebrow": "यह सूट शेयर करें",
+    "whatsapp": "व्हाट्सऐप",
+    "facebook": "फ़ेसबुक",
+    "instagram": "इंस्टाग्राम",
+    "copy": "लिंक कॉपी करें",
+    "instagramCopied": "लिंक कॉपी हो गया। इसे इंस्टाग्राम स्टोरी या मैसेज में पेस्ट करें।"
   }
 }

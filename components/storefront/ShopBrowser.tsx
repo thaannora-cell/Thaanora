@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import FilterCard from "./FilterCard";
+import ShareSheet from "./panel/ShareSheet";
 import FabricRack from "./rack/FabricRack";
 import type { PanelAction } from "./rack/Bolt";
 import DetailsDialog from "./panel/DetailsDialog";
@@ -11,7 +12,7 @@ import NotifyDialog from "./panel/NotifyDialog";
 import TryOnDialog, { OPEN_TRYON_EVENT } from "./panel/TryOnDialog";
 import type { Face } from "./tryon/ModelFigure";
 import { DEFAULT_FILTERS, brandsOf, filterProducts, type Filters } from "@/lib/filters";
-import { salePrice, type PublicProduct } from "@/lib/product";
+import type { PublicProduct } from "@/lib/product";
 import { useSelection } from "./selection/SelectionProvider";
 import { openSourcing } from "./SourcingDialog";
 import CollectionGrid from "./CollectionGrid";
@@ -63,11 +64,8 @@ type Props = {
 
 export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailors, signedIn = false, recommendations }: Props) {
   const t = useTranslations("Home");
-  const tPanel = useTranslations("Panel");
-  const tRack = useTranslations("Rack");
   const tSel = useTranslations("Selection");
   const selection = useSelection();
-  const locale = useLocale();
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [saved, setSaved] = useState<string[]>([]);
   const [activeCode, setActiveCode] = useState<string | null>(null);
@@ -193,27 +191,12 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
     if (signedIn) void setFavourite(code, on);
   };
 
-  const share = async (p: PublicProduct) => {
-    const url = `${window.location.origin}/${locale}?p=${encodeURIComponent(p.code)}`;
-    const text = tPanel("shareText", { name: `${p.brand} ${p.name}`, price: tRack("price", { amount: salePrice(p) }) });
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "Thaanora", text, url });
-        return;
-      } catch (e) {
-        if (e instanceof DOMException && e.name === "AbortError") return;
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(`${text}\n${url}`);
-      showToast(tPanel("linkCopied"));
-    } catch {
-      showToast(url);
-    }
-  };
+  // Share opens the menu: WhatsApp, Facebook, Instagram, copy link (the suit's own page).
+  const [shareFor, setShareFor] = useState<PublicProduct | null>(null);
+  const share = (p: PublicProduct) => setShareFor(p);
 
   const onAction = (action: PanelAction, p: PublicProduct) => {
-    if (action === "share") void share(p);
+    if (action === "share") share(p);
     else setDialog({ kind: action, code: p.code });
   };
 
@@ -317,7 +300,7 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
                   onTry={() => setDialog({ kind: "try", code: dialogProduct.code })}
                   onStitch={() => setDialog({ kind: "stitch", code: dialogProduct.code })}
                   onNotify={() => setDialog({ kind: "notify", code: dialogProduct.code })}
-                  onShare={() => void share(dialogProduct)}
+                  onShare={() => share(dialogProduct)}
                 />
               ) : undefined
             }
@@ -332,6 +315,8 @@ export default function ShopBrowser({ products, brandOfMonth, loadFailed, tailor
           <NotifyDialog product={dialogProduct} open={dialog?.kind === "notify"} onClose={closeDialog} />
         </>
       )}
+
+      <ShareSheet product={shareFor} open={shareFor !== null} onClose={() => setShareFor(null)} />
 
       <TryOnDialog
         products={products}

@@ -82,9 +82,12 @@ export default function DetailsDialog({ product: p, open, onClose, actions }: Pr
 
       <span className="th-caps mt-2 text-[11px] font-medium uppercase tracking-[0.16em] text-gold-ink">{t("reviews")}</span>
       {open && <ReviewsList code={p.code} />}
-      <Link href={`/suits/${encodeURIComponent(p.code)}`} className="self-start text-[14px] font-medium text-emerald underline underline-offset-2">
-        {t("fullPage")}
-      </Link>
+      {/* From the rack's "Details & reviews" there are no action buttons, so link the full page here. */}
+      {!actions && (
+        <Link href={`/suits/${encodeURIComponent(p.code)}`} className="self-start text-[14px] font-medium text-emerald underline underline-offset-2">
+          {t("fullPage")}
+        </Link>
+      )}
     </Modal>
   );
 }
